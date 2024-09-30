@@ -1,0 +1,92 @@
+.About-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9; /* Màu nền có thể tùy chỉnh */
+  }
+  
+  .About-row {
+    display: flex;
+    width: 100%;
+    max-width: 1200px; /* Đặt chiều rộng tối đa cho container */
+    flex-wrap: wrap; /* Đảm bảo bố cục có thể xuống dòng trên màn hình nhỏ */
+  }
+  
+  .About-column-left,
+  .About-column-right {
+    flex: 1;
+    padding: 30px;
+  }
+  
+  .left-side img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px; /* Bo tròn các góc của ảnh */
+  }
+  
+  .right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .right-side h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #888;
+    margin: 0;
+  }
+  
+  .right-side h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .right-side p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .right-side button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff5a5f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: start;
+  }
+  
+  .right-side button:hover {
+    background-color: #e04444;
+  }
+  
+  /* Responsive cho màn hình nhỏ hơn */
+  @media (max-width: 768px) {
+    .About-row {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .About-column-left,
+    .About-column-right {
+      flex: unset;
+      width: 100%;
+    }
+  
+    .right-side {
+      text-align: center; /* Căn giữa văn bản cho màn hình nhỏ */
+    }
+  
+    .right-side button {
+      align-self: center;
+    }
+  }
+  

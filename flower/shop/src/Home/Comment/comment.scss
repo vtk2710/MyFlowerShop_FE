@@ -1,0 +1,41 @@
+.comment {
+ width: 50%;
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #e0e0e0; /* Đường viền nhẹ */
+    border-radius: 8px; /* Bo góc */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+}
+.sw h2{
+    margin: 40px;
+    font-size: 2.2rem;
+    color: #333;
+    text-align: center;
+
+}
+
+.swip{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.comment__content {
+    flex-grow: 1; /* Cho phép nội dung chiếm không gian còn lại */
+}
+
+.comment__content h3 {
+    margin: 0; /* Bỏ margin cho tiêu đề */
+    font-size: 1.2rem; /* Kích thước font tiêu đề */
+    color: #333; /* Màu chữ */
+}
+
+.comment__content p {
+    margin: 5px 0 0; /* Khoảng cách cho đoạn văn */
+    color: #666; /* Màu chữ nhạt hơn cho nội dung */
+}

@@ -1,0 +1,37 @@
+.why_section {
+  background-color: white;
+  padding: 60px 0;
+}
+.img-box svg {
+  width: 100%;  /* Đảm bảo SVG không vượt quá chiều rộng của container */
+  height: auto; /* Giữ tỷ lệ hình ảnh SVG */
+  max-width: 80px; /* Giới hạn chiều rộng tối đa của SVG */
+}
+
+.heading_container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.box {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.img-box {
+  margin-bottom: 20px;
+}
+
+.detail-box h5 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.detail-box p {
+  color: #777;
+}
