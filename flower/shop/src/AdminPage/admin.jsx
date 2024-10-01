@@ -31,7 +31,7 @@ export default function AdminPage() {
     //Trang admin tạm thời, design sau
     return(
         <div>
-            <h1>Admin Page</h1>
+            <h1>Admin Page test</h1>
             <button onClick={handleLogout}>Logout</button>
         </div>
     );
