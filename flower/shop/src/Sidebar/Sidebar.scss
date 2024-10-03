@@ -1,0 +1,24 @@
+/* src/Sidebar.css */
+
+/* Phần chứa avatar và text "Welcome" */
+.welcome-section {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #2A3F54;
+  }
+  
+  /* Định dạng avatar tròn */
+  .welcome-avatar {
+    border-radius: 50%;  /* Tạo hình tròn */
+    width: 60px;         /* Kích thước avatar */
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  
+  /* Định dạng text "Welcome" */
+  .welcome-text {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+  }
+  
