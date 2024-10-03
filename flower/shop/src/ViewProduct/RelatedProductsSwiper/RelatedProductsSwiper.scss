@@ -1,0 +1,35 @@
+.product-flower{
+
+    width: 90%;
+    flex: 0 1 calc(28% - 20px);
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+ 
+    height: 500px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 1px solid #d9c7c7;
+}
+.mySwiperRelatedProducts{
+    padding: 10px 50px;
+}
+.product-flower img {
+    object-fit: cover;
+
+    width: 100%;
+    height: 50%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  .product-flower .ant-btn {
+    background-color: #ff5a5f;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .product-flower .ant-btn:hover {
+    background-color: #fb0303;
+  }
