@@ -1,0 +1,89 @@
+.user-container {
+    min-height: 100vh;
+
+    .user-header {
+        background-color: #fff;
+        display: flex;
+        justify-content: flex-end; // Aligning content to the right
+        align-items: center;
+        padding: 0 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; // This ensures both items are on the right
+        width: auto;
+    }
+
+    .cart-icon {
+        margin-left: 10px; // This ensures the cart icon appears after the avatar
+    }
+
+    .header-avatar {
+        cursor: pointer;
+    }
+
+    .user-sider {
+        background-color: #fff;
+        border-right: 1px solid #f0f0f0;
+    }
+
+    .user-content {
+        padding: 24px;
+
+        section {
+            margin-bottom: 40px;
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .profile-card {
+                padding: 20px;
+                background: #f9f9f9;
+                border-radius: 8px;
+
+                .profile-form-container {
+                    display: flex;
+                    align-items: flex-start;
+                    flex-wrap: wrap;
+
+                    .profile-picture {
+                        margin-right: 40px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-bottom: 20px;
+
+                        .profile-avatar {
+                            width: 128px;
+                            height: 128px;
+                            object-fit: cover;
+                            margin-bottom: 10px;
+                        }
+
+                        button {
+                            width: 100%;
+                        }
+                    }
+
+                    .profile-form {
+                        flex: 1;
+                        min-width: 300px;
+
+                        .ant-form-item {
+                            margin-bottom: 16px;
+                        }
+
+                        button {
+                            margin-top: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
