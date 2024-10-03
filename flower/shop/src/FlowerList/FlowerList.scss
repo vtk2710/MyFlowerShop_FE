@@ -1,0 +1,71 @@
+.flower-list {
+    width: 100%; /* Tràn toàn bộ chiều ngang */
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.flower-list h2 {
+    font-size: 32px;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* Đảm bảo table chiếm hết chiều rộng */
+.ant-table {
+    width: 100%;
+}
+
+.ant-table-cell {
+    padding: 12px;
+}
+
+/* Nút hành động */
+.ant-btn {
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.ant-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Nút Delete */
+.ant-btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.ant-btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Nút Edit */
+.ant-btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.ant-btn-edit:hover {
+    background-color: #2980b9;
+}
+
+/* Các thẻ trạng thái */
+.ant-tag-green {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.ant-tag-volcano {
+    background-color: #e74c3c;
+    color: white;
+}
