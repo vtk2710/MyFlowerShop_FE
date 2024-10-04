@@ -1,38 +1,34 @@
-import React, {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { Layout } from "antd";
+import { Outlet } from "react-router-dom"; // Sử dụng Outlet để hiển thị nội dung động
+import SideBar from "../Sidebar/Sidebar"; // Import SideBar
+import AdminHeader from "../admin/AdminHeader/AdminHeader";
+// Import AdminHeader
 
-export default function AdminPage() {
+const { Content } = Layout;
 
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
+const Admin = () => {
+  return (
+    <Layout style={{ minHeight: "100vh" }}>
+      {/* Sidebar điều hướng */}
+      <SideBar /> {/* Hiển thị sidebar */}
+      {/* Layout chính cho nội dung */}
+      <Layout className="site-layout" style={{ padding: "0 24px 24px" }}>
+        <AdminHeader /> {/* Hiển thị header */}
+        {/* Nội dung sẽ thay đổi dựa trên định tuyến con */}
+        <Content
+          style={{
+            margin: "24px 16px",
+            padding: 24,
+            background: "#fff",
+            minHeight: 280,
+          }}
+        >
+          <Outlet />{" "}
+          {/* Hiển thị các component dựa trên route con như Dashboard1, UserManage */}
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
 
-    //Kiểm tra token còn lưu trên local không. Nếu không còn sẽ quay về Home
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if(!token) {
-            navigate("/");
-        } else {
-            setIsLoading(false);
-        }
-    }, [navigate]);
-
-    if(isLoading) {
-        return (
-            <div>Loading....</div>
-        );
-    }
-
-    //Xử lý logout
-    const handleLogout = () => {
-        localStorage.removeItem("token"); //Xóa token
-        navigate("/");
-    };
-
-    //Trang admin tạm thời, design sau
-    return(
-        <div>
-            <h1>Admin Page test</h1>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
-    );
-}
+export default Admin;

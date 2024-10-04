@@ -1,20 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./HomePage/home";
-import AdminPage from "./AdminPage/admin";
+import Admin from "./AdminPage/admin";
 import UserPage from "./UserPage/user";
 import SellerPage from "./SellerPage/seller";
 import CreateProfilePage from "./CreateProfilePage/create_profile";
 //import ShopPage from "./UserPage/user1";
-
+import Dashboard1 from "./admin/Dashboard1/Dashboard1";
+import UserManage from "./admin/UserManage/UserManage";
+import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
+import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
+import ProductPage from "./ViewProduct/viewpage";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Home />,
-    },
-    {
-      path: "/admin-page",
-      element: <AdminPage />,
     },
     {
       path: "/user-page",

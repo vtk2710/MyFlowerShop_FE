@@ -1,0 +1,29 @@
+// .header {
+//     background-color: #fff;
+//     padding: 0;
+//     display: flex;
+//     justify-content: flex-end;
+//     align-items: center;
+   
+    
+//   }
+  
+//   .header__right {
+//     display: flex;
+//     align-items: center;
+//     gap: 20px;
+//     cursor: pointer;
+//   }
+  
+//   .header__avatar {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//   }
+  
+  .ant-avatar img {
+    object-fit: fill; 
+  }
+  .ant-layout {
+    padding: 0px !important;  // Ghi đè padding thành 0
+  }
