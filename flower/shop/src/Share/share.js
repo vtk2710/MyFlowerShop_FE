@@ -1,11 +1,11 @@
 export const Flowers = [
     {
         Id: '1',
-        Image: '/picture/snap.jpeg', 
+        Image: '/picture/5.png',  
     },
     {
         Id: '2',
-        Image: '/picture/xe.jpg',
+        Image: '/picture/2.jpg',
     },
     {
         Id: '3',
@@ -21,6 +21,7 @@ export const Flowers = [
     },
     {
         Id: '6',
-        Image: '/picture/hoacuchongjpg.jpg',  
+        Image: '/picture/1.jpg',  
     },
+ 
 ];
