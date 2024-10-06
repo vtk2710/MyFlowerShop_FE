@@ -3,14 +3,14 @@
     position: relative; /* Vị trí tương đối so với vị trí gốc của nó */
     margin-top: 85px;
     img{
-        width: 70%;
+        width: 100%;
         height: 75dvh;
-        object-position: bottom;
+        object-position: center;
         object-fit: cover;
     //  padding-left: 500px;
-     border-radius: 60px;
-     border-top-left-radius: 60px;
-     margin-left: 280px;
+    //  border-radius: 60px;
+    //  border-top-left-radius: 60px;
+    //  margin-left: 235px;
      margin-top: 10px;
     }
 }

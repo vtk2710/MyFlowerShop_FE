@@ -1,31 +1,70 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Products } from "../Share/Product";
 import Header from "../components/Header/header";
 import "./viewpage.scss";
 import RelatedProductsSwiper from "./RelatedProductsSwiper/RelatedProductsSwiper";
 
-
 const ProductPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
   const product = Products.find((p) => p.Id === parseInt(id)); // Tìm sản phẩm theo ID
-  const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý quantity
+  const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
+  const [cart, setCart] = useState([]); // Quản lý giỏ hàng
+
+  useEffect(() => {
+    setQuantity(1);
+    window.scrollTo(0, 0); // Cuộn lên đầu trang khi vào trang chi tiết
+  }, [id]);
+
+  // nhập số lượng
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= 1) {
+      setQuantity(value); // Chỉ cho phép số lượng từ 1 trở lên
+    }
+  };
 
   // Hàm để tăng số lượng
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
   };
 
-  // Hàm để giảm số lượng (giảm xuống không dưới 1)
+  // Hàm để giảm số lượng (không cho phép giảm xuống dưới 1)
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+  // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
+  useEffect(() => {
+    localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(existingCart);
+  }, []);
+
+  // Hàm thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = () => {
+    const productToAdd = { ...product, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    const productExists = existingCart.find(
+      (item) => item.Id === productToAdd.Id
+    );
+    if (productExists) {
+      // Nếu đã có, cập nhật số lượng
+      productExists.quantity += quantity;
+    } else {
+      // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
+      existingCart.push(productToAdd);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
+    setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
+    console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
+  };
 
   return (
     <div>
@@ -33,51 +72,49 @@ const ProductPage = () => {
       <div className="product-container">
         {/* Hình ảnh sản phẩm */}
         <div className="product-image">
-          <img
-            src={product.Image}
-            alt={product.Name}
-            className="product-img"
-          />
+          <img src={product.Image} alt={product.Name} className="product-img" />
         </div>
 
         {/* Chi tiết sản phẩm */}
         <div className="product-details">
-          <h1 className="product-title">{product.Name} - {product.Price}</h1>
+          <h1 className="product-title">
+            {product.Name} - {product.Price}
+          </h1>
           <p className="product-description">{product.Description}</p>
-          <p><strong>Origin:</strong> {product.Origin}</p>
-          <p><strong>Shop:</strong> {product.ShopName}</p>
+          <p>
+            <strong>Origin:</strong> {product.Origin}
+          </p>
+          <p>
+            <strong>Shop:</strong> {product.ShopName}
+          </p>
 
           {/* Chọn số lượng */}
           <div className="quantity-section">
-            {/* <h2 className="section-title">Quantity</h2> */}
-            <div className="quantity-controls">
-              <button className="quantity-btn" onClick={decreaseQuantity}>-</button>
-              <span className="quantity">{quantity}</span>
-              <button className="quantity-btn" onClick={increaseQuantity}>+</button>
-            </div>
-          </div>
-
-          {/* Tùy chọn giá */}
-          <div className="price-options-section">
-            <h2 className="section-title">Price options</h2>
-            <div className="price-options">
-              <label className="price-option">
-                <input type="radio" name="priceOption" />
-                <span>One time purchase. {product.Price}</span>
-              </label>
-              <label className="price-option">
-                <input type="radio" name="priceOption" />
-                <span>Subscribe now, and save 25% on this order.</span>
-              </label>
-            </div>
+            <button className="quantity-btn" onClick={decreaseQuantity}>
+              -
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              min="1" // Đảm bảo giá trị không nhỏ hơn 1
+              className="quantity-input"
+            />
+            <button className="quantity-btn" onClick={increaseQuantity}>
+              +
+            </button>
           </div>
 
           {/* Nút Thêm vào giỏ hàng */}
-          <button className="add-to-basket-btn">ADD TO CART</button>
-          
+          <button className="add-to-basket-btn" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
         </div>
       </div>
-      <RelatedProductsSwiper shopName={product.ShopName} currentProductId={product.Id} />
+      <RelatedProductsSwiper
+        shopName={product.ShopName}
+        currentProductId={product.Id}
+      />
     </div>
   );
 };

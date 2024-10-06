@@ -1,8 +1,14 @@
+/* eslint-disable no-unused-vars */
 //HEADER version 2
 import { Link, useNavigate } from "react-router-dom";
 import "./header.scss";
-import { MenuOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { Modal, Button, Form, Input, Dropdown, Menu } from "antd";
+import {
+  MenuOutlined,
+  SearchOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Modal, Button, Form, Input, Dropdown, Menu, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 // import api from "../../config/axios";
 import axios from "axios";
@@ -15,7 +21,76 @@ function Header() {
   const [isSignUp, setIsSignUp] = useState(false); // Quản lý trạng thái đăng nhập/đăng ký
   const [loading, setLoading] = useState(false); // Quản lý trạng thái load
   const [userInfo, setUserInfo] = useState(null);
+  const [isCartVisible, setIsCartVisible] = useState(false); // State quản lý hiển thị modal giỏ hàng
+  const [cart, setCart] = useState([]); // State cho giỏ hàng
+  const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
 
+  // Hàm lấy giỏ hàng từ localStorage khi trang được tải
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(savedCart); // Cập nhật giỏ hàng từ localStorage
+  }, []);
+
+  // Hàm xóa sản phẩm
+  const handleDeleteItem = (id) => {
+    const updatedCart = cart.filter((item) => item.Id !== id);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
+  };
+
+  // Hàm chọn sản phẩm bằng checkbox
+  const handleSelectItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter((item) => item !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  // Hàm xóa nhiều sản phẩm
+  const handleDeleteSelectedItems = () => {
+    const updatedCart = cart.filter((item) => !selectedItems.includes(item.Id));
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
+    setSelectedItems([]); // Xóa danh sách sản phẩm đã chọn
+  };
+
+  // Hàm mở modal giỏ hàng
+  const handleCartOpen = () => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(savedCart); // Cập nhật giỏ hàng từ localStorage khi mở modal
+    setIsCartVisible(true);
+  };
+
+  // Hàm đóng modal giỏ hàng
+  const handleCartClose = () => {
+    setIsCartVisible(false);
+  };
+
+  // Hàm lấy giá trị float từ chuỗi giá
+  const extractPrice = (priceString) => {
+    // Loại bỏ dấu phẩy và chữ ' VND', rồi chuyển thành số
+    return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+  };
+
+  // Hàm tính tổng giá của các sản phẩm đã được chọn
+  const getTotalPrice = () => {
+    return (
+      cart
+        .reduce((total, item) => {
+          if (selectedItems.includes(item.Id)) {
+            // Chỉ tính tổng cho các sản phẩm đã chọn
+            const price = extractPrice(item.Price) || 0; // Đảm bảo `Price` là số float
+            const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
+            return total + price * quantity; // Cộng tổng giá của sản phẩm đã chọn
+          }
+          return total;
+        }, 0)
+        .toLocaleString("vi-VN") + " VND"
+    );
+  };
+
+  // Hàm lấy thông tin user từ API
   const fetchUserInfo = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -194,6 +269,12 @@ function Header() {
                 />
               </li>
             )}
+            <li className="cart-icon">
+              <ShoppingCartOutlined
+                onClick={handleCartOpen} // Mở modal giỏ hàng
+                style={{ fontSize: "20px", cursor: "pointer" }}
+              />
+            </li>
 
             <li className="search-icon">
               <Input
@@ -211,6 +292,115 @@ function Header() {
           <MenuOutlined />
         </div>
       </header>
+
+      {/* Modal giỏ hàng */}
+      <Modal
+        title="Cart"
+        visible={isCartVisible}
+        onCancel={handleCartClose}
+        footer={null}
+        width={700}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {cart.length > 0 ? (
+            <div>
+              {/* Nút xóa các sản phẩm đã chọn */}
+              <Button
+                onClick={handleDeleteSelectedItems}
+                disabled={selectedItems.length === 0}
+              >
+                Delete Selected Items
+              </Button>
+
+              {/* Danh sách sản phẩm trong giỏ hàng */}
+              {cart.map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "10px",
+                    marginTop: "10px",
+                  }}
+                >
+                  {/* Checkbox để chọn sản phẩm */}
+                  <Checkbox
+                    checked={selectedItems.includes(item.Id)}
+                    onChange={() => handleSelectItem(item.Id)}
+                  />
+
+                  {/* Hiển thị hình ảnh sản phẩm */}
+                  <img
+                    src={item.Image}
+                    alt={item.Name}
+                    width="50px"
+                    style={{
+                      borderRadius: "100px",
+                      width: "100px",
+                      height: "100px",
+                    }}
+                  />
+
+                  {/* Tên sản phẩm và giá */}
+                  <div
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <p style={{ margin: 0 }}>
+                      {item.Name} - {item.Price}
+                    </p>
+                  </div>
+
+                  {/* Input số lượng sản phẩm */}
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min="1"
+                    onChange={(e) => {
+                      const newQuantity = Number(e.target.value);
+                      const updatedCart = [...cart];
+                      updatedCart[index].quantity = newQuantity; // Cập nhật số lượng
+                      setCart(updatedCart);
+                      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
+                    }}
+                    style={{ width: "50px", textAlign: "center" }}
+                  />
+
+                  {/* Nút xóa từng sản phẩm */}
+                  <Button onClick={() => handleDeleteItem(item.Id)}>
+                    Delete
+                  </Button>
+                </div>
+              ))}
+
+              {/* Tính tổng giá trị giỏ hàng cho sản phẩm đã chọn */}
+              <p>
+                <strong>Total:</strong> {getTotalPrice()}
+              </p>
+
+              {/* Nút thanh toán */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
+                }}
+              >
+                <Button type="primary" style={{ color: "white" }}>
+                  CheckOut
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p>Empty Cart Please Buy Something</p>
+          )}
+        </div>
+      </Modal>
 
       {/* Modal for Sign In/Sign Up */}
       <Modal
