@@ -5,6 +5,8 @@ import { Products } from "../Share/Product";
 import Header from "../components/Header/header";
 import "./viewpage.scss";
 import RelatedProductsSwiper from "./RelatedProductsSwiper/RelatedProductsSwiper";
+import { notification, Button } from "antd";
+import { SmileOutlined } from "@ant-design/icons"; // Sử dụng icon mới từ Ant Design
 
 const ProductPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
@@ -16,14 +18,6 @@ const ProductPage = () => {
     setQuantity(1);
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi vào trang chi tiết
   }, [id]);
-
-  // nhập số lượng
-  const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value >= 1) {
-      setQuantity(value); // Chỉ cho phép số lượng từ 1 trở lên
-    }
-  };
 
   // Hàm để tăng số lượng
   const increaseQuantity = () => {
@@ -38,11 +32,11 @@ const ProductPage = () => {
   };
 
   // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
-  useEffect(() => {
-    localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(existingCart);
-  }, []);
+  // useEffect(() => {
+  //   localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
+  //   const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //   setCart(existingCart);
+  // }, []);
 
   // Hàm thêm sản phẩm vào giỏ hàng
   const handleAddToCart = () => {
@@ -66,6 +60,21 @@ const ProductPage = () => {
     console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
   };
 
+  const openNotification = () => {
+    notification.open({
+      message: "Notification Cart",
+      description:
+        "Add to cart successfully! Please check your cart to see the product.",
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+      duration: 1.5,
+    });
+  };
+
+  const handleButtonClick = () => {
+    openNotification();
+    handleAddToCart();
+  };
+
   return (
     <div>
       <Header />
@@ -87,7 +96,6 @@ const ProductPage = () => {
           <p>
             <strong>Shop:</strong> {product.ShopName}
           </p>
-
           {/* Chọn số lượng */}
           <div className="quantity-section">
             <button className="quantity-btn" onClick={decreaseQuantity}>
@@ -97,18 +105,21 @@ const ProductPage = () => {
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              min="1" // Đảm bảo giá trị không nhỏ hơn 1
+              min="1"
               className="quantity-input"
             />
             <button className="quantity-btn" onClick={increaseQuantity}>
               +
             </button>
           </div>
-
           {/* Nút Thêm vào giỏ hàng */}
-          <button className="add-to-basket-btn" onClick={handleAddToCart}>
+          <Button
+            type="primary"
+            onClick={handleButtonClick}
+            className="add-to-cart-btn"
+          >
             Add to Cart
-          </button>
+          </Button>
         </div>
       </div>
       <RelatedProductsSwiper

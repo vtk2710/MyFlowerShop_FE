@@ -227,9 +227,6 @@ function Header() {
               <Link to="/hoa-chuc-mung">CONGRATULATORY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-chia-buon">SYMPATHY FLOWERS</Link>
-            </li>
-            <li>
               <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
@@ -408,7 +405,9 @@ function Header() {
         visible={isVisible}
         onCancel={() => setIsVisible(false)}
         width={400}
+        height={500}
         className="modal-wrapper"
+        bodyStyle={{ padding: "24px", minHeight: "300px" }}
         footer={null}
       >
         <div className="form-container">
@@ -416,6 +415,9 @@ function Header() {
             name={isSignUp ? "signup_form" : "signin_form"}
             onFinish={handleSubmit}
             layout="vertical"
+            className={`form-transition ${
+              isSignUp ? "form-hidden" : "form-visible"
+            }`}
           >
             {!isSignUp && (
               <>
@@ -439,6 +441,16 @@ function Header() {
                   <Input.Password placeholder="Enter your password" />
                 </Form.Item>
 
+                <div style={{ textAlign: "right", marginBottom: "16px" }}>
+                  <Button
+                    type="link"
+                    className="forgot-password-link"
+                    onClick={() => alert("In development")}
+                  >
+                    Forgot password?
+                  </Button>
+                </div>
+
                 <Form.Item>
                   <Button
                     type="primary"
@@ -451,8 +463,16 @@ function Header() {
                 </Form.Item>
               </>
             )}
+          </Form>
 
-            {/* Modal Sign Up */}
+          <Form
+            name="signup_form"
+            onFinish={handleSubmit}
+            layout="vertical"
+            className={`form-transition ${
+              isSignUp ? "form-visible" : "form-hidden"
+            }`}
+          >
             {isSignUp && (
               <>
                 <Form.Item
@@ -523,7 +543,11 @@ function Header() {
             )}
           </Form>
 
-          <Button type="link" onClick={toggleForm}>
+          <Button
+            type="link"
+            onClick={toggleForm}
+            style={{ margin: "0px 30px" }}
+          >
             {isSignUp
               ? "Already have an account? Sign In"
               : "Don't have an account? Sign Up"}
