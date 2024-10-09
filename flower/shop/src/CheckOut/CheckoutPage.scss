@@ -1,0 +1,76 @@
+
+.checkout-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    background-image: url('https://s-media-cache-ak0.pinimg.com/originals/2c/d5/57/2cd557809b2e747efe00c6f12b320b0c.jpg'); 
+    background-size: cover; 
+    background-position: center; /* Canh giữa hình nền */
+    background-repeat: no-repeat; 
+    overflow-y: auto; /* Cho phép cuộn dọc */
+    padding: 20px 20px; /* Thêm padding trên và dưới */
+    box-sizing: border-box; 
+  }
+  
+  .checkout-container {
+    width: 100%;
+    max-width: 700px; /* Đảm bảo form không quá rộng */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-top: 20px; 
+    margin-bottom: 20px; 
+
+  }
+  
+  
+  .checkout-container {
+    width: 70%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  
+  h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .cart-summary {
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  
+  .cart-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+  
+  .cart-item p {
+    margin: 0;
+    color: #555;
+  }
+  
+ 
+  
+  
+  

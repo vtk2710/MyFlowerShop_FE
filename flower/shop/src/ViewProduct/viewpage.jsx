@@ -6,7 +6,7 @@ import Header from "../components/Header/header";
 import "./viewpage.scss";
 import RelatedProductsSwiper from "./RelatedProductsSwiper/RelatedProductsSwiper";
 import { notification, Button } from "antd";
-import { SmileOutlined } from "@ant-design/icons"; // Sử dụng icon mới từ Ant Design
+import { SmileOutlined } from "@ant-design/icons";
 
 const ProductPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
@@ -31,13 +31,6 @@ const ProductPage = () => {
     }
   };
 
-  // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
-  // useEffect(() => {
-  //   localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
-  //   const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //   setCart(existingCart);
-  // }, []);
-
   // Hàm thêm sản phẩm vào giỏ hàng
   const handleAddToCart = () => {
     const productToAdd = { ...product, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
@@ -57,7 +50,6 @@ const ProductPage = () => {
 
     localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
     setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
-    console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
   };
 
   const openNotification = () => {
