@@ -58,6 +58,13 @@ flex: 0 1 calc(28% - 20px);
 .product-card .ant-btn:hover {
   background-color: #fb0303;
 }
+/* Ẩn các SVG (mũi tên) của Ant Design Pagination */
+.ant-pagination-prev .anticon,
+.ant-pagination-next .anticon {
+  display: none; /* Ẩn SVG mặc định */
+}
+
+
 
 //Modal
 // .info-modal__img {

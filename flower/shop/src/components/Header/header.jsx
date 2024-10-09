@@ -47,6 +47,25 @@ function Header() {
     }
   };
 
+  // Hàm xử lý chuyển đến trang checkout
+  const handleCheckout = () => {
+    // Lọc ra các sản phẩm đã được chọn từ giỏ hàng
+    const selectedProducts = cart.filter((item) =>
+      selectedItems.includes(item.Id)
+    );
+
+    console.log("Selected Products for Checkout: ", selectedProducts); // Log ra để kiểm tra
+
+    if (selectedProducts.length === 0) {
+      alert("Please select items to checkout.");
+      return;
+    }
+
+    // Lưu các sản phẩm được chọn vào localStorage và điều hướng sang trang checkout
+    localStorage.setItem("checkoutItems", JSON.stringify(selectedProducts));
+    window.location.href = "/checkout";
+  };
+
   // Hàm xóa nhiều sản phẩm
   const handleDeleteSelectedItems = () => {
     const updatedCart = cart.filter((item) => !selectedItems.includes(item.Id));
@@ -333,7 +352,7 @@ function Header() {
                     alt={item.Name}
                     width="50px"
                     style={{
-                      borderRadius: "100px",
+                      borderRadius: "50px",
                       width: "100px",
                       height: "100px",
                     }}
@@ -388,13 +407,19 @@ function Header() {
                   marginTop: "20px",
                 }}
               >
-                <Button type="primary" style={{ color: "white" }}>
+                <Button
+                  type="primary"
+                  style={{ color: "white" }}
+                  onClick={handleCheckout}
+                >
                   CheckOut
                 </Button>
               </div>
             </div>
           ) : (
-            <p>Empty Cart Please Buy Something</p>
+            <p style={{ textAlign: "center", color: "red" }}>
+              Empty Cart Please Buy Something
+            </p>
           )}
         </div>
       </Modal>
