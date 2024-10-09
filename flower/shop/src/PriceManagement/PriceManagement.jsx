@@ -3,14 +3,14 @@ import './PriceManagement.scss';
 
 const PriceManagement = () => {
   const [priceList, setPriceList] = useState([
-    { id: 1, flower: 'Rose', price: '480000' },
-    { id: 2, flower: 'White Rose', price: '360000' },
-    { id: 3, flower: 'Hydrangea', price: '240000' },
-    { id: 4, flower: 'Lisianthus', price: '600000' },
-    { id: 5, flower: 'Hibiscus', price: '672000' },
-    { id: 6, flower: 'Camellia', price: '96000' },
-    { id: 7, flower: 'Sunflower', price: '504000' },
-    { id: 8, flower: 'Peony', price: '840000' },
+    { id: 1, flower: 'Rose', price: '480000', event: 'Valentine\'s Day' },
+    { id: 2, flower: 'White Rose', price: '360000', event: 'Wedding' },
+    { id: 3, flower: 'Hydrangea', price: '240000', event: 'Mother\'s Day' },
+    { id: 4, flower: 'Lisianthus', price: '600000', event: 'Graduation' },
+    { id: 5, flower: 'Hibiscus', price: '672000', event: 'Festival' },
+    { id: 6, flower: 'Camellia', price: '96000', event: 'Anniversary' },
+    { id: 7, flower: 'Sunflower', price: '504000', event: 'Summer Party' },
+    { id: 8, flower: 'Peony', price: '840000', event: 'Spring Festival' },
   ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFlower, setSelectedFlower] = useState(null);
@@ -26,7 +26,7 @@ const PriceManagement = () => {
     );
     setNewPrice('');
     setSelectedFlower(null);
-    alert('Price updated successfully!'); // Thông báo xác nhận
+    alert('Price updated successfully!');
   };
 
   const formatPrice = (price) => {
@@ -49,6 +49,7 @@ const PriceManagement = () => {
           <tr>
             <th>Name</th>
             <th>Price (VND)</th>
+            <th>Event</th> {/* Cột mới để hiển thị sự kiện */}
             <th>Actions</th>
           </tr>
         </thead>
@@ -57,6 +58,7 @@ const PriceManagement = () => {
             <tr key={item.id}>
               <td>{item.flower}</td>
               <td>{formatPrice(item.price)} VND</td>
+              <td>{item.event}</td> {/* Hiển thị sự kiện */}
               <td>
                 <button className="edit-button" onClick={() => setSelectedFlower(item)}>
                   New Price
@@ -68,19 +70,18 @@ const PriceManagement = () => {
       </table>
 
       {selectedFlower && (
-      <div className="modal">
-        <h3>Update Price for {selectedFlower.flower}</h3>
-        <input
-          type="text"
-          placeholder="New Price"
-          value={newPrice}
-          onChange={(e) => setNewPrice(e.target.value)}
-        />
-        <button className="update-button" onClick={() => updatePrice(selectedFlower.id)}>Update</button>
-        <button className="cancel-button" onClick={() => setSelectedFlower(null)}>Cancel</button>
-      </div>
+        <div className="modal">
+          <h3>Update Price for {selectedFlower.flower}</h3>
+          <input
+            type="text"
+            placeholder="New Price"
+            value={newPrice}
+            onChange={(e) => setNewPrice(e.target.value)}
+          />
+          <button className="update-button" onClick={() => updatePrice(selectedFlower.id)}>Update</button>
+          <button className="cancel-button" onClick={() => setSelectedFlower(null)}>Cancel</button>
+        </div>
       )}
-
     </div>
   );
 };
