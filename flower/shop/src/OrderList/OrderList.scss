@@ -7,11 +7,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.order-list li:hover {
+  transform: scale(1.02);
 }
 
 .order-left {
@@ -20,26 +26,60 @@
 }
 
 .order-left img {
-  margin-right: 15px;
+  margin-right: 20px;
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 
 .status {
-  padding: 5px 10px;
-  border-radius: 4px;
-  &.intransit {
-    background-color: #03a9f4;
-    color: white;
-  }
-  &.completed {
-    background-color: #4caf50;
-    color: white;
-  }
-  &.received {
-    background-color: yellow;
-    color: white;
-  }
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+.status.delivered {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status.pendingdelivery {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status.accepted {
+  background-color: #03a9f4;
+  color: white;
+}
+
+.status.canceled {
+  background-color: #f44336;
+  color: white;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .order-actions button {
-  margin-right: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.order-actions button:hover {
+  background-color: #d0d0d0;
+  transform: scale(1.05);
+}
+
+.order-actions button:focus {
+  outline: none;
 }
