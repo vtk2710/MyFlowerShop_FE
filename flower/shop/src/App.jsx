@@ -10,6 +10,8 @@ import UserManage from "./admin/UserManage/UserManage";
 import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
 import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
 import ProductPage from "./ViewProduct/viewpage";
+import Flowers from "./Shop/Flowers/flower";
+import FlowerPage from "./Shop/FlowerDetails/viewflower";
 function App() {
   const router = createBrowserRouter([
     {
@@ -54,6 +56,14 @@ function App() {
     {
       path: "/ViewPage/:id",
       element: <ProductPage />,
+    },
+    {
+      path: "/viewflower/:id",
+      element: <FlowerPage />,
+    },
+    {
+      path: "/flowers/:id",
+      element: <Flowers />,
     },
     {
       path: "*",
