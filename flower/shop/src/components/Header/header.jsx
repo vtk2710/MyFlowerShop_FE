@@ -70,18 +70,19 @@ function Header() {
   // Hàm lấy giá trị float từ chuỗi giá
   const extractPrice = (priceString) => {
     // Loại bỏ dấu phẩy và chữ ' VND', rồi chuyển thành số
-    return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    // return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    return priceString;
   };
 
   // Hàm tính tổng giá của các sản phẩm đã được chọn
   const getTotalPrice = () => {
     return (
       cart
-        .reduce((total, item) => {
-          if (selectedItems.includes(item.Id)) {
+        .reduce((total, flower) => {
+          if (selectedItems.includes(flower.flowerID)) {
             // Chỉ tính tổng cho các sản phẩm đã chọn
-            const price = extractPrice(item.Price) || 0; // Đảm bảo `Price` là số float
-            const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
+            const price = extractPrice(flower.price) || 0; // Đảm bảo `Price` là số float
+            const quantity = parseFloat(flower.quantity) || 1; // Đảm bảo `quantity` là số
             return total + price * quantity; // Cộng tổng giá của sản phẩm đã chọn
           }
           return total;
@@ -166,6 +167,9 @@ function Header() {
     }
   };
 
+
+
+
   // Hàm xử lý khi submit form
   const handleSubmit = (values) => {
     if (isSignUp) {
@@ -218,28 +222,28 @@ function Header() {
               <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/hoa-hong">ROSES</Link>
+              <Link to="/flowers/1">ROSES</Link>
             </li>
             <li>
-              <Link to="/hoa-cuoi">WEDDING FLOWERS</Link>
+              <Link to="/flowers/2">WEDDING FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-chuc-mung">CONGRATULATORY FLOWERS</Link>
+              <Link to="/flowers/3">CONGRATULATORY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-chia-buon">SYMPATHY FLOWERS</Link>
+              <Link to="/flowers/4">SYMPATHY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
+              <Link to="/flowers/5">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-dip-le">HOLIDAY FLOWERS</Link>
+              <Link to="/flowers/6">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-lan">ORCHIDS</Link>
+              <Link to="/flowers/7">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/hoa-de-ban">TABLE FLOWERS</Link>
+              <Link to="/flowers/8">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>
@@ -313,7 +317,7 @@ function Header() {
               </Button>
 
               {/* Danh sách sản phẩm trong giỏ hàng */}
-              {cart.map((item, index) => (
+              {cart.map((flower, index) => (
                 <div
                   key={index}
                   style={{
@@ -326,14 +330,14 @@ function Header() {
                 >
                   {/* Checkbox để chọn sản phẩm */}
                   <Checkbox
-                    checked={selectedItems.includes(item.Id)}
-                    onChange={() => handleSelectItem(item.Id)}
+                    checked={selectedItems.includes(flower.flowerID)}
+                    onChange={() => handleSelectItem(flower.flowerID)}
                   />
 
                   {/* Hiển thị hình ảnh sản phẩm */}
                   <img
-                    src={item.Image}
-                    alt={item.Name}
+                    src={flower.imageUrl}
+                    alt={flower.flowerName}
                     width="50px"
                     style={{
                       borderRadius: "100px",
@@ -352,14 +356,14 @@ function Header() {
                     }}
                   >
                     <p style={{ margin: 0 }}>
-                      {item.Name} - {item.Price}
+                      {flower.flowerName} - {flower.price}
                     </p>
                   </div>
 
                   {/* Input số lượng sản phẩm */}
                   <input
                     type="number"
-                    value={item.quantity}
+                    value={flower.quantity}
                     min="1"
                     onChange={(e) => {
                       const newQuantity = Number(e.target.value);
@@ -372,7 +376,7 @@ function Header() {
                   />
 
                   {/* Nút xóa từng sản phẩm */}
-                  <Button onClick={() => handleDeleteItem(item.Id)}>
+                  <Button onClick={() => handleDeleteItem(flower.flowerID)}>
                     Delete
                   </Button>
                 </div>
