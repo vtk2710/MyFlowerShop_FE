@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./OrchidPage.scss"; // Liên kết với file SCSS cho styling của trang Orchid
 import { orchidFlowerData } from "../Share/orchid"; // Import dữ liệu hoa orchid từ orchidFlower.js
+import Header from '../components/Header/header';
 
 const OrchidFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const OrchidFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Orchid Flowers */}
+      <Header/>
       <div className="orchid-flowers-page">
         <h1>All Orchid Flowers</h1>
         <div className="modal-container">

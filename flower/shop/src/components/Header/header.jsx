@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 //HEADER version 2
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.scss";
 import {
   MenuOutlined,
@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function Header() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -149,7 +150,12 @@ function Header() {
       // luu tru thong tiun user vao localstorage
       await fetchUserInfo();
       setIsVisible(false);
-      navigate("/");
+
+      if(response.data.type === "admin") {
+        navigate('/admin')
+      }
+      else
+        navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -241,25 +247,25 @@ function Header() {
               <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/flowers/1">ROSES</Link>
+              <Link to="/rose">ROSES</Link>
             </li>
             <li>
-              <Link to="/flowers/2">WEDDING FLOWERS</Link>
+              <Link to="/wedding">WEDDING FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/3">CONGRATULATORY FLOWERS</Link>
+              <Link to="/congratulate">CONGRATULATORY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
+              <Link to="/birthday">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/6">HOLIDAY FLOWERS</Link>
+              <Link to="/holiday">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/7">ORCHIDS</Link>
+              <Link to="/orchids">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/flowers/8">TABLE FLOWERS</Link>
+              <Link to="/table-flower">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./TablePage.scss"; // Liên kết với file SCSS cho styling của trang Table Flowers
 import { tableFlowerData } from "../Share/table"; // Import dữ liệu hoa table từ tableFlower.js
+import Header from '../components/Header/header';
 
 const TableFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const TableFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Table Flowers */}
+      <Header/>
       <div className="table-flowers-page">
         <h1>All Table Flowers</h1>
         <div className="modal-container">

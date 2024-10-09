@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./HolidayPage.scss"; // Liên kết với file SCSS cho styling của trang Holiday
 import { holidayFlowerData } from "../Share/holiday"; // Import dữ liệu hoa holiday từ holidayFlower.js
+import Header from '../components/Header/header';
 
 const HolidayFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const HolidayFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Holiday Flowers */}
+      <Header/>
       <div className="holiday-flowers-page">
         <h1>All Holiday Flowers</h1>
         <div className="modal-container">

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./CongratulatePage.scss"; // Liên kết với file SCSS cho styling của trang Congratulate
 import { congratulateFlowerData } from "../Share/congratulate"; // Import dữ liệu hoa chúc mừng từ congratulate.js
+import Header from '../components/Header/header';
 
 const CongratulateFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const CongratulateFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Congratulate Flowers */}
+      <Header/>
       <div className="congratulate-page">
         <h1>All Congratulatory Flowers</h1>
         <div className="modal-container">

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./BirthdayPage.scss"; // Liên kết với file SCSS cho styling của trang Birthday
 import { birthdayFlowerData } from "../Share/birthday"; // Import dữ liệu hoa sinh nhật từ birthday.js
+import Header from '../components/Header/header';
 
 const BirthdayFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const BirthdayFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Birthday Flowers */}
+      <Header/>
       <div className="birthday-page">
         <h1>All Birthday Flowers</h1>
         <div className="modal-container">

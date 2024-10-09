@@ -11,6 +11,15 @@ import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
 import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
 import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
+import Flowers from "./Shop/Flowers/flower";
+import FlowerPage from "./Shop/FlowerDetails/viewflower";
+import BirthdayFlowersPage from "./Birthday/BirthdayPage";
+import HolidayFlowersPage from "./Holiday/HolidayPage";
+import OrchidFlowersPage from "./Orchid/OrchidPage";
+import RosesPage from "./Roses/RosesPage";
+import TableFlowersPage from "./Table/TablePage";
+import WeddingFlowersPage from "./Wedding/WeddingPage";
+import CongratulateFlowersPage from "./Congratulate/CongratulatePage";
 function App() {
   const router = createBrowserRouter([
     {
@@ -84,6 +93,42 @@ function App() {
         </div>
       ), // Trang 404 nếu đường dẫn không hợp lệ
     },
+    {
+      path: "/viewflower/:id",
+      element: <FlowerPage />,
+    },
+    {
+      path: "/rose",
+      element: <RosesPage />,
+    },
+    {
+      path: "/wedding",
+      element: <WeddingFlowersPage />,
+    },
+    {
+      path: "/congratulate",
+      element: <CongratulateFlowersPage />,
+    },
+    {
+      path: "/birthday",
+      element: <BirthdayFlowersPage />,
+    },
+    {
+      path: "/holiday",
+      element: <HolidayFlowersPage />,
+    },
+    {
+      path: "/orchids",
+      element: <OrchidFlowersPage />,
+    },
+    {
+      path: "/table-flower",
+      element: <TableFlowersPage />,
+    },
+    {
+      path: "*",
+      element: <div>404 Not Found</div>, // Trang 404 nếu đường dẫn không hợp lệ
+    }, 
   ]);
 
   return <RouterProvider router={router} />;

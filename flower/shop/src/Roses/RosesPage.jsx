@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import Navbar from "./Navbar";
+//import Navbar from "./Navbar";
 import "./RosesPage.scss"; // Liên kết với file SCSS cho styling
 import { roseData } from "../Share/rose"; // Import dữ liệu từ rose.js
+import Header from '../components/Header/header';
+import { useNavigate } from 'react-router-dom';
 
 const RosesPage = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
@@ -13,24 +16,34 @@ const RosesPage = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = roseData.slice(indexOfFirstItem, indexOfLastItem);
 
+  // console.log(roseData)
+  // console.log(indexOfLastItem, indexOfFirstItem, currentItems);
+  // console.log(currentItems[0])
+
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= Math.ceil(roseData.length / itemsPerPage)) {
       setCurrentPage(pageNumber);
     }
   };
 
+  const handleOpen = (rose) => {
+    // Điều hướng sang trang chi tiết sản phẩm
+    navigate(`/viewflower/${rose.Id}`);
+  };
+
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Roses */}
+      {/* <Navbar /> Hiển thị Navbar trong trang Roses */}
+      <Header />
       <div className="roses-page">
         <h1>All Rose In Flatform</h1>
         <div className="modal-container">
           {currentItems.map((rose) => (
-            <div key={rose.Id} className="modal">
+            <div key={rose.Id} className="modal-rose">
               <img src={rose.Image} alt={rose.Name} />
               <h1>{rose.Name}</h1>
               {/* Thêm nút View Details */}
-              <button className="view-details-btn" onClick={() => alert(`Viewing details for ${rose.Name}`)}>View Details</button>
+              <button className="view-details-btn" onClick={() => handleOpen(rose)}>View Details</button>
             </div>
           ))}
         </div>
