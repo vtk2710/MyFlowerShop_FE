@@ -1,0 +1,45 @@
+.order-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.order-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.order-left {
+  display: flex;
+  align-items: center;
+}
+
+.order-left img {
+  margin-right: 15px;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  &.intransit {
+    background-color: #03a9f4;
+    color: white;
+  }
+  &.completed {
+    background-color: #4caf50;
+    color: white;
+  }
+  &.received {
+    background-color: yellow;
+    color: white;
+  }
+}
+
+.order-actions button {
+  margin-right: 10px;
+}
