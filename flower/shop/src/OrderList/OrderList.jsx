@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, Pagination } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import './OrderList.scss';
 
 const OrderList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 3;
+
   const [orders, setOrders] = useState([
     {
       id: 1,
@@ -40,7 +43,79 @@ const OrderList = () => {
       phone: '(555) 123-4567',
       email: 'oliver.smith@example.com',
     },
+    {
+      id: 4,
+      customer: 'James Anderson',
+      status: 'Accepted',
+      imageUrl: '/image/weddingflower.jpg',
+      productInfo: 'Wedding flower',
+      quantity: 5,
+      address: '45 Maple Street, Los Angeles, CA',
+      phone: '(666) 153-4367',
+      email: 'james.anderson@example.com',
+    },
+    {
+      id: 5,
+      customer: 'Emily Johnson',
+      status: 'Pending Delivery',
+      imageUrl: '/image/hoahongtrang.png',
+      productInfo: 'Rose Bouquet',
+      quantity: 3,
+      address: '120 Elm Avenue, New York, NY',
+      phone: '(212) 555-1234',
+      email: 'emily.johnson@example.com',
+    },
+    {
+      id: 6,
+      customer: 'Michael Brown',
+      status: 'Delivered',
+      imageUrl: '/image/tulip.jpg',
+      productInfo: 'Tulip Arrangement',
+      quantity: 4,
+      address: '78 Pine Lane, Houston, TX',
+      phone: '(713) 555-9876',
+      email: 'michael.brown@example.com',
+    },
+    {
+      id: 7,
+      customer: 'Sarah Davis',
+      status: 'Pending Delivery',
+      imageUrl: '/image/hoasen.jpg',
+      productInfo: 'Lily Basket',
+      quantity: 2,
+      address: '256 Oak Road, San Francisco, CA',
+      phone: '(415) 555-2468',
+      email: 'sarah.davis@example.com',
+    },
+    {
+      id: 8,
+      customer: 'Robert Wilson',
+      status: 'Canceled',
+      imageUrl: '/image/hoahuongduong.jpg',
+      productInfo: 'Sunflower Bunch',
+      quantity: 1,
+      address: '98 Cedar Drive, Miami, FL',
+      phone: '(305) 555-3142',
+      email: 'robert.wilson@example.com',
+    },
+    {
+      id: 9,
+      customer: 'Jessica Lee',
+      status: 'Accepted',
+      imageUrl: '/image/hoalayon.jpg',
+      productInfo: 'Orchid Pot',
+      quantity: 3,
+      address: '65 Birch Street, Seattle, WA',
+      phone: '(206) 555-4791',
+      email: 'jessica.lee@example.com',
+    }
   ]);
+
+  // Tính toán số trang
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+  // Lấy danh sách đơn hàng cho trang hiện tại
+  const currentOrders = orders.slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage);
 
   const showModal = (order) => {
     setCurrentCustomer(order);
@@ -63,27 +138,31 @@ const OrderList = () => {
     );
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="order-list">
       <h2>Order List</h2>
       <ul>
-        {orders.map((order) => (
+        {currentOrders.map((order) => (
           <li key={order.id}>
             <div className="order-left">
               <img
                 src={order.imageUrl}
                 alt="Product"
-                style={{ width: '100px', height: '100px' }}
+                className="order-image"
               />
               <div>
-                <span style={{ fontWeight: 'bold', marginRight: '10px' }}>{order.customer}</span>
+                <span className="customer-name">{order.customer}</span>
                 <p>{order.productInfo}</p>
               </div>
             </div>
             <div className="order-right">
               <EyeOutlined
                 onClick={() => showModal(order)}
-                style={{ fontSize: '20px', cursor: 'pointer', marginRight: '10px' }}
+                className="view-icon"
               />
               <span className={`status ${order.status.replace(' ', '').toLowerCase()}`}>
                 {order.status}
@@ -92,26 +171,17 @@ const OrderList = () => {
                 {order.status !== 'Canceled' && (
                   <>
                     {order.status !== 'Delivered' && (
-                      <Button
-                        style={{ marginRight: '10px' }}
-                        onClick={() => updateOrderStatus(order.id, 'Delivered')}
-                      >
+                      <Button onClick={() => updateOrderStatus(order.id, 'Delivered')}>
                         Mark as Delivered
                       </Button>
                     )}
                     {order.status !== 'Canceled' && (
-                      <Button
-                        style={{ marginRight: '10px' }}
-                        onClick={() => updateOrderStatus(order.id, 'Canceled')}
-                      >
+                      <Button onClick={() => updateOrderStatus(order.id, 'Canceled')}>
                         Mark as Canceled
                       </Button>
                     )}
                     {order.status !== 'Accepted' && (
-                      <Button
-                        style={{ marginRight: '10px' }}
-                        onClick={() => updateOrderStatus(order.id, 'Accepted')}
-                      >
+                      <Button onClick={() => updateOrderStatus(order.id, 'Accepted')}>
                         Mark as Accepted
                       </Button>
                     )}
@@ -128,6 +198,15 @@ const OrderList = () => {
         ))}
       </ul>
 
+      {/* Pagination */}
+      <Pagination
+        current={currentPage}
+        total={orders.length}
+        pageSize={ordersPerPage}
+        onChange={handlePageChange}
+        className="pagination-custom"
+      />
+
       {currentCustomer && (
         <Modal
           title={`Customer Details: ${currentCustomer.customer}`}
@@ -135,11 +214,11 @@ const OrderList = () => {
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="modal-content">
             <img
               src={currentCustomer.imageUrl}
               alt={currentCustomer.customer}
-              style={{ marginRight: '20px', borderRadius: '8px', width: '200px', height: '200px' }}
+              className="modal-image"
             />
             <div>
               <p><strong>Address:</strong> {currentCustomer.address}</p>
