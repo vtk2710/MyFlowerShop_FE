@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 //HEADER version 2
 import { Link, useNavigate } from "react-router-dom";
 import "./header.scss";
@@ -185,9 +184,6 @@ function Header() {
       setLoading(false);
     }
   };
-
-
-
 
   // Hàm xử lý khi submit form
   const handleSubmit = (values) => {

@@ -1,11 +1,7 @@
 // src/Sidebar.jsx
 
 import { Layout, Menu } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, LaptopOutlined } from "@ant-design/icons";
 import "./Sidebar.scss";
 import { Link } from "react-router-dom";
 
@@ -64,10 +60,6 @@ const Sidebar = () => {
         </SubMenu>
 
         {/* Settings Menu */}
-        <SubMenu key="sub3" icon={<NotificationOutlined />} title="Settings">
-          <Menu.Item key="6">Settings 1</Menu.Item>
-          <Menu.Item key="7">Settings 2</Menu.Item>
-        </SubMenu>
       </Menu>
     </Sider>
   );
