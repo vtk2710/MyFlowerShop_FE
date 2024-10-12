@@ -62,6 +62,8 @@ function Header() {
 
     // Lưu các sản phẩm được chọn vào localStorage và điều hướng sang trang checkout
     localStorage.setItem("checkoutItems", JSON.stringify(selectedProducts));
+    // Đặt cờ để biết là chuyển từ giỏ hàng
+    localStorage.setItem("checkoutFromCart", "true");
     window.location.href = "/checkout";
   };
 

@@ -51,7 +51,18 @@ const ProductPage = () => {
     localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
     setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
   };
+  const handleBuyNow = () => {
+    // Tạo object chứa thông tin sản phẩm và số lượng
+    const productToBuy = {
+      ...product,
+      quantity: Number(quantity),
+    };
+    // Lưu sản phẩm vào localStorage
+    localStorage.setItem("buyNowProduct", JSON.stringify(productToBuy));
 
+    // Chuyển hướng đến trang thanh toán
+    window.location.href = "/checkout";
+  };
   const openNotification = () => {
     notification.open({
       message: "Notification Cart",
@@ -111,6 +122,15 @@ const ProductPage = () => {
             className="add-to-cart-btn"
           >
             Add to Cart
+          </Button>
+          {/* Nút Mua ngay */}
+          <Button
+            type="primary"
+            style={{ marginLeft: "10px" }}
+            className="add-to-cart-btn"
+            onClick={handleBuyNow}
+          >
+            Buy Now
           </Button>
         </div>
       </div>
