@@ -20,6 +20,7 @@ import RosesPage from "./Roses/RosesPage";
 import TableFlowersPage from "./Table/TablePage";
 import WeddingFlowersPage from "./Wedding/WeddingPage";
 import CongratulateFlowersPage from "./Congratulate/CongratulatePage";
+import UserDetail from "./admin/UserDetail/UserDetail";
 function App() {
   const router = createBrowserRouter([
     {
@@ -60,6 +61,10 @@ function App() {
           element: <ReportAdmin />, // Component tương ứng với route này
         },
       ],
+    },
+    {
+      path: "/userdetail/:id", // Đường dẫn mới cho trang thông tin người dùng
+      element: <UserDetail />,
     },
     {
       path: "/ViewPage/:id",

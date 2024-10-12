@@ -1,6 +1,8 @@
+/* Styles for the order list */
 .order-list ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .order-list li {
@@ -13,11 +15,6 @@
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.order-list li:hover {
-  transform: scale(1.02);
 }
 
 .order-left {
@@ -25,61 +22,98 @@
   align-items: center;
 }
 
-.order-left img {
+.order-image {
   margin-right: 20px;
   border-radius: 8px;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
 }
 
-.status {
-  padding: 5px 12px;
-  border-radius: 15px;
+.customer-name {
   font-weight: bold;
-  font-size: 0.9em;
-  text-transform: uppercase;
+  margin-right: 10px;
 }
 
-.status.delivered {
-  background-color: #4caf50;
-  color: white;
-}
-
-.status.pendingdelivery {
-  background-color: #ff9800;
-  color: white;
-}
-
-.status.accepted {
-  background-color: #03a9f4;
-  color: white;
-}
-
-.status.canceled {
-  background-color: #f44336;
-  color: white;
-}
-
-.order-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.order-actions button {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 5px 12px;
-  border-radius: 5px;
+.view-icon {
+  font-size: 20px;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
+  margin-right: 10px;
 }
 
-.order-actions button:hover {
-  background-color: #d0d0d0;
-  transform: scale(1.05);
+.status {
+  display: inline-block;
+  margin-bottom: 20px; /* Khoảng cách giữa trạng thái và các nút bên dưới */
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
 }
 
-.order-actions button:focus {
-  outline: none;
+.status.delivered { background-color: #4caf50; }
+.status.pendingdelivery { background-color: #ff9800; }
+.status.accepted { background-color: #03a9f4; }
+.status.canceled { background-color: #f44336; }
+
+/* Pagination styles */
+.pagination-custom .ant-pagination-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 4px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  background-color: #ffffff;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.pagination-custom .ant-pagination-item a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.pagination-custom .ant-pagination-item:hover {
+  border-color: #1890ff;
+}
+
+.pagination-custom .ant-pagination-item-active {
+  border-color: #1890ff;
+  background-color: #e6f7ff;
+}
+
+.pagination-custom .ant-pagination-item-active a {
+  color: #1890ff;
+}
+
+.pagination-custom .ant-pagination-prev,
+.pagination-custom .ant-pagination-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  background-color: #ffffff;
+}
+
+.pagination-custom .ant-pagination-prev:hover,
+.pagination-custom .ant-pagination-next:hover {
+  border-color: #1890ff;
+}
+
+.pagination-custom .ant-pagination-prev .ant-pagination-item-link,
+.pagination-custom .ant-pagination-next .ant-pagination-item-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }

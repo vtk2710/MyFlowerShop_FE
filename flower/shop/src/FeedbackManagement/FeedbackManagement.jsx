@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Table, Button, notification } from 'antd';
 import './FeedbackManagement.scss';
 
 const FeedbackManagement = () => {
@@ -16,38 +17,57 @@ const FeedbackManagement = () => {
         fb.id === id ? { ...fb, responded: true } : fb
       )
     );
+
+    // Hiển thị thông báo khi phản hồi
+    const customerName = feedback.find((fb) => fb.id === id).customer;
+    notification.success({
+      message: 'Response Sent',
+      description: `You have successfully responded to ${customerName}'s feedback.`,
+      placement: 'topRight',
+    });
   };
+
+  const columns = [
+    {
+      title: 'Customer Name',
+      dataIndex: 'customer',
+      key: 'customer',
+    },
+    {
+      title: 'Comment',
+      dataIndex: 'comment',
+      key: 'comment',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'responded',
+      key: 'responded',
+      render: (responded) => (responded ? 'Responded' : 'Not Responded'),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Button
+          type="primary"
+          onClick={() => respondToFeedback(record.id)}
+          disabled={record.responded}
+        >
+          {record.responded ? 'Responded' : 'Respond'}
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <div className="feedback-management">
       <h2>Manage Feedback</h2>
-      <table className="feedback-table">
-        <thead>
-          <tr>
-            <th>Customer Name</th>
-            <th>Comment</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {feedback.map((fb) => (
-            <tr key={fb.id}>
-              <td>{fb.customer}</td>
-              <td>{fb.comment}</td>
-              <td>{fb.responded ? 'Responded' : 'Not Responded'}</td>
-              <td>
-                <button
-                  onClick={() => respondToFeedback(fb.id)}
-                  disabled={fb.responded} // Disable button if already responded
-                >
-                  {fb.responded ? 'Responded' : 'Respond'}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        columns={columns}
+        dataSource={feedback}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+      />
     </div>
   );
 };
