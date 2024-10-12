@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 //HEADER version 2
 import { Link, useNavigate } from "react-router-dom";
 import "./header.scss";
@@ -50,8 +49,8 @@ function Header() {
   // Hàm xử lý chuyển đến trang checkout
   const handleCheckout = () => {
     // Lọc ra các sản phẩm đã được chọn từ giỏ hàng
-    const selectedProducts = cart.filter((item) =>
-      selectedItems.includes(item.Id)
+    const selectedProducts = cart.filter((flower) =>
+      selectedItems.includes(flower.flowerID)
     );
 
     console.log("Selected Products for Checkout: ", selectedProducts); // Log ra để kiểm tra
@@ -68,12 +67,25 @@ function Header() {
 
   // Hàm xóa nhiều sản phẩm
   const handleDeleteSelectedItems = () => {
-    const updatedCart = cart.filter((item) => !selectedItems.includes(item.Id));
+    const updatedCart = cart.filter(
+      (flower) => !selectedItems.includes(flower.flowerID)
+    );
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
     setSelectedItems([]); // Xóa danh sách sản phẩm đã chọn
   };
 
+  //Hàm chọn tất cả
+  const handleSelectall = () => {
+    //Nếu độ dài 2 cái = nhau thì xét mảng rỗng
+    if (selectedItems.length === cart.length) {
+      setSelectedItems([]);
+    } else {
+      //Thêm vô mảng
+      const allItems = cart.map((flower) => flower.flowerID);
+      setSelectedItems(allItems);
+    }
+  };
   // Hàm mở modal giỏ hàng
   const handleCartOpen = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -185,9 +197,6 @@ function Header() {
       setLoading(false);
     }
   };
-
-
-
 
   // Hàm xử lý khi submit form
   const handleSubmit = (values) => {
@@ -324,6 +333,8 @@ function Header() {
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {cart.length > 0 ? (
             <div>
+              {/* Nút lấy tất cả sản phẩm  */}
+              <Button onClick={handleSelectall}>Selected All Items</Button>
               {/* Nút xóa các sản phẩm đã chọn */}
               <Button
                 onClick={handleDeleteSelectedItems}

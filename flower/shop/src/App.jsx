@@ -11,6 +11,7 @@ import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
 import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
 import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
+import UserDetail from "./admin/UserDetail/UserDetail";
 function App() {
   const router = createBrowserRouter([
     {
@@ -51,6 +52,10 @@ function App() {
           element: <ReportAdmin />, // Component tương ứng với route này
         },
       ],
+    },
+    {
+      path: "/userdetail/:id", // Đường dẫn mới cho trang thông tin người dùng
+      element: <UserDetail />,
     },
     {
       path: "/ViewPage/:id",
