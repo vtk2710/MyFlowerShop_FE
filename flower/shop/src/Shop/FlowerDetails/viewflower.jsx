@@ -10,39 +10,39 @@ import axios from "axios";
 const FlowerPage = () => {
     const { id } = useParams(); // Lấy ID từ URL
     const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
-    const rose = roseData.find((r) => r.Id === parseInt(id));
-    console.log(roseData)
-    console.log(rose.Description);
+    //const rose = roseData.find((r) => r.Id === parseInt(id));
+    //console.log(roseData)
+    //console.log(rose.Description);
     const [cart, setCart] = useState([]); // Quản lý giỏ hàng
     const [flower, setFlowerDetails] = useState({});
 
 
-    // const getFlowerDetails = async () => {
-    //     try {
-    //         const response = await axios.get(`https://localhost:7198/api/FlowerInfo/Search/${id}`);
-    //         console.log(response.data); // Ensure this logs the correct structure
-    //         return response.data; // Since it's a single object, just return it
-    //     } catch (error) {
-    //         console.error('Error fetching flower detail:', error);
-    //         return null; // Return null on error
-    //     }
-    // }
+    const getFlowerDetails = async () => {
+        try {
+            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/Search/${id}`);
+            console.log(response.data); // Ensure this logs the correct structure
+            return response.data; // Since it's a single object, just return it
+        } catch (error) {
+            console.error('Error fetching flower detail:', error);
+            return null; // Return null on error
+        }
+    }
 
-    // useEffect(() => {
-    //     const fetchFlower = async () => {
-    //         const flowerDetails = await getFlowerDetails(); // Fetch flower details
+    useEffect(() => {
+        const fetchFlower = async () => {
+            const flowerDetails = await getFlowerDetails(); // Fetch flower details
 
-    //         if (flowerDetails) {
-    //             setFlowerDetails(flowerDetails); // Set state with the flower details object
-    //         } else {
-    //             console.warn("No flower details found.");
-    //             setFlowerDetails({}); // Set an empty object if no details
-    //         }
-    //         //setLoading(false); // Set loading to false after fetching
-    //     };
+            if (flowerDetails) {
+                setFlowerDetails(flowerDetails); // Set state with the flower details object
+            } else {
+                console.warn("No flower details found.");
+                setFlowerDetails({}); // Set an empty object if no details
+            }
+            //setLoading(false); // Set loading to false after fetching
+        };
 
-    //     fetchFlower(); // Call the fetch function
-    // }, [id]);
+        fetchFlower(); // Call the fetch function
+    }, [id]);
 
     useEffect(() => {
         setQuantity(1);
@@ -69,12 +69,12 @@ const FlowerPage = () => {
         }
     };
 
-    // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
-    useEffect(() => {
-        localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
-        const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCart(existingCart);
-    }, []);
+    // // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
+    // useEffect(() => {
+    //     localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
+    //     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    //     setCart(existingCart);
+    // }, []);
 
     //Hàm thêm sản phẩm vào giỏ hàng
     const handleAddToCart = () => {
@@ -104,17 +104,17 @@ const FlowerPage = () => {
             <div className="product-container">
                 {/* Hình ảnh sản phẩm */}
                 <div className="product-image">
-                    <img src={rose.Image} alt={rose.Name} className="product-img" />
+                    <img src={flower.imageUrl} alt={flower.flowerName} className="product-img" />
                 </div>
 
                 {/* Chi tiết sản phẩm */}
                 <div className="product-details">
                     <h1 className="product-title">
-                        {rose.Name} - {rose.Price}
+                        {flower.flowerName} - {flower.price}
                     </h1>
-                    <p className="product-description">{rose.Description}</p>
+                    <p className="product-description">{flower.description}</p>
                     <p>
-                        <strong>Category:</strong> {rose.Id}
+                        <strong>Category:</strong> {flower.flowerID}
                     </p>
                     {/* Chọn số lượng */}
                     <div className="quantity-section">

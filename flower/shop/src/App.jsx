@@ -94,6 +94,10 @@ function App() {
       ), // Trang 404 nếu đường dẫn không hợp lệ
     },
     {
+      path: "/flower/:id",
+      element: <Flowers />,
+    },
+    {
       path: "/viewflower/:id",
       element: <FlowerPage />,
     },

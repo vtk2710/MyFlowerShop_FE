@@ -34,13 +34,14 @@ const CheckoutPage = () => {
   // Hàm chuyển đổi chuỗi giá trị thành số
   const extractPrice = (priceString) => {
     // Loại bỏ dấu phẩy và chữ ' VND', rồi chuyển thành số
-    return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    // return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    return priceString;
   };
 
   // Hàm tính tổng cho từng sản phẩm trong giỏ hàng
-  const calculateItemTotal = (item) => {
-    const price = extractPrice(item.Price);
-    const quantity = parseInt(item.quantity);
+  const calculateItemTotal = (flower) => {
+    const price = extractPrice(flower.price);
+    const quantity = parseInt(flower.quantity);
     // Tính tổng tiền của 1 sản phẩm
     return price * quantity;
   };
@@ -48,7 +49,7 @@ const CheckoutPage = () => {
   // Hàm tính tổng tiền của toàn bộ giỏ hàng
   const calculateTotal = () => {
     // Tính tổng giá trị của các sản phẩm trong giỏ hàng
-    const total = cart.reduce((acc, item) => acc + calculateItemTotal(item), 0);
+    const total = cart.reduce((acc, flower) => acc + calculateItemTotal(flower), 0);
 
     // Định dạng tổng giá trị theo định dạng tiền tệ Việt Nam
     return total.toLocaleString("vi-VN");
@@ -62,23 +63,23 @@ const CheckoutPage = () => {
         <div className="cart-summary" style={{ marginBottom: "20px" }}>
           <h3>Cart Summary</h3>
           {cart.length > 0 ? (
-            cart.map((item) => (
+            cart.map((flower) => (
               <div
-                key={item.Id}
+                key={flower.flowerID}
                 className="cart-item"
                 style={{ display: "flex", marginBottom: "10px" }}
               >
-                <img src={item.Image} alt={item.Name} />
+                <img src={flower.imageUrl} alt={flower.flowerName} />
                 <div>
                   <p>
-                    <strong>{item.Name}</strong>
+                    <strong>{flower.flowerName}</strong>
                   </p>
                   <p>
-                    {item.quantity} x{" "}
-                    {extractPrice(item.Price).toLocaleString("vi-VN")} VND
+                    {flower.quantity} x{" "}
+                    {extractPrice(flower.price).toLocaleString("vi-VN")} VND
                   </p>
                   <h5 style={{ color: "red" }}>
-                    {calculateItemTotal(item).toLocaleString("vi-VN")} VND
+                    {calculateItemTotal(flower).toLocaleString("vi-VN")} VND
                   </h5>
                 </div>
               </div>

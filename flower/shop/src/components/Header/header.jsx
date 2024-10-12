@@ -34,7 +34,7 @@ function Header() {
 
   // Hàm xóa sản phẩm
   const handleDeleteItem = (id) => {
-    const updatedCart = cart.filter((item) => item.Id !== id);
+    const updatedCart = cart.filter((flower) => flower.flowerID !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
   };
@@ -42,7 +42,7 @@ function Header() {
   // Hàm chọn sản phẩm bằng checkbox
   const handleSelectItem = (id) => {
     if (selectedItems.includes(id)) {
-      setSelectedItems(selectedItems.filter((item) => item !== id));
+      setSelectedItems(selectedItems.filter((flower) => flower !== id));
     } else {
       setSelectedItems([...selectedItems, id]);
     }
@@ -51,8 +51,8 @@ function Header() {
   // Hàm xử lý chuyển đến trang checkout
   const handleCheckout = () => {
     // Lọc ra các sản phẩm đã được chọn từ giỏ hàng
-    const selectedProducts = cart.filter((item) =>
-      selectedItems.includes(item.Id)
+    const selectedProducts = cart.filter((flower) =>
+      selectedItems.includes(flower.flowerID)
     );
 
     console.log("Selected Products for Checkout: ", selectedProducts); // Log ra để kiểm tra
@@ -69,7 +69,7 @@ function Header() {
 
   // Hàm xóa nhiều sản phẩm
   const handleDeleteSelectedItems = () => {
-    const updatedCart = cart.filter((item) => !selectedItems.includes(item.Id));
+    const updatedCart = cart.filter((flower) => !selectedItems.includes(flower.flowerID));
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
     setSelectedItems([]); // Xóa danh sách sản phẩm đã chọn
@@ -247,25 +247,25 @@ function Header() {
               <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/rose">ROSES</Link>
+              <Link to="/flower/1">ROSES</Link>
             </li>
             <li>
-              <Link to="/wedding">WEDDING FLOWERS</Link>
+              <Link to="/flower/2">WEDDING FLOWERS</Link>
             </li>
             <li>
-              <Link to="/congratulate">CONGRATULATORY FLOWERS</Link>
+              <Link to="/flower/3">CONGRATULATORY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/birthday">BIRTHDAY FLOWERS</Link>
+              <Link to="/flower/5">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/holiday">HOLIDAY FLOWERS</Link>
+              <Link to="/flower/6">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/orchids">ORCHIDS</Link>
+              <Link to="/flower/7">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/table-flower">TABLE FLOWERS</Link>
+              <Link to="/flower/8">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>
