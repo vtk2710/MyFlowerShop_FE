@@ -1,25 +1,41 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
 import { Table, Button, notification } from 'antd';
 import './FeedbackManagement.scss';
 
-const FeedbackManagement = () => {
-  const [feedback, setFeedback] = useState([
-    { id: 1, customer: 'John Doe', comment: 'I was impressed with the quick delivery service. The flowers arrived on time and in perfect condition. I will definitely order again!', responded: false },
-    { id: 2, customer: 'Jane Smith', comment: 'I appreciate the customization options available. The personalized bouquet was exactly what I wanted for my wedding day!', responded: false },
-    { id: 3, customer: 'Noah Moore', comment: 'The prices are reasonable compared to other flower shops, and the quality is exceptional. Highly recommend!', responded: false },
-    { id: 4, customer: 'Isabella Taylor', comment: 'I received a bouquet as a gift, and I was blown away by how long the flowers lasted. They stayed vibrant for over a week!', responded: false },
-    { id: 5, customer: 'Mia Thomas', comment: 'Customer service was very helpful when I had questions about my order. They responded quickly and were very friendly.', responded: false },
-  ]);
+const FeedbackManagement = ({ feedback }) => {
+  // Lấy dữ liệu từ localStorage nếu có, nếu không thì sử dụng mảng mặc định
+  const [feedbackList, setFeedbackList] = useState(() => {
+    const savedFeedback = localStorage.getItem('feedbackList');
+    return savedFeedback ? JSON.parse(savedFeedback) : [
+      { id: 1, customer: 'John Doe', comment: 'Great service!', responded: false },
+      { id: 2, customer: 'Jane Smith', comment: 'Loved the flowers!', responded: false },
+    ];
+  });
 
+  // useEffect để thêm phản hồi mới từ FeedbackPage mà không bị lặp lại
+  useEffect(() => {
+    if (feedback) {
+      // Kiểm tra xem phản hồi đã tồn tại chưa, nếu chưa thì mới thêm
+      const existingFeedback = feedbackList.find(fb => fb.comment === feedback.comment && fb.customer === feedback.customer);
+      if (!existingFeedback) {
+        const newFeedback = [...feedbackList, { id: feedbackList.length + 1, ...feedback }];
+        setFeedbackList(newFeedback);
+        localStorage.setItem('feedbackList', JSON.stringify(newFeedback)); // Lưu vào localStorage
+      }
+    }
+  }, [feedback, feedbackList]);
+
+  // Hàm phản hồi
   const respondToFeedback = (id) => {
-    setFeedback((prevFeedback) =>
-      prevFeedback.map((fb) =>
-        fb.id === id ? { ...fb, responded: true } : fb
-      )
+    const updatedFeedbackList = feedbackList.map((fb) =>
+      fb.id === id ? { ...fb, responded: true } : fb
     );
+    setFeedbackList(updatedFeedbackList);
+    localStorage.setItem('feedbackList', JSON.stringify(updatedFeedbackList)); // Cập nhật localStorage
 
     // Hiển thị thông báo khi phản hồi
-    const customerName = feedback.find((fb) => fb.id === id).customer;
+    const customerName = feedbackList.find((fb) => fb.id === id).customer;
     notification.success({
       message: 'Response Sent',
       description: `You have successfully responded to ${customerName}'s feedback.`,
@@ -27,23 +43,11 @@ const FeedbackManagement = () => {
     });
   };
 
+  // Cấu hình cột trong bảng
   const columns = [
-    {
-      title: 'Customer Name',
-      dataIndex: 'customer',
-      key: 'customer',
-    },
-    {
-      title: 'Comment',
-      dataIndex: 'comment',
-      key: 'comment',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'responded',
-      key: 'responded',
-      render: (responded) => (responded ? 'Responded' : 'Not Responded'),
-    },
+    { title: 'Customer Name', dataIndex: 'customer', key: 'customer' },
+    { title: 'Comment', dataIndex: 'comment', key: 'comment' },
+    { title: 'Status', dataIndex: 'responded', key: 'responded', render: (responded) => (responded ? 'Responded' : 'Not Responded') },
     {
       title: 'Actions',
       key: 'actions',
@@ -64,7 +68,7 @@ const FeedbackManagement = () => {
       <h2>Manage Feedback</h2>
       <Table
         columns={columns}
-        dataSource={feedback}
+        dataSource={feedbackList}
         rowKey="id"
         pagination={{ pageSize: 5 }}
       />
