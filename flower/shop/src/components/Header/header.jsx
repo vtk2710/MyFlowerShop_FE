@@ -11,6 +11,7 @@ import { Modal, Button, Form, Input, Dropdown, Menu, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 // import api from "../../config/axios";
 import axios from "axios";
+import { getCart } from "../../API/cart/cart";
 
 function Header() {
   const location = useLocation();
@@ -22,18 +23,26 @@ function Header() {
   const [loading, setLoading] = useState(false); // Quản lý trạng thái load
   const [userInfo, setUserInfo] = useState(null);
   const [isCartVisible, setIsCartVisible] = useState(false); // State quản lý hiển thị modal giỏ hàng
-  const [cart, setCart] = useState([]); // State cho giỏ hàng
+  const [cart, setCart] = useState(null); // State cho giỏ hàng
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
 
   // Hàm lấy giỏ hàng từ localStorage khi trang được tải
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(savedCart); // Cập nhật giỏ hàng từ localStorage
-  }, []);
+    if(isVisible) {
+      return;
+    }
+    const savedCart = async () => {
+      const data = await getCart();
+      console.log(data);
+      setCart(data)
+    }
+    savedCart();
+  }, [isVisible]);
 
+  console.log(cart)
   // Hàm xóa sản phẩm
   const handleDeleteItem = (id) => {
-    const updatedCart = cart.filter((flower) => flower.flowerID !== id);
+    const updatedCart = cart?.items?.filter((flower) => flower.flowerID !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
   };
@@ -50,7 +59,7 @@ function Header() {
   // Hàm xử lý chuyển đến trang checkout
   const handleCheckout = () => {
     // Lọc ra các sản phẩm đã được chọn từ giỏ hàng
-    const selectedProducts = cart.filter((flower) =>
+    const selectedProducts = cart?.items?.filter((flower) =>
       selectedItems.includes(flower.flowerID)
     );
 
@@ -70,7 +79,7 @@ function Header() {
 
   // Hàm xóa nhiều sản phẩm
   const handleDeleteSelectedItems = () => {
-    const updatedCart = cart.filter(
+    const updatedCart = cart?.items?.filter(
       (flower) => !selectedItems.includes(flower.flowerID)
     );
     setCart(updatedCart);
@@ -81,18 +90,16 @@ function Header() {
   //Hàm chọn tất cả
   const handleSelectall = () => {
     //Nếu độ dài 2 cái = nhau thì xét mảng rỗng
-    if (selectedItems.length === cart.length) {
+    if (selectedItems.length === cart?.items?.length) {
       setSelectedItems([]);
     } else {
       //Thêm vô mảng
-      const allItems = cart.map((flower) => flower.flowerID);
+      const allItems = cart?.items?.map((flower) => flower.flowerID);
       setSelectedItems(allItems);
     }
   };
   // Hàm mở modal giỏ hàng
   const handleCartOpen = () => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(savedCart); // Cập nhật giỏ hàng từ localStorage khi mở modal
     setIsCartVisible(true);
   };
 
@@ -109,20 +116,20 @@ function Header() {
   };
 
   // Hàm tính tổng giá của các sản phẩm đã được chọn
+  // const getTotalPrice = () => {
+  //   return (
+  //     cart.totalPrice.toLocaleString("vi-VN") + " VND"      
+  //   );
+  // };
   const getTotalPrice = () => {
-    return (
-      cart
-        .reduce((total, flower) => {
-          if (selectedItems.includes(flower.flowerID)) {
-            // Chỉ tính tổng cho các sản phẩm đã chọn
-            const price = extractPrice(flower.price) || 0; // Đảm bảo `Price` là số float
-            const quantity = parseFloat(flower.quantity) || 1; // Đảm bảo `quantity` là số
-            return total + price * quantity; // Cộng tổng giá của sản phẩm đã chọn
-          }
-          return total;
-        }, 0)
-        .toLocaleString("vi-VN") + " VND"
-    );
+    return cart?.items?.reduce((total, item) => {
+      if (selectedItems.includes(item.flowerID)) {  // Chỉ tính tổng cho các sản phẩm đã chọn
+        const price = extractPrice(item.price) || 0;  // Đảm bảo `Price` là số float
+        const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
+        return total + (price * quantity);  // Cộng tổng giá của sản phẩm đã chọn
+      }
+      return total;
+    }, 0).toLocaleString('vi-VN') + " VND";
   };
 
   // Hàm lấy thông tin user từ API
@@ -165,7 +172,7 @@ function Header() {
       await fetchUserInfo();
       setIsVisible(false);
 
-      if(response.data.type === "admin") {
+      if (response.data.type === "admin") {
         navigate('/admin')
       }
       else
@@ -191,9 +198,18 @@ function Header() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Sign up success:", data);
+        const userSignUp = await response.json();
+        console.log("Sign up success:", userSignUp);
+        localStorage.setItem("newUser", JSON.stringify(userSignUp));
         setIsVisible(false); // Close modal
+
+        const loginFormData = formSignUpData;
+        loginFormData.delete("email");
+        const loginResponse = await axios.post("https://localhost:7198/login", 
+          loginFormData
+        );
+        
+        localStorage.setItem("token", loginResponse.data.token);
         navigate("/create-profile"); // Chuyển về trang create profile nếu thành công
       }
     } catch (error) {
@@ -258,25 +274,25 @@ function Header() {
               <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/flower/1">ROSES</Link>
+              <Link to="/flowers/1">ROSES</Link>
             </li>
             <li>
-              <Link to="/flower/2">WEDDING FLOWERS</Link>
+              <Link to="/flowers/2">WEDDING FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flower/3">CONGRATULATORY FLOWERS</Link>
+              <Link to="/flowers/3">CONGRATULATORY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flower/5">BIRTHDAY FLOWERS</Link>
+              <Link to="/flowers/5">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flower/6">HOLIDAY FLOWERS</Link>
+              <Link to="/flowers/6">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flower/7">ORCHIDS</Link>
+              <Link to="/flowers/7">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/flower/8">TABLE FLOWERS</Link>
+              <Link to="/flowers/8">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>
@@ -339,7 +355,7 @@ function Header() {
         width={700}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {cart.length > 0 ? (
+          {cart?.items?.length > 0 ? (
             <div>
               {/* Nút lấy tất cả sản phẩm  */}
               <Button onClick={handleSelectall}>Selected All Items</Button>
@@ -352,7 +368,7 @@ function Header() {
               </Button>
 
               {/* Danh sách sản phẩm trong giỏ hàng */}
-              {cart.map((flower, index) => (
+              {cart?.items?.map((flower, index) => (
                 <div
                   key={index}
                   style={{
@@ -463,9 +479,8 @@ function Header() {
             name={isSignUp ? "signup_form" : "signin_form"}
             onFinish={handleSubmit}
             layout="vertical"
-            className={`form-transition ${
-              isSignUp ? "form-hidden" : "form-visible"
-            }`}
+            className={`form-transition ${isSignUp ? "form-hidden" : "form-visible"
+              }`}
           >
             {!isSignUp && (
               <>
@@ -517,9 +532,8 @@ function Header() {
             name="signup_form"
             onFinish={handleSubmit}
             layout="vertical"
-            className={`form-transition ${
-              isSignUp ? "form-visible" : "form-hidden"
-            }`}
+            className={`form-transition ${isSignUp ? "form-visible" : "form-hidden"
+              }`}
           >
             {isSignUp && (
               <>

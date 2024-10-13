@@ -3,16 +3,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header/header";
 import "./viewflower.scss";
-import { roseData } from "../../Share/rose";
 import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
 import axios from "axios";
+import { addToCart } from "../../API/cart/cart";
 
 const FlowerPage = () => {
     const { id } = useParams(); // Lấy ID từ URL
     const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
-    //const rose = roseData.find((r) => r.Id === parseInt(id));
-    //console.log(roseData)
-    //console.log(rose.Description);
     const [cart, setCart] = useState([]); // Quản lý giỏ hàng
     const [flower, setFlowerDetails] = useState({});
 
@@ -77,25 +74,13 @@ const FlowerPage = () => {
     // }, []);
 
     //Hàm thêm sản phẩm vào giỏ hàng
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
-        const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+        try {
+            const response = await addToCart(flower.flowerID, quantity);
+        } catch(error) {
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        const productExists = existingCart.find(
-            (flower) => flower.flowerID === productToAdd.flowerID
-        );
-        if (productExists) {
-            // Nếu đã có, cập nhật số lượng
-            productExists.quantity += quantity;
-        } else {
-            // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
-            existingCart.push(productToAdd);
         }
-
-        localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
-        setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
-        console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
     };
 
     return (
@@ -114,7 +99,7 @@ const FlowerPage = () => {
                     </h1>
                     <p className="product-description">{flower.description}</p>
                     <p>
-                        <strong>Category:</strong> {flower.flowerID}
+                        <strong>Category:</strong> {flower.categoryID}
                     </p>
                     {/* Chọn số lượng */}
                     <div className="quantity-section">
@@ -140,7 +125,8 @@ const FlowerPage = () => {
                 </div>
             </div>
             <RelatedProductsSwiper
-                currentProductId={flower.flowerID}
+                currentFlowerId={flower.flowerID}
+                currentCategoryId={flower.categoryID}
             />
         </div>
     );

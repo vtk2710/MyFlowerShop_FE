@@ -13,13 +13,7 @@ import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
 import Flowers from "./Shop/Flowers/flower";
 import FlowerPage from "./Shop/FlowerDetails/viewflower";
-import BirthdayFlowersPage from "./Birthday/BirthdayPage";
-import HolidayFlowersPage from "./Holiday/HolidayPage";
-import OrchidFlowersPage from "./Orchid/OrchidPage";
 import RosesPage from "./Roses/RosesPage";
-import TableFlowersPage from "./Table/TablePage";
-import WeddingFlowersPage from "./Wedding/WeddingPage";
-import CongratulateFlowersPage from "./Congratulate/CongratulatePage";
 import UserDetail from "./admin/UserDetail/UserDetail";
 function App() {
   const router = createBrowserRouter([
@@ -107,32 +101,8 @@ function App() {
       element: <FlowerPage />,
     },
     {
-      path: "/rose",
+      path: "flowers/:categoryID",
       element: <RosesPage />,
-    },
-    {
-      path: "/wedding",
-      element: <WeddingFlowersPage />,
-    },
-    {
-      path: "/congratulate",
-      element: <CongratulateFlowersPage />,
-    },
-    {
-      path: "/birthday",
-      element: <BirthdayFlowersPage />,
-    },
-    {
-      path: "/holiday",
-      element: <HolidayFlowersPage />,
-    },
-    {
-      path: "/orchids",
-      element: <OrchidFlowersPage />,
-    },
-    {
-      path: "/table-flower",
-      element: <TableFlowersPage />,
     },
     {
       path: "*",
