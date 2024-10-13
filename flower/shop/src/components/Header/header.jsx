@@ -24,6 +24,14 @@ function Header() {
   const [cart, setCart] = useState([]); // State cho giỏ hàng
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
 
+  //Hàm Search
+  const onSearch = () => {
+    if (searchText.trim()) {
+      // Điều hướng tới trang kết quả tìm kiếm với từ khóa
+      navigate(`/search/${searchText}`);
+    }
+  };
+
   // Hàm lấy giỏ hàng từ localStorage khi trang được tải
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -218,10 +226,6 @@ function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const onSearch = (value) => {
-    console.log("Search value:", value);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUserInfo(null);
@@ -312,8 +316,8 @@ function Header() {
                 placeholder="Search..."
                 prefix={<SearchOutlined />}
                 value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onPressEnter={() => onSearch(searchText)}
+                onChange={(e) => setSearchText(e.target.value)} // Cập nhật giá trị tìm kiếm
+                onPressEnter={onSearch} // Gọi hàm tìm kiếm khi nhấn Enter
               />
             </li>
           </ul>

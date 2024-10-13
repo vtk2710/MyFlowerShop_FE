@@ -38,22 +38,23 @@ function PrProduct() {
   };
 
   return (
-    <div className="row HomePage__body" ref={productSectionRef}>
+    <>
       <h2>All HOT FLOWERS IN SHOP</h2>
-      {currentProducts.map((product) => (
-        <div className="product-card" key={product.Id}>
-          <img src={product.Image} alt={product.Name} />
-          <h3>{product.Name}</h3>
-          <Button
-            type="primary"
-            onClick={() => handleOpen(product)}
-            style={{ marginTop: "10px" }}
-          >
-            View Details
-          </Button>
-        </div>
-      ))}
-
+      <div className="row HomePage__body" ref={productSectionRef}>
+        {currentProducts.map((product) => (
+          <div className="product-card" key={product.Id}>
+            <img src={product.Image} alt={product.Name} />
+            <h3>{product.Name}</h3>
+            <Button
+              type="primary"
+              onClick={() => handleOpen(product)}
+              style={{ marginTop: "10px", marginLeft: "90px" }}
+            >
+              View Details
+            </Button>
+          </div>
+        ))}
+      </div>
       {/* Phân trang sử dụng Ant Design */}
       <Pagination
         current={currentPage}
@@ -67,7 +68,7 @@ function PrProduct() {
           alignItems: "center",
         }}
       />
-    </div>
+    </>
   );
 }
 
