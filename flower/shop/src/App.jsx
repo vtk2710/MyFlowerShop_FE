@@ -11,6 +11,9 @@ import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
 import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
 import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
+import Flowers from "./Shop/Flowers/flower";
+import FlowerPage from "./Shop/FlowerDetails/viewflower";
+import RosesPage from "./Roses/RosesPage";
 import UserDetail from "./admin/UserDetail/UserDetail";
 import SearchResultsPage from "./components/SearchResultsPage/SearchResultsPage";
 function App() {
@@ -94,6 +97,22 @@ function App() {
         </div>
       ), // Trang 404 nếu đường dẫn không hợp lệ
     },
+    {
+      path: "/flower/:id",
+      element: <Flowers />,
+    },
+    {
+      path: "/viewflower/:id",
+      element: <FlowerPage />,
+    },
+    {
+      path: "flowers/:categoryID",
+      element: <RosesPage />,
+    },
+    {
+      path: "*",
+      element: <div>404 Not Found</div>, // Trang 404 nếu đường dẫn không hợp lệ
+    }, 
   ]);
 
   return <RouterProvider router={router} />;

@@ -106,7 +106,11 @@ const CheckoutPage = () => {
 
   // Hàm tính tổng tiền của toàn bộ giỏ hàng hoặc sản phẩm "Buy Now"
   const calculateTotal = () => {
-    return cartItems.reduce((acc, item) => acc + calculateItemTotal(item), 0);
+    // Tính tổng giá trị của các sản phẩm trong giỏ hàng
+    const total = cart.reduce((acc, flower) => acc + calculateItemTotal(flower), 0);
+
+    // Định dạng tổng giá trị theo định dạng tiền tệ Việt Nam
+    return total.toLocaleString("vi-VN");
   };
 
   // Hàm tính tổng tiền sau khi áp dụng giảm giá
@@ -121,6 +125,44 @@ const CheckoutPage = () => {
       <Header />
       <div className="checkout-container">
         <h2>Checkout</h2>
+
+        {/* Thông tin giỏ hàng */}
+        <div className="cart-summary" style={{ marginBottom: "20px" }}>
+          <h3>Cart Summary</h3>
+          {cart.length > 0 ? (
+            cart.map((flower) => (
+              <div
+                key={flower.flowerID}
+                className="cart-item"
+                style={{ display: "flex", marginBottom: "10px" }}
+              >
+                <img src={flower.imageUrl} alt={flower.flowerName} />
+                <div>
+                  <p>
+                    <strong>{flower.flowerName}</strong>
+                  </p>
+                  <p>
+                    {flower.quantity} x{" "}
+                    {extractPrice(flower.price).toLocaleString("vi-VN")} VND
+                  </p>
+                  <h5 style={{ color: "red" }}>
+                    {calculateItemTotal(flower).toLocaleString("vi-VN")} VND
+                  </h5>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
+        </div>
+
+        {/* Tính tổng tiền của giỏ hàng */}
+        <div
+          className="total-summary"
+          style={{ textAlign: "center", marginBottom: "20px" }}
+        >
+          <h2 style={{ color: "red" }}>TOTAL: {calculateTotal()} VND</h2>
+        </div>
 
         {/* Thông tin khách hàng */}
         <div className="customer-info" style={{ marginBottom: "20px" }}>

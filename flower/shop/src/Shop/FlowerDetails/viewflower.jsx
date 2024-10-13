@@ -5,6 +5,7 @@ import Header from "../../components/Header/header";
 import "./viewflower.scss";
 import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
 import axios from "axios";
+import { addToCart } from "../../API/cart/cart";
 
 const FlowerPage = () => {
     const { id } = useParams(); // Lấy ID từ URL
@@ -65,33 +66,21 @@ const FlowerPage = () => {
         }
     };
 
-    // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
+    // // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
     // useEffect(() => {
     //     localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
     //     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     //     setCart(existingCart);
     // }, []);
 
-    // Hàm thêm sản phẩm vào giỏ hàng
-    const handleAddToCart = () => {
+    //Hàm thêm sản phẩm vào giỏ hàng
+    const handleAddToCart = async () => {
         const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
-        const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+        try {
+            const response = await addToCart(flower.flowerID, quantity);
+        } catch(error) {
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        const productExists = existingCart.find(
-            (flower) => flower.flowerID === productToAdd.flowerID
-        );
-        if (productExists) {
-            // Nếu đã có, cập nhật số lượng
-            productExists.quantity += quantity;
-        } else {
-            // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
-            existingCart.push(productToAdd);
         }
-
-        localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
-        setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
-        console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
     };
 
     return (
@@ -108,7 +97,7 @@ const FlowerPage = () => {
                     <h1 className="product-title">
                         {flower.flowerName} - {flower.price}
                     </h1>
-                    <p className="product-description">{flower.flowerDescription}</p>
+                    <p className="product-description">{flower.description}</p>
                     <p>
                         <strong>Category:</strong> {flower.categoryID}
                     </p>
@@ -136,7 +125,8 @@ const FlowerPage = () => {
                 </div>
             </div>
             <RelatedProductsSwiper
-                currentProductId={flower.flowerID}
+                currentFlowerId={flower.flowerID}
+                currentCategoryId={flower.categoryID}
             />
         </div>
     );

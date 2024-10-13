@@ -1,42 +1,56 @@
-/* eslint-disable react/prop-types */
-import { useState } from 'react';
-import Navbar from "./Navbar";
+import { useEffect, useState } from 'react';
 import "./RosesPage.scss"; // Liên kết với file SCSS cho styling
-import { roseData } from "../Share/rose"; // Import dữ liệu từ rose.js
+import Header from '../components/Header/header';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchFlowerList } from '../API/flower/get_flower_list';
 
 const RosesPage = () => {
+  const { categoryID } = useParams();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const [flowerList, setFlowerList] = useState([]);
+  const itemsPerPage = 6;
 
   // Tính toán dữ liệu hiển thị trên mỗi trang
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = roseData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = flowerList.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= Math.ceil(roseData.length / itemsPerPage)) {
+    if (pageNumber >= 1 && pageNumber <= Math.ceil(flowerList.length / itemsPerPage)) {
       setCurrentPage(pageNumber);
     }
   };
 
+  const handleOpen = (flower) => {
+    // Điều hướng sang trang chi tiết sản phẩm
+    navigate(`/viewflower/${flower.flowerId}`);
+  };
+
+  useEffect(() => {
+    fetchFlowerList(categoryID).then(setFlowerList);
+    setCurrentPage(1);
+  }, [categoryID]);
+
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Roses */}
+      {/* <Navbar /> Hiển thị Navbar trong trang Roses */}
+      <Header />
       <div className="roses-page">
-        <h1>All Rose In Flatform</h1>
+        {/* <h1>All Rose In Flatform</h1> */}
         <div className="modal-container">
-          {currentItems.map((rose) => (
-            <div key={rose.Id} className="modal">
-              <img src={rose.Image} alt={rose.Name} />
-              <h1>{rose.Name}</h1>
+          {currentItems.map((flower) => (
+            <div key={flower.flowerId} className="modal-rose">
+              <img src={flower.imageUrl} alt={flower.flowerName} />
+              <h1>{flower.flowerName}</h1>
               {/* Thêm nút View Details */}
-              <button className="view-details-btn" onClick={() => alert(`Viewing details for ${rose.Name}`)}>View Details</button>
+              <button className="view-details-btn" onClick={() => handleOpen(flower)}>View Details</button>
             </div>
           ))}
         </div>
         <Pagination
           itemsPerPage={itemsPerPage}
-          totalItems={roseData.length}
+          totalItems={flowerList.length}
           paginate={paginate}
           currentPage={currentPage}
         />
@@ -55,15 +69,15 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
     <nav className="pagination-nav">
       <ul className="pagination">
         <li onClick={() => paginate(currentPage - 1)} className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <a href="#!" className="page-link">&laquo;</a>
+          <span className="page-link">&laquo;</span>
         </li>
         {pageNumbers.map((number) => (
           <li key={number} onClick={() => paginate(number)} className={`page-item ${number === currentPage ? 'active' : ''}`}>
-            <a href="#!" className="page-link">{number}</a>
+            <span className="page-link">{number}</span>
           </li>
         ))}
         <li onClick={() => paginate(currentPage + 1)} className={`page-item ${currentPage === pageNumbers.length ? 'disabled' : ''}`}>
-          <a href="#!" className="page-link">&raquo;</a>
+          <span className="page-link">&raquo;</span>
         </li>
       </ul>
     </nav>

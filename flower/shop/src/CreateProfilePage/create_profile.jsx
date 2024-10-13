@@ -1,107 +1,112 @@
-import React, { useState } from 'react'
-import { Form, Input, DatePicker, Select, Button, Upload, message } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import React, { useState } from 'react';
+import { Form, Input, Button, DatePicker, Upload, Radio, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import './create_profile.scss';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const { TextArea } = Input
-const { Option } = Select
+const CreateProfilePage = () => {
+    const [form] = Form.useForm();
+    const [avatar, setAvatar] = useState(null);
+    const navigate = useNavigate();
 
-export default function CreateProfilePage() {
-    const [form] = Form.useForm()
-    const [imageUrl, setImageUrl] = useState(null)
+    const handleAvatarChange = ({ file }) => {
 
-    const onFinish = (values) => {
-        console.log('Success:', values)
-        message.success('Profile created successfully!')
-    }
+        console.log(file);
+        setAvatar(file);
+        // if (file.status === 'done') {
+            
+        //     message.success(`${file.name} uploaded successfully.`);
+        // } else if (file.status === 'error') {
+        //     message.error(`${file.name} upload failed.`);
+        // }
+    };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo)
-    }
+    const handleCreateProfile = async (values) => {
+        // Format date
+        const birthDate = values.birthDate ? values.birthDate.format('YYYY-MM-DD') : null;
 
-    const handleImageUpload = (info) => {
-        if (info.file.status === 'done') {
-            setImageUrl(URL.createObjectURL(info.file.originFileObj))
-            message.success(`${info.file.name} file uploaded successfully`)
-        } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`)
+        if(avatar === null) {
+            message.error("No file upload");
+            return;
         }
-    }
+
+        const formData = new FormData();
+        formData.append('FullName', values.fullName);
+        formData.append('Address', values.address);
+        formData.append('BirthDate', birthDate);
+        formData.append('Sex', values.sex);
+        formData.append('Avatar', avatar);
+
+
+        // Call API to submit formData
+        const signUpUserToken = localStorage.getItem("token");
+        
+        try {
+            const response = await axios.post('https://localhost:7198/api/UserInfo/create', formData, {
+                headers: {
+                    Authorization: `Bearer ${signUpUserToken}`
+                }
+            });
+            localStorage.removeItem("newUser");
+            navigate('/');
+        } catch (error) {
+            console.log("Can't create profile:", error)
+        }   
+        // You can replace this with actual API submission using axios/fetch
+    };
 
     return (
-        <div className="create-profile">
-            <h1>Create Your Profile</h1>
-            <div className="profile-content">
-                <div className="profile-picture-section">
+        <div className="create-profile-container">
+            <h2>Create Profile</h2>
+            <Form form={form} onFinish={handleCreateProfile} layout="vertical" className="create-profile-form">
+                <Form.Item
+                    label="Full Name"
+                    name="fullName"
+                    rules={[{ required: true, message: 'Please input your full name!' }]}
+                >
+                    <Input placeholder="Enter your full name" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[{ required: true, message: 'Please input your address!' }]}
+                >
+                    <Input placeholder="Enter your address" />
+                </Form.Item>
+
+                <Form.Item label="Birth Date" name="birthDate">
+                    <DatePicker format="YYYY-MM-DD" style={{ width: '100%' }} />
+                </Form.Item>
+
+                <Form.Item label="Sex" name="sex" rules={[{ required: true, message: 'Please select your gender!' }]}>
+                    <Radio.Group>
+                        <Radio value="Male">Male</Radio>
+                        <Radio value="Female">Female</Radio>                    
+                    </Radio.Group>
+                </Form.Item>
+
+                <Form.Item label="Avatar">
                     <Upload
                         name="avatar"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                        onChange={handleImageUpload}
+                        listType="picture"
+                        maxCount={1}
+                        onChange={handleAvatarChange}
+                        beforeUpload={() => false} // Prevent auto upload
                     >
-                        {imageUrl ? (
-                            <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-                        ) : (
-                            <div>
-                                <UploadOutlined />
-                                <div style={{ marginTop: 8 }}>Upload</div>
-                            </div>
-                        )}
+                        <Button icon={<UploadOutlined />}>Upload Avatar</Button>
                     </Upload>
-                </div>
-                <Form
-                    form={form}
-                    name="createProfile"
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    layout="vertical"
-                    className="profile-form"
-                >
-                    <Form.Item
-                        name="fullName"
-                        label="Full Name"
-                        rules={[{ required: true, message: 'Please input your full name!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                </Form.Item>
 
-                    <Form.Item
-                        name="birthday"
-                        label="Birthday"
-                        rules={[{ required: true, message: 'Please select your birthday!' }]}
-                    >
-                        <DatePicker style={{ width: '100%' }} />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="gender"
-                        label="Gender"
-                        rules={[{ required: true, message: 'Please select your gender!' }]}
-                    >
-                        <Select placeholder="Select your gender">
-                            <Option value="male">Male</Option>
-                            <Option value="female">Female</Option>
-                            <Option value="other">Other</Option>
-                            <Option value="prefer-not-to-say">Prefer not to say</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item
-                        name="address"
-                        label="Address"
-                        rules={[{ required: true, message: 'Please input your address!' }]}
-                    >
-                        <TextArea rows={4} />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Create Profile
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </div>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
-    )
-}
+    );
+};
+
+export default CreateProfilePage;
