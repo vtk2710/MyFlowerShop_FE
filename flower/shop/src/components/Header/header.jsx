@@ -2,6 +2,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./header.scss";
 import {
+  CheckCircleOutlined,
+  DeleteOutlined,
   MenuOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
@@ -39,18 +41,20 @@ function Header() {
   }, []);
 
   // Hàm xóa sản phẩm
-  const handleDeleteItem = (id) => {
-    const updatedCart = cart.filter((item) => item.Id !== id);
+  const handleDeleteItem = (flowerId) => {
+    const updatedCart = cart.filter((flower) => flower.flowerId !== flowerId);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
   };
 
   // Hàm chọn sản phẩm bằng checkbox
-  const handleSelectItem = (id) => {
-    if (selectedItems.includes(id)) {
-      setSelectedItems(selectedItems.filter((item) => item !== id));
+  const handleSelectItem = (flowerId) => {
+    if (selectedItems.includes(flowerId)) {
+      // Nếu sản phẩm đã được chọn thì bỏ chọn
+      setSelectedItems(selectedItems.filter((id) => id !== flowerId));
     } else {
-      setSelectedItems([...selectedItems, id]);
+      // Nếu sản phẩm chưa được chọn thì thêm vào
+      setSelectedItems([...selectedItems, flowerId]);
     }
   };
 
@@ -78,7 +82,7 @@ function Header() {
   // Hàm xóa nhiều sản phẩm
   const handleDeleteSelectedItems = () => {
     const updatedCart = cart.filter(
-      (flower) => !selectedItems.includes(flower.flowerID)
+      (flower) => !selectedItems.includes(flower.flowerId)
     );
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
@@ -87,13 +91,13 @@ function Header() {
 
   //Hàm chọn tất cả
   const handleSelectall = () => {
-    //Nếu độ dài 2 cái = nhau thì xét mảng rỗng
+    // Nếu đã chọn tất cả sản phẩm thì bỏ chọn
     if (selectedItems.length === cart.length) {
       setSelectedItems([]);
     } else {
-      //Thêm vô mảng
-      const allItems = cart.map((flower) => flower.flowerID);
-      setSelectedItems(allItems);
+      // Nếu chưa chọn tất cả thì thêm tất cả sản phẩm vào selectedItems
+      const allFlowers = cart.map((flower) => flower.flowerId);
+      setSelectedItems(allFlowers);
     }
   };
   // Hàm mở modal giỏ hàng
@@ -329,36 +333,56 @@ function Header() {
       </header>
 
       {/* Modal giỏ hàng */}
+
       <Modal
-        title="Cart"
+        title={
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <ShoppingCartOutlined
+              style={{ fontSize: "30px", color: "#ff5a5f" }}
+            />
+          </div>
+        }
         visible={isCartVisible}
         onCancel={handleCartClose}
         footer={null}
-        width={700}
+        width={850}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {cart.length > 0 ? (
             <div>
-              {/* Nút lấy tất cả sản phẩm  */}
-              <Button onClick={handleSelectall}>Selected All Items</Button>
-              {/* Nút xóa các sản phẩm đã chọn */}
-              <Button
-                onClick={handleDeleteSelectedItems}
-                disabled={selectedItems.length === 0}
-              >
-                Delete Selected Items
-              </Button>
+              {/* Nút lấy tất cả sản phẩm */}
+              <div className="button-container">
+                <Button
+                  onClick={handleSelectall}
+                  className="button-cart"
+                  style={{ width: "100px" }}
+                >
+                  <CheckCircleOutlined className="icon-cart" />
+                </Button>
+
+                {/* Nút xóa các sản phẩm đã chọn */}
+                <Button
+                  className="button-delete"
+                  onClick={handleDeleteSelectedItems}
+                  disabled={selectedItems.length === 0}
+                  style={{ width: "100px" }}
+                >
+                  <DeleteOutlined className="icon-cart" />
+                </Button>
+              </div>
 
               {/* Danh sách sản phẩm trong giỏ hàng */}
               {cart.map((flower, index) => (
                 <div
-                  key={index}
+                  key={flower.flowerID}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
+                    flexDirection: "row",
+                    gap: "20px",
                     marginBottom: "10px",
                     marginTop: "10px",
+                    fontSize: "20px",
                   }}
                 >
                   {/* Checkbox để chọn sản phẩm */}
@@ -373,24 +397,34 @@ function Header() {
                     alt={flower.flowerName}
                     width="50px"
                     style={{
-                      borderRadius: "50px",
-                      width: "100px",
-                      height: "100px",
+                      borderRadius: "8px",
+                      width: "150px",
+                      height: "150px",
                     }}
                   />
 
                   {/* Tên sản phẩm và giá */}
                   <div
                     style={{
-                      flex: 1,
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
+                      gap: "40px",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flex: 1,
                     }}
                   >
-                    <p style={{ margin: 0 }}>
-                      {flower.flowerName} - {flower.price}
+                    <p style={{ margin: 0, flex: 1 }}>
+                      {flower.flowerName} - {flower.shopName}
                     </p>
+                    <strong
+                      style={{
+                        color: "rgb(244 121 122)",
+                        flex: 2,
+                        textAlign: "center",
+                      }}
+                    >
+                      {flower.price}
+                    </strong>
                   </div>
 
                   {/* Input số lượng sản phẩm */}
@@ -405,20 +439,37 @@ function Header() {
                       setCart(updatedCart);
                       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
                     }}
-                    style={{ width: "50px", textAlign: "center" }}
+                    style={{ width: "10px", textAlign: "center", flex: 0.25 }}
                   />
 
                   {/* Nút xóa từng sản phẩm */}
-                  <Button onClick={() => handleDeleteItem(flower.flowerID)}>
-                    Delete
+                  <Button
+                    style={{
+                      width: "100px",
+                      color: "white",
+                      backgroundColor: "#ff5a5f",
+                    }}
+                    onClick={() => handleDeleteItem(flower.flowerID)}
+                  >
+                    Remove
                   </Button>
                 </div>
               ))}
 
               {/* Tính tổng giá trị giỏ hàng cho sản phẩm đã chọn */}
-              <p>
-                <strong>Total:</strong> {getTotalPrice()}
-              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  paddingRight: "20px",
+                }}
+              >
+                <p>
+                  <strong style={{ fontSize: "25px", color: "red" }}>
+                    Total: {getTotalPrice()}
+                  </strong>
+                </p>
+              </div>
 
               {/* Nút thanh toán */}
               <div
@@ -430,7 +481,12 @@ function Header() {
               >
                 <Button
                   type="primary"
-                  style={{ color: "white" }}
+                  style={{
+                    color: "white",
+                    width: "200px",
+                    height: "40px",
+                    fontSize: "15px",
+                  }}
                   onClick={handleCheckout}
                 >
                   CheckOut
@@ -438,9 +494,7 @@ function Header() {
               </div>
             </div>
           ) : (
-            <p style={{ textAlign: "center", color: "red" }}>
-              Empty Cart Please Buy Something
-            </p>
+            <p>Empty Cart Please Buy Something</p>
           )}
         </div>
       </Modal>
