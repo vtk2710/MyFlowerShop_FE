@@ -13,6 +13,8 @@ import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
 import UserDetail from "./admin/UserDetail/UserDetail";
 import SearchResultsPage from "./components/SearchResultsPage/SearchResultsPage";
+import SellerManage from "./admin/SellerManage/SellerManage";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -51,6 +53,10 @@ function App() {
         {
           path: "ReportAdmin", // Đường dẫn cho Dashboard 3
           element: <ReportAdmin />, // Component tương ứng với route này
+        },
+        {
+          path: "SellersManage", // Đường dẫn cho Dashboard 3
+          element: <SellerManage />, // Component tương ứng với route này
         },
       ],
     },

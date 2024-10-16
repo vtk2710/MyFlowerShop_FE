@@ -54,9 +54,9 @@ const Sidebar = () => {
           <Menu.Item key="5">
             <Link to="/admin/ReportAdmin">View Report User</Link>
           </Menu.Item>
-          {/* <Menu.Item key="3">
-           
-          </Menu.Item> */}
+          <Menu.Item key="3">
+            <Link to="/admin/SellersManage">Manage Sellers</Link>
+          </Menu.Item>
         </SubMenu>
 
         {/* Settings Menu */}

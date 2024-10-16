@@ -259,26 +259,31 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
+
             <li>
-              <Link to="/flowers/1">ROSES</Link>
+              <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/flowers/2">WEDDING FLOWERS</Link>
+              <Link to="/hoa-hong">ROSES</Link>
             </li>
             <li>
-              <Link to="/flowers/3">CONGRATULATORY FLOWERS</Link>
+              <Link to="/hoa-cuoi">WEDDING FLOWERS</Link>
             </li>
+            <li>
+              <Link to="/hoa-chuc-mung">CONGRATULATORY FLOWERS</Link>
+            </li>
+
             <li>
               <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/6">HOLIDAY FLOWERS</Link>
+              <Link to="/hoa-dip-le">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/7">ORCHIDS</Link>
+              <Link to="/hoa-lan">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/flowers/8">TABLE FLOWERS</Link>
+              <Link to="/hoa-de-ban">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>
