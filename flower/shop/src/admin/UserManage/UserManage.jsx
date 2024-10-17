@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const { Search } = Input;
 
 // Dữ liệu ban đầu của bảng
-const initialData = [
+const initialUserData = [
   {
     key: "1",
     userName: "user1",
@@ -17,6 +17,9 @@ const initialData = [
     birth_date: "1990-01-01",
     sex: "Male",
     points: 80,
+    avatar: "https://i.pravatar.cc/150?img=1",
+    created_date: "2020-01-01",
+    updated_date: "2022-01-01",
   },
   {
     key: "2",
@@ -29,6 +32,9 @@ const initialData = [
     birth_date: "1985-05-15",
     sex: "Female",
     points: 95,
+    avatar: "https://i.pravatar.cc/150?img=2",
+    created_date: "2019-03-11",
+    updated_date: "2021-04-20",
   },
   {
     key: "3",
@@ -41,6 +47,9 @@ const initialData = [
     birth_date: "1992-03-22",
     sex: "Female",
     points: 70,
+    avatar: "https://i.pravatar.cc/150?img=3",
+    created_date: "2021-07-14",
+    updated_date: "2023-02-05",
   },
   {
     key: "4",
@@ -53,6 +62,9 @@ const initialData = [
     birth_date: "1980-12-30",
     sex: "Male",
     points: 60,
+    avatar: "https://i.pravatar.cc/150?img=4",
+    created_date: "2018-12-25",
+    updated_date: "2020-10-14",
   },
   {
     key: "5",
@@ -65,6 +77,9 @@ const initialData = [
     birth_date: "1995-07-11",
     sex: "Female",
     points: 85,
+    avatar: "https://i.pravatar.cc/150?img=5",
+    created_date: "2020-05-20",
+    updated_date: "2022-08-30",
   },
   {
     key: "6",
@@ -77,6 +92,10 @@ const initialData = [
     birth_date: "1983-11-05",
     sex: "Male",
     points: 100,
+    avatar:
+      "https://congdongdanhgia.com/wp-content/uploads/2022/03/anime-chibi-21.jpg",
+    created_date: "2017-01-10",
+    updated_date: "2021-12-25",
   },
   {
     key: "7",
@@ -89,6 +108,9 @@ const initialData = [
     birth_date: "1999-09-09",
     sex: "Male",
     points: 75,
+    avatar: "https://i.pravatar.cc/150?img=7",
+    created_date: "2019-11-22",
+    updated_date: "2022-05-18",
   },
   {
     key: "8",
@@ -101,6 +123,9 @@ const initialData = [
     birth_date: "2000-02-28",
     sex: "Female",
     points: 50,
+    avatar: "https://i.pravatar.cc/150?img=8",
+    created_date: "2022-09-15",
+    updated_date: "2023-04-10",
   },
 ];
 
@@ -114,7 +139,7 @@ const UserManage = () => {
     if (savedData && savedData.length > 0) {
       setData(savedData);
     } else {
-      setData(initialData);
+      setData(initialUserData);
     }
   }, []);
 
@@ -132,6 +157,7 @@ const UserManage = () => {
       return item;
     });
     setData(newData);
+    localStorage.setItem("userData", JSON.stringify(newData));
   };
 
   // Hoàn tác xóa (banning) người dùng
@@ -143,6 +169,7 @@ const UserManage = () => {
       return item;
     });
     setData(newData);
+    localStorage.setItem("userData", JSON.stringify(newData));
   };
 
   // Lọc dữ liệu theo tìm kiếm

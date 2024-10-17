@@ -2,6 +2,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.scss";
 import {
+  CheckCircleOutlined,
+  DeleteOutlined,
   MenuOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
@@ -55,12 +57,12 @@ function Header() {
     localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
   };
 
-  // Hàm chọn sản phẩm bằng checkbox
   const handleSelectItem = (id) => {
     if (selectedItems.includes(id)) {
       setSelectedItems(selectedItems.filter((flower) => flower !== id));
     } else {
-      setSelectedItems([...selectedItems, id]);
+      // Nếu sản phẩm chưa được chọn thì thêm vào
+      setSelectedItems([...selectedItems, flowerId]);
     }
   };
 
@@ -277,26 +279,31 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
+
             <li>
-              <Link to="/flowers/1">ROSES</Link>
+              <Link to="/">HOME</Link>
             </li>
             <li>
-              <Link to="/flowers/2">WEDDING FLOWERS</Link>
+              <Link to="/hoa-hong">ROSES</Link>
             </li>
             <li>
-              <Link to="/flowers/3">CONGRATULATORY FLOWERS</Link>
+              <Link to="/hoa-cuoi">WEDDING FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/5">BIRTHDAY FLOWERS</Link>
+              <Link to="/hoa-chuc-mung">CONGRATULATORY FLOWERS</Link>
+            </li>
+
+            <li>
+              <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/6">HOLIDAY FLOWERS</Link>
+              <Link to="/hoa-dip-le">HOLIDAY FLOWERS</Link>
             </li>
             <li>
-              <Link to="/flowers/7">ORCHIDS</Link>
+              <Link to="/hoa-lan">ORCHIDS</Link>
             </li>
             <li>
-              <Link to="/flowers/8">TABLE FLOWERS</Link>
+              <Link to="/hoa-de-ban">TABLE FLOWERS</Link>
             </li>
 
             {/* <li>
@@ -351,36 +358,56 @@ function Header() {
       </header>
 
       {/* Modal giỏ hàng */}
+
       <Modal
-        title="Cart"
+        title={
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <ShoppingCartOutlined
+              style={{ fontSize: "30px", color: "#ff5a5f" }}
+            />
+          </div>
+        }
         visible={isCartVisible}
         onCancel={handleCartClose}
         footer={null}
-        width={700}
+        width={850}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {cart?.items?.length > 0 ? (
             <div>
-              {/* Nút lấy tất cả sản phẩm  */}
-              <Button onClick={handleSelectall}>Selected All Items</Button>
-              {/* Nút xóa các sản phẩm đã chọn */}
-              <Button
-                onClick={handleDeleteSelectedItems}
-                disabled={selectedItems.length === 0}
-              >
-                Delete Selected Items
-              </Button>
+              {/* Nút lấy tất cả sản phẩm */}
+              <div className="button-container">
+                <Button
+                  onClick={handleSelectall}
+                  className="button-cart"
+                  style={{ width: "100px" }}
+                >
+                  <CheckCircleOutlined className="icon-cart" />
+                </Button>
+
+                {/* Nút xóa các sản phẩm đã chọn */}
+                <Button
+                  className="button-delete"
+                  onClick={handleDeleteSelectedItems}
+                  disabled={selectedItems.length === 0}
+                  style={{ width: "100px" }}
+                >
+                  <DeleteOutlined className="icon-cart" />
+                </Button>
+              </div>
 
               {/* Danh sách sản phẩm trong giỏ hàng */}
               {cart?.items?.map((flower, index) => (
                 <div
-                  key={index}
+                  key={flower.flowerID}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
+                    flexDirection: "row",
+                    gap: "20px",
                     marginBottom: "10px",
                     marginTop: "10px",
+                    fontSize: "20px",
                   }}
                 >
                   {/* Checkbox để chọn sản phẩm */}
@@ -395,24 +422,34 @@ function Header() {
                     alt={flower.flowerName}
                     width="50px"
                     style={{
-                      borderRadius: "50px",
-                      width: "100px",
-                      height: "100px",
+                      borderRadius: "8px",
+                      width: "150px",
+                      height: "150px",
                     }}
                   />
 
                   {/* Tên sản phẩm và giá */}
                   <div
                     style={{
-                      flex: 1,
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
+                      gap: "40px",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flex: 1,
                     }}
                   >
-                    <p style={{ margin: 0 }}>
-                      {flower.flowerName} - {flower.price}
+                    <p style={{ margin: 0, flex: 1 }}>
+                      {flower.flowerName} - {flower.shopName}
                     </p>
+                    <strong
+                      style={{
+                        color: "rgb(244 121 122)",
+                        flex: 2,
+                        textAlign: "center",
+                      }}
+                    >
+                      {flower.price}
+                    </strong>
                   </div>
 
                   {/* Input số lượng sản phẩm */}
@@ -427,20 +464,37 @@ function Header() {
                       setCart(updatedCart);
                       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
                     }}
-                    style={{ width: "50px", textAlign: "center" }}
+                    style={{ width: "10px", textAlign: "center", flex: 0.25 }}
                   />
 
                   {/* Nút xóa từng sản phẩm */}
-                  <Button onClick={() => handleDeleteItem(flower.flowerID)}>
-                    Delete
+                  <Button
+                    style={{
+                      width: "100px",
+                      color: "white",
+                      backgroundColor: "#ff5a5f",
+                    }}
+                    onClick={() => handleDeleteItem(flower.flowerID)}
+                  >
+                    Remove
                   </Button>
                 </div>
               ))}
 
               {/* Tính tổng giá trị giỏ hàng cho sản phẩm đã chọn */}
-              <p>
-                <strong>Total:</strong> {getTotalPrice()}
-              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  paddingRight: "20px",
+                }}
+              >
+                <p>
+                  <strong style={{ fontSize: "25px", color: "red" }}>
+                    Total: {getTotalPrice()}
+                  </strong>
+                </p>
+              </div>
 
               {/* Nút thanh toán */}
               <div
@@ -452,7 +506,12 @@ function Header() {
               >
                 <Button
                   type="primary"
-                  style={{ color: "white" }}
+                  style={{
+                    color: "white",
+                    width: "200px",
+                    height: "40px",
+                    fontSize: "15px",
+                  }}
                   onClick={handleCheckout}
                 >
                   CheckOut
@@ -460,9 +519,7 @@ function Header() {
               </div>
             </div>
           ) : (
-            <p style={{ textAlign: "center", color: "red" }}>
-              Empty Cart Please Buy Something
-            </p>
+            <p>Empty Cart Please Buy Something</p>
           )}
         </div>
       </Modal>

@@ -1,6 +1,6 @@
 .HomePage__body {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Chia thành 3 cột đều nhau */
+    grid-template-columns: repeat(4, 1fr); /* Chia thành 3 cột đều nhau */
     padding: 0px 50px;
     margin: 20px auto;
     justify-items: center;
@@ -31,7 +31,7 @@
 .product-card img {
     object-fit: cover;
     width: 100%;
-    height: 50%; /* Giữ tỷ lệ chiều cao của hình ảnh */
+    height: 50%; 
     border-radius: 8px;
     margin-bottom: 10px;
 }

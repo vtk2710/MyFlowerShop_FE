@@ -78,3 +78,53 @@ h2, h3 {
   border-radius: 10px; 
 }
 
+.customer-info-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+}
+
+
+.radio-button {
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff5a5f; 
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: none; 
+}
+hover {
+  background-color: #ff5a5f; 
+  color: white; 
+}
+/* Xóa viền giữa hai nút Radio Button */
+.ant-radio-button-wrapper {
+border-left: none !important;
+margin-right: 10px; 
+}
+.ant-radio-button-wrapper-checked {
+border-left: none !important;
+border-right: none !important;
+}
+
+
+
+//VOUCHER
+
+
+.total-summary {
+text-align: center;
+font-size: 20px;
+}
+
+.total-summary h2 {
+font-size: 24px;
+color: red;
+}

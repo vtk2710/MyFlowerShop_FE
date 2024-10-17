@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Products } from "../../Share/Product"; // Đảm bảo bạn nhập đúng đường dẫn đến Products
+import { Products } from "../../Share/Product";
 import FlowerDonutChart from "../Donut/Donut";
 
 // Hàm để chuyển đổi dữ liệu cho biểu đồ

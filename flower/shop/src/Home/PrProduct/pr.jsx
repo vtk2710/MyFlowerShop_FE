@@ -7,7 +7,7 @@ import "./pr.scss";
 function PrProduct() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9;
+  const productsPerPage = 8;
 
   // Tạo ref để tham chiếu đến phần tử chứa danh sách sản phẩm
   const productSectionRef = useRef(null);

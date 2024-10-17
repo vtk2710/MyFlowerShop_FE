@@ -77,27 +77,21 @@
   border: 1px solid;
   border-radius: 10px;
   }
- 
-  
 
-/* Định dạng cho toàn bộ form */
-form {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: visible;
+  .ant-modal-body {
+    display: flex;
+    flex-direction: column; /* Đảm bảo các phần tử xếp theo cột */
+    gap: 20px; /* Khoảng cách giữa các phần tử */
 }
 
-/* Định dạng cho các input */
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+.cart-item {
+    display: flex;
+    align-items: center; /* Căn giữa các phần tử theo trục dọc */
+    justify-content: space-between; /* Đảm bảo khoảng cách đều giữa các phần tử */
+    gap: 20px; /* Khoảng cách giữa các phần tử bên trong mỗi sản phẩm */
 }
+
+
 
 
 
@@ -106,77 +100,159 @@ input {
 /* Giới hạn kích thước modal */
 
 .modal-wrapper {
-  position: relative;
-  margin: 0 auto;
-  padding: 24px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  width: 90%; /* Điều chỉnh chiều rộng modal */
-  max-width: 400px; /* Giới hạn chiều rộng tối đa của modal */
-  min-height: auto; /* Cho phép chiều cao tự động thay đổi */
+position: relative;
+margin: 0 auto;
+padding: 24px;
+background-color: #fff;
+border-radius: 10px;
+box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+width: 100%;
+min-height: 400px; /* Điều chỉnh min-height để modal đủ không gian cho cả hai form */
+}
+.ant-modal{
+padding: 0px;
 }
 
-.ant-modal {
-  padding: 0;
-}
 
 .form-container {
-  width: 100%;
-  height: auto; /* Cho phép chiều cao tự động thay đổi */
-  padding: 10px 0;
-  overflow: hidden;
+position: relative;
+width: 100%;
+height: 300px; /* Điều chỉnh chiều cao của container để hiển thị form đầy đủ */
+overflow: hidden;
 }
 
 .form-transition {
-  position: relative;
-  width: 100%;
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease;
+position: absolute;
+width: 100%;
+transition: transform 0.5s ease-in-out, opacity 0.5s ease;
 }
 
 .form-visible {
-  opacity: 1;
-  transform: translateX(0);
+opacity: 1;
+transform: translateX(0); /* Form đang được hiển thị */
 }
 
 .form-hidden {
-  opacity: 0;
-  transform: translateX(-100%);
-  pointer-events: none;
+opacity: 0;
+transform: translateX(100%); /* Form bị ẩn, đẩy sang bên phải */
+pointer-events: none; /* Ngăn không cho tương tác với form bị ẩn */
 }
 
-.signup-link, .forgot-password-link {
-  font-size: 14px;
-  color: #ff5a5f;
-  font-weight: bold;
-  transition: color 0.3s ease;
-  text-align: center;
-  display: block;
-  margin-top: 15px;
+.signup-link {
+font-size: 14px;
+color: #ff5a5f;
+font-weight: bold;
+transition: color 0.3s ease;
+margin-top: 300px; /* Thêm khoảng cách giữa form và nút */
+display: block; /* Căn giữa nút */
+text-align: center;
 }
-
-.signup-link:hover, .forgot-password-link:hover {
-  color: #e04444;
+.signup-link:hover {
+color: #e04444;
 }
 
 .ant-input,
 .ant-input-password {
-  padding: 10px;
-  font-size: 14px;
+padding: 10px;
+font-size: 14px;
 }
 
 .ant-btn-primary {
-  background-color: #ff5a5f;
-  border: none;
-  font-size: 16px;
-  font-weight: bold;
-  width: 100%;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
+background-color: #ff5a5f;
+border: none;
+font-size: 16px;
+font-weight: bold;
+width: 100%;
+transition: background-color 0.3s ease;
 }
 
 .ant-btn-primary:hover {
-  background-color: #e04444;
+background-color: #e04444;
+}
+
+.forgot-password-link {
+font-size: 14px;
+color: #ff5a5f;
+font-weight: bold;
+transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+color: #e04444;
+}
+
+.form-container {
+height: auto; /* Cho phép chiều cao tự động thay đổi dựa trên nội dung */
+min-height: 400px; /* Đảm bảo đủ chiều cao cho cả form */
 }
 
 
+
+.form-transition {
+position: absolute;
+width: 100%;
+transition: transform 0.5s ease-in-out, opacity 0.5s ease;
+}
+
+.form-hidden {
+opacity: 0;
+transform: translateX(-100%); /* Form ẩn sẽ bị đẩy sang bên trái */
+}
+
+.form-visible {
+opacity: 1;
+transform: translateX(0); /* Form hiển thị ở vị trí ban đầu */
+}
+
+
+.button-container {
+display: flex;
+align-items: center;
+gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.button-cart {
+background-color: #ff5a5f; 
+width: 100px;
+border: none;
+padding: 5px 10px; 
+border-radius: 5px;
+display: flex;
+align-items: center;
+transition: background-color 0.3s ease;
+cursor: pointer;
+}
+
+.button-cart:hover {
+background-color: #459bed; 
+}
+
+.button-delete {
+background-color: #ff5a5f;
+ width: 100px;
+border: none;
+padding: 5px 10px; 
+border-radius: 5px;
+display: flex;
+align-items: center;
+color: white;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.button-delete:hover {
+background-color: #459bed; 
+}
+
+.icon-cart {
+font-size: 16px; 
+margin-right: 5px; 
+}
+
+
+@media (max-width: 576px) {
+.modal-wrapper {
+  width: 90%;
+  padding: 15px;
+}
+}

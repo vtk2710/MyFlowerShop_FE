@@ -1,15 +1,14 @@
 .HomePage__body {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Chia thành 3 cột đều nhau */
+  grid-template-columns: repeat(4, 1fr); /* Chia thành 4 cột đều nhau */
   padding: 0px 50px;
   margin: 20px auto;
-  justify-items: center;
-  gap: 30px;
+  justify-items: center; /* Căn giữa các thẻ sản phẩm trong mỗi cột */
+  gap: 30px; /* Khoảng cách giữa các thẻ sản phẩm */
 }
 
 .product-card {
-  width: 80%; 
-  height: 500px;
+  width: 80%; /* Thẻ sản phẩm sẽ chiếm 80% chiều rộng cột */
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -19,7 +18,7 @@
   border: 1px solid #d9c7c7;
   display: flex;
   flex-direction: column;
- 
+  height: 80%;
 
 }
 
@@ -31,7 +30,7 @@
 .product-card img {
   object-fit: cover;
   width: 100%;
-  height: 50%; 
+  height: 50%; /* Giữ tỷ lệ chiều cao của hình ảnh */
   border-radius: 8px;
   margin-bottom: 10px;
 }
@@ -51,9 +50,9 @@
 .product-card .ant-btn:hover {
   background-color: #fb0303;
 }
-/* Ẩn các SVG (mũi tên) của Ant Design Pagination */
-.ant-pagination-prev .anticon,
-.ant-pagination-next .anticon {
-  display: none; // Ẩn mũi tên mặc định
-}
-
+  /* Ẩn các SVG (mũi tên) của Ant Design Pagination */
+  .ant-pagination-prev .anticon,
+  .ant-pagination-next .anticon {
+    display: none; // Ẩn mũi tên mặc định
+  }
+  

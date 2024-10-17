@@ -37,7 +37,7 @@ const RelatedProductsSwiper = ({ currentFlowerId, currentCategoryId }) => {
         slidesPerView={3} // Hiển thị 3 sản phẩm trên mỗi slide
         loop={false} // Đặt loop là false để không lặp lại
         pagination={{ clickable: true }} // Kích hoạt phân trang
-        className='mySwiperRelatedProducts'
+        className="mySwiperRelatedProducts"
       >
         {flowerList.map((flower) => (
           <SwiperSlide key={flower.flowerId}>
