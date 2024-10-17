@@ -3,8 +3,6 @@ import { Avatar, Menu } from 'antd';
 import {
   UserOutlined,
   DashboardOutlined,
-  DollarOutlined,
-  MessageOutlined,
   ShoppingCartOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';
@@ -35,12 +33,6 @@ const Sidebar = ({ setActiveSection, avatarSrc }) => {
           </Menu.Item>
           <Menu.Item key="orders" icon={<ShoppingCartOutlined />} onClick={() => setActiveSection('orders')}>
             Manage Orders
-          </Menu.Item>
-          <Menu.Item key="prices" icon={<DollarOutlined />} onClick={() => setActiveSection('prices')}>
-            Manage Prices
-          </Menu.Item>
-          <Menu.Item key="customerSupport" icon={<MessageOutlined />} onClick={() => setActiveSection('customerSupport')}>
-            Customer Questions
           </Menu.Item>
           <Menu.Item key="feedback" icon={<AppstoreOutlined />} onClick={() => setActiveSection('feedback')}>
             Manage Feedback

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import { Table, Tag, Space, Button, Select } from 'antd';
+import { useState } from 'react';
+import { Table, Button, Tag, Space, Input, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import './FlowerList.scss';
 
@@ -11,14 +11,10 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     description: '',
     status: '',
     price: '',
+    quantity: '',  // Thêm quantity vào form
+    date: '',  // Thêm date vào form
+    image: '',  // Giữ lại image để không mất sau khi save
   });
-
-  const [flowerData, setFlowerData] = useState([]);
-
-  useEffect(() => {
-    const savedFlowers = JSON.parse(localStorage.getItem('flowers')) || flowers;
-    setFlowerData(savedFlowers);
-  }, [flowers]);
 
   const handleEditClick = (flower) => {
     setEditingFlowerId(flower.id);
@@ -27,6 +23,9 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       description: flower.description,
       status: flower.status,
       price: flower.price,
+      quantity: flower.quantity,  // Thiết lập quantity
+      date: flower.date,  // Thiết lập date
+      image: flower.image,  // Giữ lại image để không mất khi save
     });
   };
 
@@ -38,6 +37,20 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     }));
   };
 
+  const handleQuantityChange = (value) => {
+    setFlowerForm((prevForm) => ({
+      ...prevForm,
+      quantity: value,
+    }));
+  };
+
+  const handleDateChange = (e) => {
+    setFlowerForm((prevForm) => ({
+      ...prevForm,
+      date: e.target.value,
+    }));
+  };
+
   const handleStatusChange = (value) => {
     setFlowerForm((prevForm) => ({
       ...prevForm,
@@ -45,12 +58,9 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     }));
   };
 
-  const handleUpdateClick = () => {
-    const updatedFlowers = flowerData.map((flower) =>
-      flower.id === editingFlowerId ? { ...flower, ...flowerForm } : flower
-    );
-    setFlowerData(updatedFlowers);
-    localStorage.setItem('flowers', JSON.stringify(updatedFlowers));
+  const handleSaveClick = (id) => {
+    const updatedFlower = { id, ...flowerForm };
+    updateFlower(updatedFlower);
     setEditingFlowerId(null);
   };
 
@@ -59,7 +69,16 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       title: 'Image',
       dataIndex: 'image',
       key: 'image',
-      render: (image) => <img src={image} alt="flower" style={{ width: '50px' }} />,
+      render: (image) => (
+        <img
+          src={image}
+          alt="flower"
+          style={{ width: '50px' }}
+          onError={(e) => {
+            e.target.style.display = 'none'; // Ẩn hình nếu không load được
+          }}
+        />
+      ),
     },
     {
       title: 'Name',
@@ -67,9 +86,9 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       key: 'name',
       render: (text, record) =>
         editingFlowerId === record.id ? (
-          <input type="text" name="name" value={flowerForm.name} onChange={handleInputChange} />
+          <Input name="name" value={flowerForm.name} onChange={handleInputChange} />
         ) : (
-          <a>{text}</a>
+          <span>{text}</span>
         ),
     },
     {
@@ -78,25 +97,24 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       key: 'description',
       render: (text, record) =>
         editingFlowerId === record.id ? (
-          <input type="text" name="description" value={flowerForm.description} onChange={handleInputChange} />
+          <Input name="description" value={flowerForm.description} onChange={handleInputChange} />
         ) : (
           <span>{text}</span>
         ),
     },
     {
       title: 'Status',
-      key: 'status',
       dataIndex: 'status',
-      render: (status, record) => {
-        return editingFlowerId === record.id ? (
-          <Select value={flowerForm.status} onChange={handleStatusChange} style={{ width: 120 }}>
+      key: 'status',
+      render: (status, record) =>
+        editingFlowerId === record.id ? (
+          <Select value={flowerForm.status} onChange={handleStatusChange} style={{ width: '120px' }}>
             <Select.Option value="available">Available</Select.Option>
             <Select.Option value="unavailable">Unavailable</Select.Option>
           </Select>
         ) : (
           <Tag color={status === 'available' ? 'green' : 'volcano'}>{status.toUpperCase()}</Tag>
-        );
-      },
+        ),
     },
     {
       title: 'Price',
@@ -104,19 +122,49 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       key: 'price',
       render: (price, record) =>
         editingFlowerId === record.id ? (
-          <input type="number" name="price" value={flowerForm.price} onChange={handleInputChange} />
+          <Input name="price" value={flowerForm.price} onChange={handleInputChange} />
         ) : (
           <span>{new Intl.NumberFormat('vi-VN').format(price)} VND</span>
         ),
     },
+    // Thêm cột Quantity
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      render: (quantity, record) =>
+        editingFlowerId === record.id ? (
+          <Select value={flowerForm.quantity} onChange={handleQuantityChange} style={{ width: '120px' }}>
+            {Array.from({ length: 20 }, (_, i) => i + 1).map((q) => (
+              <Select.Option key={q} value={q}>
+                {q}
+              </Select.Option>
+            ))}
+          </Select>
+        ) : (
+          <span>{quantity}</span>
+        ),
+    },
+    // Thêm cột Date
+    {
+      title: 'Post Date',
+      dataIndex: 'date',
+      key: 'date',
+      render: (date, record) =>
+        editingFlowerId === record.id ? (
+          <Input type="date" name="date" value={flowerForm.date} onChange={handleDateChange} />
+        ) : (
+          <span>{new Date(date).toLocaleDateString('en-US')}</span> // Hiển thị ngày định dạng tiếng Anh
+        ),
+    },
     {
       title: 'Actions',
-      key: 'action',
+      key: 'actions',
       render: (text, record) => (
         <Space size="middle">
           {editingFlowerId === record.id ? (
             <Button
-              onClick={handleUpdateClick}
+              onClick={() => handleSaveClick(record.id)}
               icon={<SaveOutlined />}
               style={{ backgroundColor: 'green', color: 'white' }}
             />
@@ -125,12 +173,12 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
               <Button
                 onClick={() => handleEditClick(record)}
                 icon={<EditOutlined />}
-                style={{ backgroundColor: 'red', color: 'white' }}
+                style={{ backgroundColor: 'orange', color: 'white' }}
               />
               <Button
                 onClick={() => deleteFlower(record.id)}
                 icon={<DeleteOutlined />}
-                style={{ backgroundColor: 'blue', color: 'white' }}
+                style={{ backgroundColor: 'red', color: 'white' }}
               />
             </>
           )}
@@ -140,15 +188,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   ];
 
   return (
-    <div className="flower-list">
-      <h2>Flower List</h2>
-      <Table
-        columns={columns}
-        dataSource={flowerData.map((flower) => ({ ...flower, key: flower.id }))}
-        pagination={{ pageSize: 5 }}
-        style={{ width: '100%' }}
-      />
-    </div>
+    <Table columns={columns} dataSource={flowers.map((flower) => ({ ...flower, key: flower.id }))} pagination={{ pageSize: 5 }} />
   );
 };
 
