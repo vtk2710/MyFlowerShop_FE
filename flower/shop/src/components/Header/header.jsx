@@ -25,6 +25,15 @@ function Header() {
   const [isCartVisible, setIsCartVisible] = useState(false); // State quản lý hiển thị modal giỏ hàng
   const [cart, setCart] = useState([]); // State cho giỏ hàng
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
+  const [categories, setCategories] = useState([]);
+
+  // Lấy danh sách danh mục từ localStorage khi trang được tải (category)
+  useEffect(() => {
+    const storedCategories = JSON.parse(localStorage.getItem("categories"));
+    if (storedCategories) {
+      setCategories(storedCategories);
+    }
+  }, []);
 
   //Hàm Search
   const onSearch = () => {
@@ -259,32 +268,18 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
-
-            <li>
-              <Link to="/">HOME</Link>
-            </li>
-            <li>
-              <Link to="/hoa-hong">ROSES</Link>
-            </li>
-            <li>
-              <Link to="/hoa-cuoi">WEDDING FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/hoa-chuc-mung">CONGRATULATORY FLOWERS</Link>
-            </li>
-
-            <li>
-              <Link to="/hoa-sinh-nhat">BIRTHDAY FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/hoa-dip-le">HOLIDAY FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/hoa-lan">ORCHIDS</Link>
-            </li>
-            <li>
-              <Link to="/hoa-de-ban">TABLE FLOWERS</Link>
-            </li>
+            {categories.map((category) => (
+              <li key={category.key}>
+                <Link
+                  to={`/${category.Category.toLowerCase().replace(
+                    /\s+/g,
+                    "-"
+                  )}`}
+                >
+                  {category.Category.toUpperCase()}
+                </Link>
+              </li>
+            ))}
 
             {/* <li>
               <UserOutlined
