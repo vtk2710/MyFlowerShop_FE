@@ -1,47 +1,55 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { Layout, Menu, Dropdown, Button } from 'antd';
-import { UserOutlined, DashboardOutlined, HomeOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom'; // Giữ lại cho các phần khác nếu cần
+import { Layout, Menu, Dropdown, Avatar, Badge } from 'antd';
+import { UserOutlined, SettingOutlined, LogoutOutlined, MailOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const { Header } = Layout;
 
-const Navbar = ({ sellerName }) => {
-  const navigate = useNavigate();  // Dùng cho phần điều hướng đến trang seller
+const Navbar = ({ avatarSrc, notificationCount }) => {
+  const navigate = useNavigate();
 
   const handleMenuClick = (e) => {
     if (e.key === '1') {
-      window.location.href = 'http://localhost:5173/homepage';  // Chuyển hướng đến trang homepage
+      // Logic for viewing profile
+    } else if (e.key === '2') {
+      // Logic for settings
     } else if (e.key === '3') {
-      navigate('/seller');  // Điều hướng tới trang seller
+      // Logic for logging out
     }
-  };
-
-  const handleSellerClick = () => {
-    navigate('/seller');  // Chuyển hướng tới trang seller khi bấm vào tên người dùng
   };
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1" icon={<HomeOutlined />}>
-        Home
+      <Menu.Item key="1" icon={<UserOutlined />}>
+        View Profile
       </Menu.Item>
-      <Menu.Item key="3" icon={<DashboardOutlined />}>
-        Dashboard
+      <Menu.Item key="2" icon={<SettingOutlined />}>
+        Settings
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="3" icon={<LogoutOutlined />} danger>
+        Log Out
       </Menu.Item>
     </Menu>
   );
 
   return (
-    <Header style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: '#fff' }}>
+    <Header style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: '#fff', padding: '0 20px' }}>
       <div style={{ fontSize: '24px', fontWeight: 'bold' }}>Seller Management Page</div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Button onClick={handleSellerClick} icon={<UserOutlined />} type="text">
-          {sellerName}
-        </Button>
-        <Dropdown overlay={menu} placement="bottomRight">
-          <Button icon={<DashboardOutlined />} type="text">
-            Menu
-          </Button>
+        {/* Notification Icon */}
+        <Badge count={notificationCount} offset={[10, 0]}>
+          <MailOutlined style={{ fontSize: '24px', marginRight: '20px', cursor: 'pointer' }} />
+        </Badge>
+        {/* Avatar */}
+        <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
+          <Avatar
+            src={avatarSrc}
+            size="large"
+            style={{ cursor: 'pointer' }}
+          />
         </Dropdown>
       </div>
     </Header>

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle, faEdit, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './CustomerSupport.scss';
 
 const CustomerSupport = () => {
@@ -33,32 +35,37 @@ const CustomerSupport = () => {
   return (
     <div className="customer-support">
       <h2>Manage Customer Questions</h2>
-      <h3>Customer Questions</h3>
       <ul className="questions-list">
         {customerQuestions.map((question) => (
-          <li key={question.id}>
-            <p><strong>Q:</strong> {question.question}</p>
+          <li key={question.id} className="question-item">
+            <p>
+              <FontAwesomeIcon icon={faQuestionCircle} className="question-icon" /> <strong>Q:</strong> {question.question}
+            </p>
             {!question.answered ? (
-              <div>
+              <div className="response-section">
                 <textarea
                   placeholder="Type your response..."
                   value={editingResponseId === question.id ? responseInput : ''}
                   onChange={(e) => setResponseInput(e.target.value)}
+                  className="response-textarea"
                 />
-                <button 
-                  className="submit-response-button" 
-                  onClick={() => handleResponseChange(question.id, responseInput)}
-                >
-                  {editingResponseId === question.id ? 'Submit Response' : 'Edit Response'}
-                </button>
-                {editingResponseId === question.id && (
-                  <button className="cancel-button" onClick={() => {
-                    setEditingResponseId(null);
-                    setResponseInput('');
-                  }}>
-                    Cancel
+                <div className="button-group">
+                  <button 
+                    className={`submit-response-button ${editingResponseId === question.id ? 'active' : ''}`}
+                    onClick={() => handleResponseChange(question.id, responseInput)}
+                  >
+                    {editingResponseId === question.id ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faEdit} />} 
+                    {editingResponseId === question.id ? ' Submit' : ' Edit Response'}
                   </button>
-                )}
+                  {editingResponseId === question.id && (
+                    <button className="cancel-button" onClick={() => {
+                      setEditingResponseId(null);
+                      setResponseInput('');
+                    }}>
+                      <FontAwesomeIcon icon={faTimes} /> Cancel
+                    </button>
+                  )}
+                </div>
               </div>
             ) : (
               <p><strong>A:</strong> {question.response}</p>

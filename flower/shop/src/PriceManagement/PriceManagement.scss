@@ -24,6 +24,10 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+
+      &:hover {
+        background-color: darkgreen; // Hiệu ứng khi hover
+      }
     }
   }
 
@@ -44,7 +48,7 @@
     tbody {
       tr {
         &:hover {
-          background-color: #f9f9f9; // Chế độ hover cho hàng
+          background-color: #f9f9f9; // Màu nền khi hover vào hàng
         }
 
         td {
@@ -59,12 +63,16 @@
             padding: 5px 10px;
             cursor: pointer;
             border-radius: 3px; // Bo tròn cho nút
+
+            &:hover {
+              background-color: darkred; // Màu khi hover vào nút
+            }
           }
         }
       }
     }
   }
-  
+
   // Kiểu dáng cho modal khi thêm hoặc sửa giá
   .modal {
     position: fixed;
@@ -98,13 +106,67 @@
     }
 
     .update-button {
-      background-color: green; // Màu cho nút Update
+      background-color: blue; // Màu cho nút Update
       color: white;
+
+      &:hover {
+        background-color: darkblue; // Hiệu ứng khi hover
+      }
     }
 
     .cancel-button {
       background-color: red; // Màu cho nút Cancel
       color: white;
+
+      &:hover {
+        background-color: darkred; // Hiệu ứng khi hover
+      }
     }
+  }
+}
+
+// Kiểu dáng chung cho bảng Ant Design
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Kiểu dáng cho input
+.ant-input {
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+// Căn chỉnh footer của modal
+.ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  .ant-btn-primary {
+    background-color: blue; // Màu xanh cho nút Update trong footer modal
+    border: none;
+
+    &:hover {
+      background-color: darkblue; // Hiệu ứng hover cho nút Update
+    }
+  }
+
+  .ant-btn-default {
+    background-color: red; // Màu đỏ cho nút Cancel trong footer modal
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: darkred; // Hiệu ứng hover cho nút Cancel
+    }
+  }
+}
+
+// Kiểu cho nút link
+.ant-btn-link {
+  color: red;
+
+  &:hover {
+    color: darkred; // Màu khi hover vào nút link
   }
 }

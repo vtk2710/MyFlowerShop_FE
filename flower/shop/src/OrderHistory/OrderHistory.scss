@@ -1,0 +1,229 @@
+/* Navbar */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Wrapper cho toàn bộ trang Order History */
+.order-history-wrapper {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    max-width: 1300px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Container chính cho nội dung */
+.order-history-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Tabs */
+.tabs-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    margin-top: 60px; /* Khoảng cách với navbar */
+    background-color: white;
+    z-index: 900; /* Đảm bảo nằm dưới navbar */
+}
+
+.tab-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+        color: #ff5733;
+    }
+
+    &.active-tab {
+        color: #ff5733;
+        border-bottom: 2px solid #ff5733;
+    }
+}
+
+/* Search bar */
+.search-bar {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+
+    input {
+        width: 100%;
+        max-width: 600px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+}
+
+/* Nội dung của các đơn hàng */
+.orders-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Card đơn hàng */
+.order-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Hình ảnh đơn hàng */
+.order-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+}
+
+/* Thông tin đơn hàng */
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    h3 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    p {
+        margin: 0;
+        color: #555;
+        font-size: 16px;
+    }
+
+    .total-price {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .price-label {
+        color: #555;
+        font-size: 16px;
+    }
+
+    .price-amount {
+        color: #ff5733;
+        font-weight: bold;
+        font-size: 18px;
+    }
+}
+
+/* Các hành động cho đơn hàng */
+.order-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+
+    .buy-again-button,
+    .contact-seller-button {
+        padding: 10px 15px;
+        background-color: #ff5733;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        flex: 1;
+        transition: background-color 0.3s;
+    }
+
+    .contact-seller-button {
+        background-color: #555;
+    }
+
+    .buy-again-button:hover,
+    .contact-seller-button:hover {
+        background-color: #ff2a00;
+    }
+}
+
+/* Phân trang */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #f0f0f0;
+    color: #ff5733;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    border-color: #ccc;
+    background-color: #eee;
+}
+
+.pagination button.active {
+    background-color: #ff5733;
+    color: white;
+    border: 1px solid #ff5733;
+}
+
+/* Trạng thái giao hàng */
+.delivery-status {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 16px;
+    color: green;
+
+    svg {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+}

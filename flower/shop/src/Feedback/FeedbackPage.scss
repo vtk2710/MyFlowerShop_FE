@@ -1,0 +1,149 @@
+.feedback-page-wrapper {
+    background-color: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.feedback-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    animation: fadeIn 0.6s ease-in-out;
+    text-align: center;
+}
+
+.feedback-container h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.order-summary {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    gap: 20px;
+}
+
+.order-image {
+    flex: 1;
+}
+
+.order-details {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order-details h3 {
+    font-size: 22px;
+    color: #444;
+    font-weight: bold;
+}
+
+.order-details p {
+    font-size: 16px;
+    color: #555;
+    margin: 3px 0;
+}
+
+.order-details p strong {
+    color: #333;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+form input,  /* Thêm input ở đây để nó kế thừa cùng kiểu với select và textarea */
+form select,
+form textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+form input:focus,  /* Thêm focus cho input */
+form select:focus,
+form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+form textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+form button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+form button:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group label {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 24px;
+    color: #ccc;
+    transition: color 0.3s ease;
+}
+
+.star.selected {
+    color: #ffd700;
+}
