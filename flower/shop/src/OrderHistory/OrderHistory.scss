@@ -8,7 +8,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Wrapper cho toàn bộ trang Order History */
+/* Wrapper for Order History page */
 .order-history-wrapper {
     padding: 20px;
     background-color: #f9f9f9;
@@ -18,14 +18,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Container chính cho nội dung */
+/* Main container for content */
 .order-history-container {
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
 }
 
-/* Tabs */
+/* Tabs for filtering orders */
 .tabs-container {
     display: flex;
     justify-content: flex-start;
@@ -33,9 +33,9 @@
     border-bottom: 1px solid #ddd;
     margin-bottom: 20px;
     padding: 10px 0;
-    margin-top: 60px; /* Khoảng cách với navbar */
+    margin-top: 60px;
     background-color: white;
-    z-index: 900; /* Đảm bảo nằm dưới navbar */
+    z-index: 900; /* Ensure it stays under navbar */
 }
 
 .tab-item {
@@ -45,15 +45,15 @@
     color: #333;
     transition: color 0.2s, border-bottom 0.2s;
     border-bottom: 2px solid transparent;
+}
 
-    &:hover {
-        color: #ff5733;
-    }
+.tab-item:hover {
+    color: #ff5733;
+}
 
-    &.active-tab {
-        color: #ff5733;
-        border-bottom: 2px solid #ff5733;
-    }
+.tab-item.active-tab {
+    color: #ff5733;
+    border-bottom: 2px solid #ff5733;
 }
 
 /* Search bar */
@@ -61,18 +61,18 @@
     margin: 20px 0;
     display: flex;
     justify-content: center;
-
-    input {
-        width: 100%;
-        max-width: 600px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-    }
 }
 
-/* Nội dung của các đơn hàng */
+.search-bar input {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Order content area */
 .orders-content {
     background-color: white;
     padding: 20px;
@@ -80,7 +80,7 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Card đơn hàng */
+/* Each order card */
 .order-card {
     display: flex;
     flex-direction: column;
@@ -90,93 +90,105 @@
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 8px;
+    transition: box-shadow 0.3s ease;
 }
 
-/* Hình ảnh đơn hàng */
+.order-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Order image container */
 .order-image {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 200px;
-
-    img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        display: block;
-    }
 }
 
-/* Thông tin đơn hàng */
+.order-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Order info section */
 .order-info {
     display: flex;
     flex-direction: column;
     gap: 10px;
-
-    h3 {
-        margin: 0;
-        font-size: 24px;
-        color: #333;
-    }
-
-    p {
-        margin: 0;
-        color: #555;
-        font-size: 16px;
-    }
-
-    .total-price {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 8px;
-        margin-top: 10px;
-        font-size: 18px;
-    }
-
-    .price-label {
-        color: #555;
-        font-size: 16px;
-    }
-
-    .price-amount {
-        color: #ff5733;
-        font-weight: bold;
-        font-size: 18px;
-    }
+    text-align: center;
 }
 
-/* Các hành động cho đơn hàng */
+.order-info h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+/* View Detail button */
+.view-detail-button {
+    background-color: #ff5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100%; /* Đặt chiều dài nút bằng với h3 */
+    max-width: 200px; /* Cùng chiều dài với h3 */
+    margin: 0 auto; /* Căn giữa */
+    transition: background-color 0.3s ease;
+}
+
+.view-detail-button:hover {
+    background-color: #ff2a00;
+}
+
+/* Total Price */
+.total-price {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #ff5733;
+    font-weight: bold;
+}
+
+/* Action buttons for each order */
 .order-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-
-    .buy-again-button,
-    .contact-seller-button {
-        padding: 10px 15px;
-        background-color: #ff5733;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        flex: 1;
-        transition: background-color 0.3s;
-    }
-
-    .contact-seller-button {
-        background-color: #555;
-    }
-
-    .buy-again-button:hover,
-    .contact-seller-button:hover {
-        background-color: #ff2a00;
-    }
 }
 
-/* Phân trang */
+.order-actions .buy-again-button,
+.order-actions .contact-seller-button {
+    padding: 10px 15px;
+    background-color: #ff5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    flex: 1;
+    transition: background-color 0.3s ease;
+}
+
+.order-actions .contact-seller-button {
+    background-color: #555;
+}
+
+.order-actions .buy-again-button:hover,
+.order-actions .contact-seller-button:hover {
+    background-color: #ff2a00;
+}
+
+/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
@@ -214,16 +226,74 @@
     border: 1px solid #ff5733;
 }
 
-/* Trạng thái giao hàng */
+/* Delivery status */
 .delivery-status {
     display: flex;
     align-items: center;
     margin-top: 8px;
     font-size: 16px;
     color: green;
-
-    svg {
-        margin-right: 8px;
-        font-size: 18px;
-    }
 }
+
+.delivery-status svg {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* Modal styles */
+.ant-modal-content {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.ant-modal-header {
+    border-bottom: none;
+}
+
+.ant-modal-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.ant-modal-footer {
+    border-top: none;
+}
+
+/* Modal Image */
+.order-details-modal .modal-image {
+    max-width: 150px; /* Smaller size for the image inside the modal */
+    height: auto;
+    display: block;
+    margin-bottom: 20px; /* Spacing between image and other details */
+}
+
+/* Order Details Modal */
+.order-details-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-details-content {
+    display: flex;
+    justify-content: space-between; /* Tạo khoảng cách giữa hai cột */
+    gap: 20px;
+}
+
+.order-details-column {
+    flex: 1; /* Chia đều mỗi cột */
+}
+
+.order-details-column p {
+    margin: 10px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.order-details-column p svg {
+    margin-right: 10px;
+    color: #ff5733; /* Màu biểu tượng */
+    font-size: 18px;
+}
+
