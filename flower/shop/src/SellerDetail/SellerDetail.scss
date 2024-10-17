@@ -1,0 +1,169 @@
+.seller-page {
+  text-align: center;
+  padding: 20px;
+
+  .seller-details-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; // Align content to the left
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; // Full width
+    margin-bottom: 30px;
+
+    .seller-logo-container {
+      background-color: #000; // Black background for the container
+      padding: 15px;
+      border-radius: 8px; // Rounded corners for the rectangular container
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 250px; // Width of the rectangular container
+      height: 150px; // Height of the rectangular container
+
+      .seller-logo {
+        width: 100px; // Fixed size for the circular logo
+        height: 100px;
+        border-radius: 50%; // Makes the logo circular
+      }
+    }
+
+    .seller-details {
+      margin-left: 50px; // Increase space between logo and details
+      text-align: left;
+      flex-grow: 1;
+
+      h1 {
+        font-size: 2rem; // Larger font size for the shop name
+        margin-bottom: 10px;
+      }
+
+      .seller-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 16px;
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 10px; // Gap between icon and text
+          font-size: 15px;
+
+          & > span {
+            color: #ff9900; // Orange color for text after colon
+          }
+
+          // Style for each detail with icons
+          &:nth-child(1) svg {
+            color: #1890ff; // Icon color for Products
+          }
+
+          &:nth-child(2) svg {
+            color: #1890ff; // Icon color for Followers
+          }
+
+          &:nth-child(3) svg {
+            color: #1890ff; // Icon color for Rating
+          }
+
+          &:nth-child(4) svg {
+            color: #1890ff; // Icon color for Joined date
+          }
+        }
+      }
+    }
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #ff5e57;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .product-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .product-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      color: #ff5e57;
+      margin-bottom: 20px;
+    }
+  }
+
+  .pagination-nav {
+    margin-top: 20px;
+
+    .pagination {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+
+      .page-item {
+        margin: 0 5px;
+        cursor: pointer;
+
+        &.active .page-link {
+          background-color: #ff5e57;
+          color: white;
+        }
+
+        &.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        .page-link {
+          padding: 8px 12px;
+          border: 1px solid #ddd;
+          text-decoration: none;
+          color: #333;
+          border-radius: 5px;
+
+          &:hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+    }
+  }
+}
