@@ -1,10 +1,10 @@
-// OrderHistory.js
 import { useState, useEffect } from 'react';
 import Header from './Navbar';
 import './OrderHistory.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { allOrders } from '../Share/history';
-import { TruckOutlined } from '@ant-design/icons';
+import { TruckOutlined, UserOutlined, PhoneOutlined, CreditCardOutlined, CalendarOutlined, EnvironmentOutlined, ProfileOutlined, GiftOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import { Modal, Button } from 'antd'; // Import Ant Design modal component
 import Footer from './Footer';
 
 const OrderHistory = () => {
@@ -27,6 +27,10 @@ const OrderHistory = () => {
     const [selectedTab, setSelectedTab] = useState(type);
     const [orders, setOrders] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState(''); // Thêm searchQuery để lưu từ khóa tìm kiếm
+    const [visibleModal, setVisibleModal] = useState(false); // State for modal visibility
+    const [selectedOrder, setSelectedOrder] = useState(null); // State to store selected order details
+
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -45,49 +49,34 @@ const OrderHistory = () => {
     };
 
     const handleBuyAgainClick = (order) => {
-        switch (order.category) {
-            case 'birthday':
-                navigate('/birthday');
-                break;
-            case 'wedding':
-                navigate('/wedding');
-                break;
-            case 'congratulatory':
-                navigate('/congratulate');
-                break;
-            case 'holiday':
-                navigate('/holiday');
-                break;
-            case 'valentine':
-                navigate('/valentine');
-                break;
-            case 'christmas':
-                navigate('/christmas');
-                break;
-            case 'newyear':
-                navigate('/newyear');
-                break;
-            case 'table':
-                navigate('/table');
-                break;
-            case 'orchid':
-                navigate('/orchid');
-                break;
-            default:
-                navigate('/');
-                break;
-        }
+        navigate(`/${order.category}`);
     };
 
     const handleFeedbackClick = (order) => {
-        navigate(`/feedback`, { state: { order } });
+        navigate('/feedback', { state: { order } });
     };
 
+    // Thêm hàm mở modal để hiển thị chi tiết đơn hàng
+    const handleViewDetailClick = (order) => {
+        setSelectedOrder(order); // Đặt đơn hàng đã chọn để hiển thị trong modal
+        setVisibleModal(true); // Mở modal
+    };
+
+    const handleModalClose = () => {
+        setVisibleModal(false); // Đóng modal
+    };
+
+    // Tính toán để hiển thị các đơn hàng trên trang hiện tại
     const indexOfLastOrder = currentPage * itemsPerPage;
     const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
-    const currentOrders = type === 'all' ? orders.slice(indexOfFirstOrder, indexOfLastOrder) : orders;
 
-    const totalPages = Math.ceil(orders.length / itemsPerPage);
+    const filteredOrders = orders.filter(order =>
+        order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+    const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
 
     const shouldShowBuyAgainButton = (status) => {
         return status === 'completed' || status === 'canceled' || type === 'all';
@@ -109,11 +98,16 @@ const OrderHistory = () => {
                     ))}
                 </div>
                 <div className="search-bar">
-                    <input type="text" placeholder="You can search by Shop name, Order ID or Product Name" />
+                    <input
+                        type="text"
+                        placeholder="You can search by Product Name"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
                 <div className="orders-content">
                     {currentOrders.length === 0 ? (
-                        <p>Không có đơn hàng nào.</p>
+                        <p>No order here.</p>
                     ) : (
                         currentOrders.map((order) => (
                             <div key={order.id} className="order-card">
@@ -121,20 +115,23 @@ const OrderHistory = () => {
                                     <img src={order.imageUrl} alt={order.productName} />
                                 </div>
                                 <div className="order-info">
-                                    <h3>{order.shopName}</h3>
-                                    <p>Date: {order.date}</p>
-                                    <p>Flower: {order.productName}</p>
-                                    <p>Quantity: {order.quantity}</p>
+                                    <h3>{order.productName}</h3>
+                                    <button
+                                        className="view-detail-button"
+                                        onClick={() => handleViewDetailClick(order)}
+                                    >
+                                        View Detail
+                                    </button>
                                     <p className="total-price">
                                         <span className="price-label">Money:</span>
                                         <span className="price-amount">{order.total.toLocaleString()} VND</span>
                                     </p>
-                                    {(order.status === 'completed' && (
+                                    {order.status === 'completed' && (
                                         <div className="delivery-status">
                                             <TruckOutlined style={{ marginRight: '8px' }} />
                                             <span>Deliver Success</span>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                                 <div className="order-actions">
                                     {shouldShowBuyAgainButton(order.status) && (
@@ -156,7 +153,7 @@ const OrderHistory = () => {
                         ))
                     )}
                 </div>
-                {type === 'all' && totalPages > 1 && (
+                {totalPages > 1 && (
                     <div className="pagination">
                         <button 
                             onClick={() => handlePageChange(currentPage - 1)} 
@@ -181,8 +178,43 @@ const OrderHistory = () => {
                         </button>
                     </div>
                 )}
+
+                {/* Modal for showing order details */}
+                <Modal
+                    title="Order Details"
+                    visible={visibleModal}
+                    onCancel={handleModalClose}
+                    footer={[
+                        <Button key="close" onClick={handleModalClose}>Close</Button>
+                    ]}
+                >
+                    {selectedOrder && (
+                        <div className="order-details-modal">
+                            <img 
+                                src={selectedOrder.imageUrl} 
+                                alt={selectedOrder.productName} 
+                                className="modal-image"
+                            />
+                            <div className="order-details-content">
+                                <div className="order-details-column">
+                                    <p><ProfileOutlined /> Order ID: {selectedOrder.id}</p>
+                                    <p><GiftOutlined /> Flower ID: {selectedOrder.flowerId}</p>
+                                    <p><UserOutlined /> User ID: {selectedOrder.userId}</p>
+                                    <p><PhoneOutlined /> Phone Number: {selectedOrder.phoneNumber}</p>
+                                </div>
+                                <div className="order-details-column">
+                                    <p><CreditCardOutlined /> Payment Method: {selectedOrder.paymentMethod}</p>
+                                    <p><TruckOutlined /> Delivery Method: {selectedOrder.deliveryMethod}</p>
+                                    <p><CalendarOutlined /> Created Date: {new Date(selectedOrder.createdDate).toLocaleDateString()}</p>
+                                    <p><EnvironmentOutlined /> Address: {selectedOrder.address}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </Modal>
+
+                <Footer /> 
             </div>
-            <Footer /> 
         </div>
     );
 };
