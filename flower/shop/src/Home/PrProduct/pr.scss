@@ -1,8 +1,7 @@
-.HomePage__body{
-  display: flex;
-  flex-wrap: wrap;// phần tử con xuống dòng nếu không đủ
-  justify-content: space-between;// căn giữa
-  padding: 0px 100px;
+.HomePage__body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Chia thành 3 cột đều nhau */
+  padding: 0px 50px;
   margin: 20px auto;
   gap: 20px;
   

@@ -13,25 +13,25 @@ const SellerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const addFlower = (newFlower) => {
-    setFlowers([...flowers, newFlower]);
-  };
+//   const addFlower = (newFlower) => {
+//     setFlowers([...flowers, newFlower]);
+//   };
 
-  const deleteFlower = (id) => {
-    setFlowers(flowers.filter((flower) => flower.id !== id));
-  };
+//   const deleteFlower = (id) => {
+//     setFlowers(flowers.filter((flower) => flower.id !== id));
+//   };
 
-  const updateFlower = (id, updatedFlower) => {
-    setFlowers(
-      flowers.map((flower) =>
-        flower.id === id ? { ...flower, ...updatedFlower } : flower
-      )
-    );
-  };
+//   const updateFlower = (id, updatedFlower) => {
+//     setFlowers(
+//       flowers.map((flower) =>
+//         flower.id === id ? { ...flower, ...updatedFlower } : flower
+//       )
+//     );
+//   };
 
-  const filteredFlowers = flowers.filter((flower) =>
-    flower.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+//   const filteredFlowers = flowers.filter((flower) =>
+//     flower.name.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
 
   return (
     <div className="seller-page">
@@ -63,5 +63,36 @@ const SellerPage = () => {
     </div>
   );
 };
+//   return (
+//     <div className="seller-page">
+//       <Navbar avatarSrc={avatarSrc} />
+//       <div className="dashboard-container">
+//         <Sidebar setActiveSection={setActiveSection} avatarSrc={avatarSrc} />
+//         <div className="content">
+//           {activeSection === 'flowers' && (
+//             <>
+//               <div className="action-bar">
+//                 <button onClick={() => setIsModalOpen(true)}>Post Flower</button>
+//                 <input
+//                   type="text"
+//                   placeholder="Search Flower..."
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="search-input"
+//                 />
+//               </div>
+//               <FlowerPost isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addFlower={addFlower} />
+//               <FlowerList flowers={filteredFlowers} deleteFlower={deleteFlower} updateFlower={updateFlower} />
+//             </>
+//           )}
+//           {activeSection === 'orders' && <OrderList />}
+//           {activeSection === 'prices' && <PriceManagement />}
+//           {activeSection === 'customerSupport' && <CustomerSupport />}
+//           {activeSection === 'feedback' && <FeedbackManagement />}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
-export default SellerPage;
+// export default SellerPage;

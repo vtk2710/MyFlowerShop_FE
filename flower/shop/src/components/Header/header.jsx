@@ -130,7 +130,13 @@ function Header() {
       // luu tru thong tiun user vao localstorage
       await fetchUserInfo();
       setIsVisible(false);
-      navigate("/");
+
+      if (response.data.type === "admin") {
+        navigate('/admin')
+      }
+      
+      else
+        navigate("/");
     } catch (error) {
       console.log(error);
     }
