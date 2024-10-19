@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Navbar from "./Navbar";
 import "./WeddingPage.scss"; // Liên kết với file SCSS cho styling
 import { weddingFlowersData } from "../Share/wedding"; // Import dữ liệu hoa cưới từ weddingFlowers.js
+import Header from '../components/Header/header';
 
 const WeddingFlowersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ const WeddingFlowersPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Hiển thị Navbar trong trang Wedding Flowers */}
+      <Header/>
       <div className="roses-page">
         <h1>All Wedding Flowers</h1>
         <div className="modal-container">

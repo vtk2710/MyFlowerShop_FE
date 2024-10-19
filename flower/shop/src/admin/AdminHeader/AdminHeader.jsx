@@ -1,23 +1,12 @@
+/* eslint-disable no-unused-vars */
 import { Layout, Avatar, Badge, Menu, Dropdown } from "antd";
-import {
-  MailOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import "./AdminHeader.scss";
 const { Header } = Layout;
 
 // Tạo menu dropdown
 const menu = (
   <Menu>
-    <Menu.Item key="1" icon={<UserOutlined />}>
-      View Profile
-    </Menu.Item>
-    <Menu.Item key="2" icon={<SettingOutlined />}>
-      Settings
-    </Menu.Item>
-    <Menu.Divider />
     <Menu.Item key="3" icon={<LogoutOutlined />} danger>
       Log Out
     </Menu.Item>
@@ -39,9 +28,9 @@ const AdminHeader = () => {
     >
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         {/* Biểu tượng thông báo */}
-        <Badge count={3} style={{ marginRight: 20 }}>
+        {/* <Badge count={3} style={{ marginRight: 20 }}>
           <MailOutlined style={{ fontSize: "24px" }} />
-        </Badge>
+        </Badge> */}
 
         {/* Dropdown avatar */}
         <Dropdown overlay={menu} trigger={["click"]}>

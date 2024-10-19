@@ -2,8 +2,11 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  border-radius: 8px; // Bo tròn các góc của bảng
+  overflow: hidden; // Đảm bảo các góc bo không bị che khuất
 
-  th, td {
+  th,
+  td {
     padding: 10px;
     border: 1px solid #ccc;
     text-align: left;
@@ -11,13 +14,19 @@
 
   th {
     background-color: #f2f2f2;
+    font-weight: bold;
   }
 
-  tr:hover {
-    background-color: #f9f9f9;
+  tr {
+    transition: background-color 0.3s; // Hiệu ứng chuyển màu mượt mà khi hover
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
   }
 }
 
+// Kiểu dáng cho nút trong bảng
 button {
   background-color: blue;
   color: white;
@@ -25,8 +34,34 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s; // Hiệu ứng chuyển màu khi hover
+
+  &:hover {
+    background-color: darkblue; // Màu khi hover vào nút
+  }
+
+  &:disabled {
+    background-color: gray; // Màu cho nút khi bị vô hiệu hóa
+    cursor: not-allowed;
+  }
 }
 
-button:disabled {
-  background-color: gray; // Màu cho nút khi bị vô hiệu hóa
+// Kiểu dáng cụ thể cho các nút trong phần "Actions"
+button.respond-button {
+  background-color: green; // Màu cho nút khi chưa phản hồi
+  color: white;
+
+  &:hover {
+    background-color: darkgreen; // Màu khi hover vào nút phản hồi
+  }
+}
+
+button.responded-button {
+  background-color: gray; // Màu khi phản hồi đã được gửi
+  color: white;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: gray; // Không thay đổi màu khi hover nếu nút đã bị vô hiệu hóa
+  }
 }

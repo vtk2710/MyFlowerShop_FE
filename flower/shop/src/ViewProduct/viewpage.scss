@@ -13,7 +13,7 @@
 }
 
 .product-img {
-  height: 560px;
+  height: 650px;
   width: 90%;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -22,6 +22,7 @@
 .product-details {
   flex: 2;
   padding-left: 20px;
+  font-size: 25px;
 }
 
 .product-title {
@@ -35,6 +36,7 @@
   font-size: 1.1rem;
   color: #555;
   margin-bottom: 20px;
+  font-size: 30px;
 }
 
 .quantity-section,
@@ -89,9 +91,8 @@
   border-radius: 8px;
   cursor: pointer;
 }
-.add-to-cart-btn:hover {
+.add-to-basket-btn:hover {
   background-color: #fa0f0f;
-  height: 10%;
 }
 .quantity-input::-webkit-inner-spin-button,
 .quantity-input::-webkit-outer-spin-button {
