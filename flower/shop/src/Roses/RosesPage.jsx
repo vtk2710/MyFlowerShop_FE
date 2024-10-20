@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import "./RosesPage.scss"; // Liên kết với file SCSS cho styling
 import Header from '../components/Header/header';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchFlowerList } from '../API/flower/get_flower_list';
+import { fetchFlowerList, fetchFlowerListByCategoryName } from '../API/flower/get_flower_list';
 
 const RosesPage = () => {
-  const { categoryID } = useParams();
+  const { categoryName } = useParams();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [flowerList, setFlowerList] = useState([]);
@@ -28,9 +28,9 @@ const RosesPage = () => {
   };
 
   useEffect(() => {
-    fetchFlowerList(categoryID).then(setFlowerList);
+    fetchFlowerListByCategoryName(categoryName).then((data) => setFlowerList(data.$values));
     setCurrentPage(1);
-  }, [categoryID]);
+  }, [categoryName]);
 
   return (
     <>

@@ -14,7 +14,7 @@ const RelatedProductsSwiper = ({ currentFlowerId, currentCategoryId }) => {
   useEffect(() => {
     fetchFlowerList(currentCategoryId).then((flowers) => {
       console.log(currentFlowerId, flowers)
-      setFlowerList(flowers.filter(f => f.flowerId !== currentFlowerId))
+      setFlowerList(flowers.$values.filter(f => f.flowerId !== currentFlowerId))
     });
   }, [currentFlowerId, currentCategoryId]);
   

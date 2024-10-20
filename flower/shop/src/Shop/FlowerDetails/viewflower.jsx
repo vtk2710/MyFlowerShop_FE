@@ -16,7 +16,7 @@ const FlowerPage = () => {
 
     const getFlowerDetails = async () => {
         try {
-            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/Search/${id}`);
+            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/${id}`);
             console.log(response.data); // Ensure this logs the correct structure
             return response.data; // Since it's a single object, just return it
         } catch (error) {
@@ -73,12 +73,23 @@ const FlowerPage = () => {
     //     setCart(existingCart);
     // }, []);
 
+
+    const openNotification = () => {
+        notification.open({
+            message: "Notification Cart",
+            description:
+                "Add to cart successfully! Please check your cart to see the product.",
+            icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+            duration: 1.5,
+        });
+    };
+
     //Hàm thêm sản phẩm vào giỏ hàng
     const handleAddToCart = async () => {
         const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
         try {
-            const response = await addToCart(flower.flowerID, quantity);
-        } catch(error) {
+            const response = await addToCart(flower.flowerId, quantity);
+        } catch (error) {
 
         }
     };
@@ -97,9 +108,9 @@ const FlowerPage = () => {
                     <h1 className="product-title">
                         {flower.flowerName} - {flower.price}
                     </h1>
-                    <p className="product-description">{flower.description}</p>
+                    <p className="product-description">{flower.flowerDescription}</p>
                     <p>
-                        <strong>Category:</strong> {flower.categoryID}
+                        Available quantity: {flower.availableQuantity}
                     </p>
                     {/* Chọn số lượng */}
                     <div className="quantity-section">
@@ -125,8 +136,8 @@ const FlowerPage = () => {
                 </div>
             </div>
             <RelatedProductsSwiper
-                currentFlowerId={flower.flowerID}
-                currentCategoryId={flower.categoryID}
+                currentFlowerId={flower.flowerId}
+                currentCategoryId={flower.categoryId}
             />
         </div>
     );
