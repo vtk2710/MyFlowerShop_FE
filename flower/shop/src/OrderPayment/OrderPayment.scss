@@ -1,0 +1,79 @@
+/* Outer rectangle */
+.outer-rectangle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fdf2f8; /* Màu hồng nhạt rất nhẹ nhàng */
+  }
+  
+  /* Outer container (second rectangle inside the outer rectangle) */
+  .outer-container {
+    width: 75%; 
+    height: 60%;
+    padding: 40px; 
+    background-color: #fce7f3; /* Màu hồng pastel tinh tế */
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); /* Đổ bóng mềm mại */
+  }
+  
+  /* Inner container (inside the second rectangle) */
+  .inner-container {
+    width: 60%;
+    padding: 40px;
+    background-color: #ffffff; /* Màu trắng tạo sự tương phản nhẹ nhàng */
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ nhàng */
+  }
+  
+  /* Success message */
+  .success-text {
+    color: #d63384; /* Màu hồng đậm cho tiêu đề nổi bật */
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  /* Button group */
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 20px; /* Tăng khoảng cách giữa các nút */
+  }
+  
+  /* Order status button */
+  .status-btn {
+    background-color: #f472b6; /* Màu hồng tươi trẻ cho nút */
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .status-btn:hover {
+    background-color: #ec4899; /* Hồng đậm hơn khi hover */
+  }
+  
+  /* Shopping button */
+  .shopping-btn {
+    background-color: #a78bfa; /* Màu tím pastel nhẹ nhàng */
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shopping-btn:hover {
+    background-color: #7c3aed; /* Tím đậm hơn khi hover */
+  }
+  

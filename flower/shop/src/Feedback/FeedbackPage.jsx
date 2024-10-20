@@ -1,13 +1,13 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './FeedbackPage.scss';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faClock, faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
+import { notification } from 'antd'; // Import notification
 
 const FeedbackPage = () => {
     const location = useLocation();
     const { order } = location.state || {};
-    const navigate = useNavigate();
     const [rating, setRating] = useState(0); 
     const [comment, setComment] = useState(''); 
     const [userName, setUserName] = useState(''); 
@@ -21,10 +21,26 @@ const FeedbackPage = () => {
         const feedbackData = {
             customer: userName, 
             comment: comment,
+            rating: rating,
             responded: false,
         };
 
-        navigate('/seller', { state: { activeSection: 'feedback', feedback: feedbackData } });
+        // Lưu phản hồi vào localStorage
+        const savedFeedback = JSON.parse(localStorage.getItem('feedbackList')) || [];
+        const newFeedback = [...savedFeedback, { id: savedFeedback.length + 1, ...feedbackData }];
+        localStorage.setItem('feedbackList', JSON.stringify(newFeedback));
+
+        // Hiển thị thông báo thành công
+        notification.success({
+            message: 'Feedback Submitted',
+            description: 'Thank you for your feedback!',
+            placement: 'topRight',
+        });
+
+        // Reset form sau khi submit
+        setUserName('');
+        setComment('');
+        setRating(0);
     };
 
     const handleStarClick = (value) => {

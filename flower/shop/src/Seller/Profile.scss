@@ -1,0 +1,123 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #f0f2f5; /* Màu nền trang nhẹ */
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.profile-inner {
+  max-width: 800px;
+  width: 100%; /* Cho phép nội dung full chiều rộng */
+  background-color: #fff; /* Nền trắng cho khung nội dung */
+  padding: 40px;
+  border-radius: 10px; /* Bo tròn các góc */
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng nhẹ */
+  transition: box-shadow 0.3s ease;
+}
+
+.profile-inner:hover {
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Tăng hiệu ứng đổ bóng khi hover */
+}
+
+.profile-title {
+  text-align: center;
+  font-size: 32px; /* Tăng kích thước font */
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: bold; /* Làm đậm tiêu đề */
+}
+
+.profile-info, .profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Tăng khoảng cách giữa các trường */
+}
+
+.profile-info p {
+  font-size: 18px; /* Tăng kích thước chữ */
+  color: #555;
+}
+
+.profile-info hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa; /* Nền nhẹ cho input */
+  transition: all 0.3s ease;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: #40a9ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(64, 169, 255, 0.5);
+}
+
+.profile-button {
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #40a9ff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 20px;
+}
+
+.profile-button:hover {
+  background-color: #1890ff;
+  box-shadow: 0px 6px 12px rgba(24, 144, 255, 0.3); /* Hiệu ứng đổ bóng khi hover */
+}
+
+/* CSS cho Radio buttons - Giới tính */
+.radio-group {
+  display: flex;
+  flex-direction: row; /* Chuyển hướng radio button thành hàng ngang */
+  gap: 20px; /* Tạo khoảng cách giữa các radio button */
+  align-items: center;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 5px; /* Tạo khoảng cách giữa radio button và text */
+}

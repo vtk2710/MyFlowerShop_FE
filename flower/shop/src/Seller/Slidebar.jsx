@@ -3,8 +3,6 @@ import { Avatar, Menu } from 'antd';
 import {
   UserOutlined,
   DashboardOutlined,
-  DollarOutlined,
-  MessageOutlined,
   ShoppingCartOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';

@@ -14,7 +14,7 @@ const Navbar = ({ avatarSrc, notificationCount }) => {
 
   const handleMenuClick = (e) => {
     if (e.key === '1') {
-      // Logic for viewing profile
+      navigate('/profile'); // Điều hướng sang trang Profile
     } else if (e.key === '2') {
       // Logic for settings
     } else if (e.key === '3') {
