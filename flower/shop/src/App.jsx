@@ -2,9 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./HomePage/home";
 import Admin from "./AdminPage/admin";
 import UserPage from "./UserPage/user";
-import SellerPage from "./SellerPage/seller";
+import SellerPage from "./Seller/SellerPage";
 import CreateProfilePage from "./CreateProfilePage/create_profile";
-//import ShopPage from "./UserPage/user1";
 import Dashboard1 from "./admin/Dashboard1/Dashboard1";
 import UserManage from "./admin/UserManage/UserManage";
 import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
@@ -117,7 +116,7 @@ function App() {
       element: <FlowerPage />,
     },
     {
-      path: "flowers/:categoryID",
+      path: "flowers/:categoryName",
       element: <RosesPage />,
     },
     {

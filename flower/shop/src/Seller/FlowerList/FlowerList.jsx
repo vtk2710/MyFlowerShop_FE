@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Table, Button, Tag, Space, Input, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import './FlowerList.scss';
+import { fetchFlowerListBySellerId } from '../../API/flower/get_flower_list';
 
 const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   const [editingFlowerId, setEditingFlowerId] = useState(null);
@@ -15,6 +16,27 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     date: '',  // Thêm date vào form
     image: '',  // Giữ lại image để không mất sau khi save
   });
+
+  const [flowerList, setFlowerList] = useState(null);
+  const [flowerData, setFlowerData] = useState([]);
+
+
+  const loadFlowerList = async () => {
+    try {
+      const data = await fetchFlowerListBySellerId();
+      setFlowerList(data);  // Set the flower list data
+    } catch (error) {
+      console.error("Error fetching flower list:", error);
+    }
+  };
+
+  console.log(flowerList);
+
+  useEffect(() => {
+    loadFlowerList();
+    const savedFlowers = JSON.parse(localStorage.getItem('flowers')) || flowers;
+    setFlowerData(savedFlowers);
+  }, [flowers], []);
 
   const handleEditClick = (flower) => {
     setEditingFlowerId(flower.id);
@@ -67,7 +89,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   const columns = [
     {
       title: 'Image',
-      dataIndex: 'image',
+      dataIndex: 'imageUrl',
       key: 'image',
       render: (image) => (
         <img
@@ -82,7 +104,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     },
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'flowerName',
       key: 'name',
       render: (text, record) =>
         editingFlowerId === record.id ? (
@@ -93,13 +115,13 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     },
     {
       title: 'Description',
-      dataIndex: 'description',
+      dataIndex: 'flowerDescription',
       key: 'description',
-      render: (text, record) =>
+      render: (flowerDescription, record) =>
         editingFlowerId === record.id ? (
           <Input name="description" value={flowerForm.description} onChange={handleInputChange} />
         ) : (
-          <span>{text}</span>
+          <span>{flowerDescription}</span>
         ),
     },
     {
@@ -188,8 +210,33 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   ];
 
   return (
-    <Table columns={columns} dataSource={flowers.map((flower) => ({ ...flower, key: flower.id }))} pagination={{ pageSize: 5 }} />
+    <div className="flower-list">
+      <h2>Flower List</h2>
+      <Table
+        columns={columns}
+        dataSource={flowerList?.$values?.map((flower) => ({ ...flower, key: flower.flowerId }))}
+        pagination={{ pageSize: 5 }}
+        style={{ width: '100%' }}
+      />
+    </div>
   );
 };
 
 export default FlowerList;
+
+
+// {
+    //   title: 'Status',
+    //   key: 'status',
+    //   dataIndex: 'status',
+    //   render: (status, record) => {
+    //     return editingFlowerId === record.id ? (
+    //       <Select value={flowerForm.status} onChange={handleStatusChange} style={{ width: 120 }}>
+    //         <Select.Option value="available">Available</Select.Option>
+    //         <Select.Option value="unavailable">Unavailable</Select.Option>
+    //       </Select>
+    //     ) : (
+    //       <Tag color={status === 'available' ? 'green' : 'volcano'}>{status.toUpperCase()}</Tag>
+    //     );
+    //   },
+    // },

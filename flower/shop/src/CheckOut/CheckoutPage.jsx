@@ -47,6 +47,7 @@ const CheckoutPage = () => {
       if (storedCart) {
         try {
           setCartItems(JSON.parse(storedCart));
+          console.log(cartItems)
         } catch (error) {
           console.error("Error parsing checkoutItems: ", error);
         }
@@ -66,6 +67,8 @@ const CheckoutPage = () => {
     // Xóa cờ "checkoutFromCart" sau khi kiểm tra xong
     localStorage.removeItem("checkoutFromCart");
   }, []);
+
+
 
   const handleSelectVoucher = (value) => {
     if (value === "none") {
@@ -115,12 +118,12 @@ const CheckoutPage = () => {
 
   // Hàm chuyển đổi chuỗi giá trị thành số
   const extractPrice = (priceString) => {
-    return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    return parseFloat(priceString);
   };
 
   // Hàm tính tổng cho từng sản phẩm
   const calculateItemTotal = (item) => {
-    const price = extractPrice(item.Price);
+    const price = extractPrice(item.price);
     const quantity = parseInt(item.quantity);
     return price * quantity;
   };
@@ -128,10 +131,10 @@ const CheckoutPage = () => {
   // Hàm tính tổng tiền của toàn bộ giỏ hàng hoặc sản phẩm "Buy Now"
   const calculateTotal = () => {
     // Tính tổng giá trị của các sản phẩm trong giỏ hàng
-    const total = cart.reduce((acc, flower) => acc + calculateItemTotal(flower), 0);
+    const total = cartItems.reduce((acc, flower) => acc + calculateItemTotal(flower), 0);
 
     // Định dạng tổng giá trị theo định dạng tiền tệ Việt Nam
-    return total.toLocaleString("vi-VN");
+    return total;
   };
 
   // Hàm tính tổng tiền sau khi áp dụng giảm giá
@@ -144,9 +147,9 @@ const CheckoutPage = () => {
   //customer info
   const [customerInfo, setCustomerInfo] = useState({
     name: "Vu Min Duc",
-    phone: "0123456789",
     address: "123 Main Street",
   });
+
   // Recipient info
   const [isRecipientMyself, setIsRecipientMyself] = useState(true);
   const [recipientInfo, setRecipientInfo] = useState({
@@ -165,9 +168,9 @@ const CheckoutPage = () => {
   };
   //Hàm xử lý thay đổi giá trị
 
-  const handleRecipientChange = (e) => {
-    setIsRecipientMyself(e.target.value === "myself");
-  };
+  // const handleRecipientChange = (e) => {
+  //   setIsRecipientMyself(e.target.value === "myself");
+  // };
 
   //radio button style
   const [selectedButton, setSelectedButton] = useState("myself");
@@ -185,44 +188,6 @@ const CheckoutPage = () => {
       <div className="checkout-container">
         <h2>Checkout</h2>
 
-        {/* Thông tin giỏ hàng */}
-        <div className="cart-summary" style={{ marginBottom: "20px" }}>
-          <h3>Cart Summary</h3>
-          {cart.length > 0 ? (
-            cart.map((flower) => (
-              <div
-                key={flower.flowerID}
-                className="cart-item"
-                style={{ display: "flex", marginBottom: "10px" }}
-              >
-                <img src={flower.imageUrl} alt={flower.flowerName} />
-                <div>
-                  <p>
-                    <strong>{flower.flowerName}</strong>
-                  </p>
-                  <p>
-                    {flower.quantity} x{" "}
-                    {extractPrice(flower.price).toLocaleString("vi-VN")} VND
-                  </p>
-                  <h5 style={{ color: "red" }}>
-                    {calculateItemTotal(flower).toLocaleString("vi-VN")} VND
-                  </h5>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>Your cart is empty.</p>
-          )}
-        </div>
-
-        {/* Tính tổng tiền của giỏ hàng */}
-        <div
-          className="total-summary"
-          style={{ textAlign: "center", marginBottom: "20px" }}
-        >
-          <h2 style={{ color: "red" }}>TOTAL: {calculateTotal()} VND</h2>
-        </div>
-
         {/* Thông tin khách hàng */}
         <div
           className="customer-info-container"
@@ -230,7 +195,7 @@ const CheckoutPage = () => {
         >
           <h3>Customer Information</h3>
           <div style={{ marginBottom: "20px" }}>
-            <Radio.Group
+            {/* <Radio.Group
               onChange={handleRecipientChange}
               value={isRecipientMyself ? "myself" : "other"}
               style={radioGroupStyle}
@@ -241,25 +206,18 @@ const CheckoutPage = () => {
               <Radio.Button value="other" className="radio-button">
                 Someone else is the recipient
               </Radio.Button>
-            </Radio.Group>
+            </Radio.Group> */}
           </div>
 
           {/** Phần này để đảm bảo form hiện đúng theo điều kiện */}
           <div>
-            <div style={{ display: isRecipientMyself ? "block" : "none" }}>
-              <h4>Form for Myself</h4>
+            <div style={{ display: "block"}}>
+              {/* <h4>Form for Myself</h4> */}
               <Form layout="vertical">
                 <Form.Item label="Name">
                   <Input
                     name="name"
                     value={customerInfo.name}
-                    onChange={handleInputChange}
-                  />
-                </Form.Item>
-                <Form.Item label="Phone">
-                  <Input
-                    name="phone"
-                    value={customerInfo.phone}
                     onChange={handleInputChange}
                   />
                 </Form.Item>
@@ -273,20 +231,13 @@ const CheckoutPage = () => {
               </Form>
             </div>
 
-            <div style={{ display: !isRecipientMyself ? "block" : "none" }}>
+            {/* <div style={{ display: !isRecipientMyself ? "block" : "none" }}>
               <h4>Form for Someone Else</h4>
               <Form layout="vertical">
                 <Form.Item label="Name">
                   <Input
                     name="name"
                     value={recipientInfo.name}
-                    onChange={handleInputChange}
-                  />
-                </Form.Item>
-                <Form.Item label="Phone">
-                  <Input
-                    name="phone"
-                    value={recipientInfo.phone}
                     onChange={handleInputChange}
                   />
                 </Form.Item>
@@ -298,7 +249,7 @@ const CheckoutPage = () => {
                   />
                 </Form.Item>
               </Form>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -308,7 +259,7 @@ const CheckoutPage = () => {
           {cartItems.length > 0 ? (
             cartItems.map((item) => (
               <div
-                key={item.Id}
+                key={item.flowerId}
                 className="cart-item"
                 style={{
                   display: "flex",
@@ -317,17 +268,17 @@ const CheckoutPage = () => {
                 }}
               >
                 <img
-                  src={item.Image}
-                  alt={item.Name}
+                  src={item.imageUrl}
+                  alt={item.flowerName}
                   style={{ width: "100px", marginRight: "10px" }}
                 />
                 <div>
                   <p>
-                    <strong>{item.Name} </strong>
+                    <strong>{item.flowerName} </strong>
                   </p>
                   <p>
                     {item.quantity} x{" "}
-                    {extractPrice(item.Price).toLocaleString("vi-VN")} VND
+                    {extractPrice(item.price).toLocaleString("vi-VN")} VND
                   </p>
                   <h5 style={{ color: "red" }}>
                     {calculateItemTotal(item).toLocaleString("vi-VN")} VND
@@ -482,7 +433,6 @@ const CheckoutPage = () => {
             style={{ marginBottom: "20px", flex: "1" }}
           >
             <h3>Payment Method</h3>
-
             <div
               style={{
                 display: "flex",

@@ -1,14 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import {React, useEffect, useState} from 'react';
 import { Layout, Menu, Dropdown, Avatar, Badge } from 'antd';
 import { UserOutlined, SettingOutlined, LogoutOutlined, MailOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const { Header } = Layout;
 
 const Navbar = ({ avatarSrc, notificationCount }) => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState();
 
   const handleMenuClick = (e) => {
     if (e.key === '1') {
@@ -20,6 +22,36 @@ const Navbar = ({ avatarSrc, notificationCount }) => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    navigate('/');
+  };
+
+  // Hàm lấy thông tin user từ API
+  const fetchUserInfo = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Token is undefined. User might not be logged in.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        "https://localhost:7198/api/UserInfo/info",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+    console.log(userInfo);
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="1" icon={<UserOutlined />}>
@@ -29,7 +61,7 @@ const Navbar = ({ avatarSrc, notificationCount }) => {
         Settings
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="3" icon={<LogoutOutlined />} danger>
+      <Menu.Item key="3" icon={<LogoutOutlined />} danger onClick={handleLogout}>
         Log Out
       </Menu.Item>
     </Menu>
@@ -46,7 +78,7 @@ const Navbar = ({ avatarSrc, notificationCount }) => {
         {/* Avatar */}
         <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
           <Avatar
-            src={avatarSrc}
+            src={userInfo?.avatar}
             size="large"
             style={{ cursor: 'pointer' }}
           />

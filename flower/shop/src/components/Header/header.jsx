@@ -13,7 +13,7 @@ import { Modal, Button, Form, Input, Dropdown, Menu, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 // import api from "../../config/axios";
 import axios from "axios";
-import { getCart } from "../../API/cart/cart";
+import { getCart, removeItem } from "../../API/cart/cart";
 
 function Header() {
   const location = useLocation();
@@ -58,12 +58,13 @@ function Header() {
     savedCart();
   }, [isVisible]);
 
-  console.log(cart)
   // Hàm xóa sản phẩm
-  const handleDeleteItem = (id) => {
-    const updatedCart = cart?.items?.filter((flower) => flower.flowerID !== id);
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
+  const handleDeleteItem = async (id) => {
+    try {
+      const response = await removeItem(id);
+    }catch(error){
+
+    }
   };
 
   const handleSelectItem = (id) => {
@@ -71,15 +72,15 @@ function Header() {
       setSelectedItems(selectedItems.filter((flower) => flower !== id));
     } else {
       // Nếu sản phẩm chưa được chọn thì thêm vào
-      setSelectedItems([...selectedItems, flowerId]);
+      setSelectedItems([...selectedItems, id]);
     }
   };
 
   // Hàm xử lý chuyển đến trang checkout
   const handleCheckout = () => {
     // Lọc ra các sản phẩm đã được chọn từ giỏ hàng
-    const selectedProducts = cart?.items?.filter((flower) =>
-      selectedItems.includes(flower.flowerID)
+    const selectedProducts = cart?.items?.$values.filter((flower) =>
+      selectedItems.includes(flower.flowerId)
     );
 
     console.log("Selected Products for Checkout: ", selectedProducts); // Log ra để kiểm tra
@@ -97,26 +98,28 @@ function Header() {
   };
 
   // Hàm xóa nhiều sản phẩm
-  const handleDeleteSelectedItems = () => {
-    const updatedCart = cart?.items?.filter(
-      (flower) => !selectedItems.includes(flower.flowerID)
-    );
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
-    setSelectedItems([]); // Xóa danh sách sản phẩm đã chọn
-  };
+  // const handleDeleteSelectedItems = () => {
+  //   const updatedCart = cart?.items?.filter(
+  //     (flower) => !selectedItems.includes(flower.flowerID)
+  //   );
+  //   setCart(updatedCart);
+  //   localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật giỏ hàng trong localStorage
+  //   setSelectedItems([]); // Xóa danh sách sản phẩm đã chọn
+  // };
 
   //Hàm chọn tất cả
-  const handleSelectall = () => {
-    //Nếu độ dài 2 cái = nhau thì xét mảng rỗng
-    if (selectedItems.length === cart?.items?.length) {
-      setSelectedItems([]);
-    } else {
-      //Thêm vô mảng
-      const allItems = cart?.items?.map((flower) => flower.flowerID);
-      setSelectedItems(allItems);
-    }
-  };
+  // const handleSelectall = () => {
+  //   //Nếu độ dài 2 cái = nhau thì xét mảng rỗng
+  //   if (selectedItems.length === cart?.items?.$values.length) {
+  //     setSelectedItems([]);
+  //   } else {
+  //     //Thêm vô mảng
+  //     const allItems = cart?.items?.$values.map((flower) => flower.flowerI);
+  //     setSelectedItems(allItems);
+  //   }
+  // };
+
+
   // Hàm mở modal giỏ hàng
   const handleCartOpen = () => {
     setIsCartVisible(true);
@@ -141,8 +144,8 @@ function Header() {
   //   );
   // };
   const getTotalPrice = () => {
-    return cart?.items?.reduce((total, item) => {
-      if (selectedItems.includes(item.flowerID)) {  // Chỉ tính tổng cho các sản phẩm đã chọn
+    return cart?.items?.$values.reduce((total, item) => {
+      if (selectedItems.includes(item.flowerId)) {  // Chỉ tính tổng cho các sản phẩm đã chọn
         const price = extractPrice(item.price) || 0;  // Đảm bảo `Price` là số float
         const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
         return total + (price * quantity);  // Cộng tổng giá của sản phẩm đã chọn
@@ -193,6 +196,9 @@ function Header() {
 
       if (response.data.type === "admin") {
         navigate('/admin')
+      }
+      else if(response.data.type === "seller") {
+        navigate('/seller-page')
       }
       else
         navigate("/");
@@ -288,6 +294,27 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
+            <li>
+              <Link to="/flowers/rose">ROSES</Link>
+            </li>
+            <li>
+              <Link to="/flowers/wedding">WEDDING FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/congratulatory">CONGRATULATORY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/birthday">BIRTHDAY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/holiday">HOLIDAY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/orchids">ORCHIDS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/table">TABLE FLOWERS</Link>
+            </li>
             {categories.map((category) => (
               <li key={category.key}>
                 <Link
@@ -368,20 +395,20 @@ function Header() {
         width={850}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {cart?.items?.length > 0 ? (
+          {cart?.items?.$values.length > 0 ? (
             <div>
               {/* Nút lấy tất cả sản phẩm */}
-              <div className="button-container">
+              {/* <div className="button-container">
                 <Button
                   onClick={handleSelectall}
                   className="button-cart"
                   style={{ width: "100px" }}
                 >
                   <CheckCircleOutlined className="icon-cart" />
-                </Button>
+                </Button> */}
 
                 {/* Nút xóa các sản phẩm đã chọn */}
-                <Button
+                {/* <Button
                   className="button-delete"
                   onClick={handleDeleteSelectedItems}
                   disabled={selectedItems.length === 0}
@@ -389,12 +416,12 @@ function Header() {
                 >
                   <DeleteOutlined className="icon-cart" />
                 </Button>
-              </div>
+              </div> */}
 
               {/* Danh sách sản phẩm trong giỏ hàng */}
-              {cart?.items?.map((flower, index) => (
+              {cart?.items?.$values.map((flower, index) => (
                 <div
-                  key={flower.flowerID}
+                  key={flower.flowerId}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -407,8 +434,8 @@ function Header() {
                 >
                   {/* Checkbox để chọn sản phẩm */}
                   <Checkbox
-                    checked={selectedItems.includes(flower.flowerID)}
-                    onChange={() => handleSelectItem(flower.flowerID)}
+                    checked={selectedItems.includes(flower.flowerId)}
+                    onChange={() => handleSelectItem(flower.flowerId)}
                   />
 
                   {/* Hiển thị hình ảnh sản phẩm */}
@@ -469,7 +496,7 @@ function Header() {
                       color: "white",
                       backgroundColor: "#ff5a5f",
                     }}
-                    onClick={() => handleDeleteItem(flower.flowerID)}
+                    onClick={() => handleDeleteItem(flower.flowerId)}
                   >
                     Remove
                   </Button>

@@ -26,6 +26,14 @@ const ProductPage = () => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi vào trang chi tiết
   }, [id]);
 
+  // nhập số lượng
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= 1) {
+      setQuantity(value); // Chỉ cho phép số lượng từ 1 trở lên
+    }
+  };
+
   // Hàm để tăng số lượng
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -163,6 +171,7 @@ const ProductPage = () => {
           <p>
             <strong>Shop:</strong> {product.ShopName}
           </p>
+
           {/* Chọn số lượng */}
           <div className="quantity-section">
             <button className="quantity-btn" onClick={decreaseQuantity}>
@@ -172,22 +181,18 @@ const ProductPage = () => {
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              min="1"
+              min="1" // Đảm bảo giá trị không nhỏ hơn 1
               className="quantity-input"
             />
             <button className="quantity-btn" onClick={increaseQuantity}>
               +
             </button>
           </div>
+
           {/* Nút Thêm vào giỏ hàng */}
-          <Button
-            type="primary"
-            onClick={handleButtonClick}
-            className="add-to-cart-btn"
-            style={{ width: "300px", height: "50px" }}
-          >
+          <button className="add-to-basket-btn" onClick={handleAddToCart}>
             Add to Cart
-          </Button>
+          </button>
           {/* Nút Mua ngay */}
           <Button
             type="primary"
