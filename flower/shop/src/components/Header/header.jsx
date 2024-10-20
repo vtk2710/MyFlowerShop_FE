@@ -27,6 +27,15 @@ function Header() {
   const [isCartVisible, setIsCartVisible] = useState(false); // State quản lý hiển thị modal giỏ hàng
   const [cart, setCart] = useState(null); // State cho giỏ hàng
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
+  const [categories, setCategories] = useState([]);
+
+  // Lấy danh sách danh mục từ localStorage khi trang được tải (category)
+  useEffect(() => {
+    const storedCategories = JSON.parse(localStorage.getItem("categories"));
+    if (storedCategories) {
+      setCategories(storedCategories);
+    }
+  }, []);
 
   //Hàm Search
   const onSearch = () => {
@@ -306,6 +315,18 @@ function Header() {
             <li>
               <Link to="/flowers/table">TABLE FLOWERS</Link>
             </li>
+            {categories.map((category) => (
+              <li key={category.key}>
+                <Link
+                  to={`/${category.Category.toLowerCase().replace(
+                    /\s+/g,
+                    "-"
+                  )}`}
+                >
+                  {category.Category.toUpperCase()}
+                </Link>
+              </li>
+            ))}
 
             {/* <li>
               <UserOutlined

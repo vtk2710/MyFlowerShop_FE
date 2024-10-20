@@ -5,14 +5,21 @@ import { Products } from "../Share/Product";
 import Header from "../components/Header/header";
 import "./viewpage.scss";
 import RelatedProductsSwiper from "./RelatedProductsSwiper/RelatedProductsSwiper";
-import { notification, Button } from "antd";
+import { notification, Button, Modal, Input, Select } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
+import { Footer } from "antd/es/layout/layout";
+
+const { TextArea } = Input;
+const { Option } = Select;
 
 const ProductPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
   const product = Products.find((p) => p.Id === parseInt(id)); // Tìm sản phẩm theo ID
   const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
   const [cart, setCart] = useState([]); // Quản lý giỏ hàng
+  const [isModalVisible, setIsModalVisible] = useState(false); // State quản lý modal
+  const [reportText, setReportText] = useState(""); // State cho nội dung báo cáo
+  const [issueType, setIssueType] = useState(""); // State để quản lý loại báo cáo
 
   useEffect(() => {
     setQuantity(1);
@@ -59,31 +66,85 @@ const ProductPage = () => {
     localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
     setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
   };
+
+  // Hàm mua sản phẩm thành công
   const handleBuyNow = () => {
-    // Tạo object chứa thông tin sản phẩm và số lượng
     const productToBuy = {
       ...product,
       quantity: Number(quantity),
     };
-    // Lưu sản phẩm vào localStorage
-    localStorage.setItem("buyNowProduct", JSON.stringify(productToBuy));
 
-    // Chuyển hướng đến trang thanh toán
+    localStorage.setItem("buyNowProduct", JSON.stringify(productToBuy));
     window.location.href = "/checkout";
   };
-  const openNotification = () => {
+
+  // Thông báo thêm vào giỏ hàng thành công
+  const openNotificationAddToCart = () => {
     notification.open({
       message: "Notification Cart",
       description:
         "Add to cart successfully! Please check your cart to see the product.",
       icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-      duration: 1.5,
+      duration: 1,
     });
   };
 
+  // Xử lý khi nhấn nút thêm vào giỏ hàng
   const handleButtonClick = () => {
-    openNotification();
+    openNotificationAddToCart();
     handleAddToCart();
+  };
+
+  // Mở modal gửi báo cáo
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  // Đóng modal gửi báo cáo
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  // Xử lý khi gửi báo cáo
+  const handleReportSubmit = () => {
+    if (reportText.trim() === "") {
+      notification.error({
+        message: "Error",
+        description: "Report content cannot be empty.",
+      });
+      return;
+    }
+
+    // Tạo nội dung báo cáo bao gồm : thông tin sản phẩm và nội dung báo cáo
+    const reportContent = {
+      key: Date.now().toString(), // Tạo ID duy nhất cho báo cáo
+      productId: product.Id, // ID của sản phẩm
+      productName: product.Name, // Tên sản phẩm
+      shopName: product.ShopName, // Tên cửa hàng
+      issueType: issueType, // Loại báo cáo
+      description: reportText, // Nội dung báo cáo từ người dùng
+      status: "Not processed", // Trạng thái của báo cáo
+      createDate: new Date().toISOString().split("T")[0], // Ngày tạo báo cáo
+    };
+
+    // Lấy báo cáo hiện tại từ localStorage (nếu có)
+    const existingReports =
+      JSON.parse(localStorage.getItem("reportsOfData")) || [];
+
+    // Thêm báo cáo mới vào danh sách
+    const updatedReports = [...existingReports, reportContent];
+
+    // Lưu lại danh sách báo cáo mới vào localStorage
+    localStorage.setItem("reportsOfData", JSON.stringify(updatedReports));
+
+    notification.success({
+      message: "Report Sent",
+      description: "Your report has been sent to admin successfully!",
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
+
+    setReportText(""); // Reset nội dung báo cáo
+    setIsModalVisible(false);
   };
 
   return (
@@ -103,6 +164,9 @@ const ProductPage = () => {
           <p className="product-description">{product.Description}</p>
           <p>
             <strong>Origin:</strong> {product.Origin}
+          </p>
+          <p>
+            <strong>Category:</strong> {product.Category}
           </p>
           <p>
             <strong>Shop:</strong> {product.ShopName}
@@ -132,18 +196,64 @@ const ProductPage = () => {
           {/* Nút Mua ngay */}
           <Button
             type="primary"
-            style={{ marginLeft: "10px" }}
+            style={{ marginLeft: "10px", width: "300px", height: "50px" }}
             className="add-to-cart-btn"
             onClick={handleBuyNow}
           >
             Buy Now
           </Button>
+          <div style={{ marginTop: "100px" }}>
+            <Button type="primary" onClick={showModal} className="report-btn">
+              Report to Admin
+            </Button>
+          </div>
         </div>
       </div>
       <RelatedProductsSwiper
         shopName={product.ShopName}
         currentProductId={product.Id}
       />
+      <Footer />
+
+      {/* Modal báo cáo */}
+      <Modal
+        title="Report to Admin"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleReportSubmit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <label
+          style={{ marginBottom: "8px", display: "block", fontWeight: "bold" }}
+        >
+          Choose the issue:
+        </label>
+        <Select
+          placeholder="Select an issue type"
+          style={{ width: "100%", marginBottom: "20px" }}
+          value={issueType.value || issueType}
+          onChange={(value) => setIssueType(value)}
+          title="Issue Type"
+        >
+          <Option value="Poor Quality">Poor Quality</Option>
+          <Option value="Wrong Item">Wrong Item</Option>
+          <Option value="Other">Other</Option>
+        </Select>
+
+        {/* TextArea để nhập nội dung báo cáo */}
+        <TextArea
+          rows={4}
+          value={reportText}
+          onChange={(e) => setReportText(e.target.value)}
+          placeholder="Please describe the issue or problem with this product..."
+        />
+      </Modal>
     </div>
   );
 };
