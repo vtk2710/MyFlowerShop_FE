@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Table, Tag, Button, Modal, message } from "antd";
+import axios from "axios";
 
 // Dữ liệu báo cáo giả lập
 const initialReports = [
@@ -126,20 +128,20 @@ const ReportAdmin = () => {
   const [selectedReport, setSelectedReport] = useState(null); // Báo cáo đang được chọn để xem chi tiết
   const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái hiện/ẩn modal
 
-  // Tải dữ liệu từ localStorage hoặc dùng dữ liệu mặc định nếu chưa có
+  // Tải dữ liệu từ API khi component được mount
   useEffect(() => {
-    const savedReports = JSON.parse(localStorage.getItem("reportsOfData"));
-    if (savedReports) {
-      setReports(savedReports);
-    } else {
-      setReports(initialReports);
-    }
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7198/api/Report/GetAllReports"
+        );
+        setReports(response.data); // Lưu dữ liệu báo cáo từ server vào state
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      }
+    };
+    fetchReports();
   }, []);
-
-  // Lưu dữ liệu vào localStorage mỗi khi reports thay đổi
-  useEffect(() => {
-    localStorage.setItem("reportsOfData", JSON.stringify(reports));
-  }, [reports]);
 
   // Hàm để mở modal và xem chi tiết báo cáo
   const viewReport = (record) => {
@@ -153,14 +155,32 @@ const ReportAdmin = () => {
     setSelectedReport(null);
   };
 
-  // Hàm đánh dấu báo cáo đã xử lý
-  const markAsResolved = (key) => {
-    const updatedReports = reports.map((report) =>
-      report.key === key ? { ...report, status: "Processed" } : report
-    );
-    setReports(updatedReports); // Cập nhật danh sách báo cáo
-    localStorage.setItem("reportsOfData", JSON.stringify(updatedReports));
-    message.success("The report has been marked as processed.");
+  // Hàm đánh dấu báo cáo đã xử lý (gửi yêu cầu cập nhật trạng thái qua API)
+  const markAsResolved = async (reportId) => {
+    try {
+      const response = await axios.put(
+        `https://localhost:7198/api/Report/UpdateReportStatus/${reportId}`,
+        {
+          status: "Processed",
+        }
+      );
+
+      if (response.status === 200) {
+        // Cập nhật trạng thái của báo cáo trong danh sách báo cáo
+        const updatedReports = reports.map((report) =>
+          report.reportId === reportId
+            ? { ...report, status: "Processed" }
+            : report
+        );
+        setReports(updatedReports); // Cập nhật state báo cáo
+        message.success("The report has been marked as processed.");
+      } else {
+        throw new Error("Failed to update report status");
+      }
+    } catch (error) {
+      message.error("Failed to update report status. Please try again.");
+      console.error("Error updating report status:", error);
+    }
   };
 
   // Cột của bảng hiển thị báo cáo
@@ -199,7 +219,7 @@ const ReportAdmin = () => {
           </Button>
           <Button
             type="link"
-            onClick={() => markAsResolved(record.key)}
+            onClick={() => markAsResolved(record.reportId)}
             disabled={record.status === "Processed"}
           >
             Mark as Processed
@@ -237,10 +257,7 @@ const ReportAdmin = () => {
             <strong>Email:</strong> {selectedReport.email || "N/A"}
           </p>
           <p>
-            <strong>Issue Type:</strong>{" "}
-            {typeof selectedReport.issueType === "object"
-              ? selectedReport.issueType.value
-              : selectedReport.issueType || "N/A"}
+            <strong>Issue Type:</strong> {selectedReport.issueType || "N/A"}
           </p>
           <p>
             <strong>Description:</strong> {selectedReport.description || "N/A"}
@@ -250,10 +267,6 @@ const ReportAdmin = () => {
           </p>
           <p>
             <strong>Created Date:</strong> {selectedReport.createDate || "N/A"}
-          </p>
-          <p>
-            <strong>Last Update Date:</strong>{" "}
-            {selectedReport.lastUpdateDate || "N/A"}
           </p>
           <p>
             <strong>Status:</strong> {selectedReport.status || "N/A"}

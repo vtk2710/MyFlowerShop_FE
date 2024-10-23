@@ -18,12 +18,12 @@ function CategoryManage() {
       // Nếu không có dữ liệu thì khởi tạo với danh sách mặc định
       setDataSource([
         { key: "1", Category: "Roses" },
-        { key: "2", Category: "Wedding Flowers" },
-        { key: "3", Category: "Congratulatory Flowers" },
-        { key: "4", Category: "Birthday Flowers" },
-        { key: "5", Category: "Holiday Flowers" },
+        { key: "2", Category: "Wedding" },
+        { key: "3", Category: "Congratulatory" },
+        { key: "4", Category: "Birthday" },
+        { key: "5", Category: "Holiday" },
         { key: "6", Category: "Orchids" },
-        { key: "7", Category: "Table Flowers" },
+        { key: "7", Category: "Table" },
       ]);
     }
   }, []);

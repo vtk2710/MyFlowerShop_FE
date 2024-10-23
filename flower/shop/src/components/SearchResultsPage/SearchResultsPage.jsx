@@ -1,63 +1,70 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
 import { useParams, useNavigate } from "react-router-dom";
-import { Products } from "../../Share/Product";
 import { Button, InputNumber, Pagination } from "antd";
 import { useState, useRef, useEffect } from "react";
 import "./SearchResultsPage.scss";
 import Header from "../Header/header";
 import Footer from "../../Home/footer/footer";
+import axios from "axios";
 
 function SearchResultsPage() {
   const { searchTerm } = useParams(); // Lấy từ khóa từ URL
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9;
-  const productSectionRef = useRef(null);
+  const flowersPerPage = 9;
+  const flowerSectionRef = useRef(null); // Tham chiếu đến phần tử flowerSection
   const [minPrice, setMinPrice] = useState(0); // Giá min
   const [maxPrice, setMaxPrice] = useState(Infinity); // Giá max
-  const [searchResults, setSearchResults] = useState(Products); // Trạng thái lưu kết quả tìm kiếm
-  const [filteredProducts, setFilteredProducts] = useState([]); // Trạng thái cho sản phẩm đã lọc theo giá
+  const [searchResults, setSearchResults] = useState([]); // Trạng thái lưu kết quả tìm kiếm hoa
+  const [filteredFlowers, setFilteredFlowers] = useState([]); // Trạng thái cho hoa đã lọc theo giá
 
-  // Hàm tìm kiếm sản phẩm theo từ khóa
-  const searchProducts = () => {
-    const searched = Products.filter((product) =>
-      product.Name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    console.log("Searched Products:", searched);
-    setSearchResults(searched);
-    setFilteredProducts(searched);
+  // Hàm tìm kiếm hoa
+  const searchFlowers = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7198/api/Search/${searchTerm}` // Đảm bảo URL đúng
+      );
+      console.log("API response data:", response); // Log toàn bộ dữ liệu API trả về
+      setSearchResults(response.data);
+      setFilteredFlowers(response.data.$values);
+    } catch (error) {
+      console.error(
+        "Error fetching search results:",
+        error.response ? error.response.data : error.message
+      );
+    }
   };
 
-  // Hàm lọc sản phẩm theo khoảng giá từ kết quả tìm kiếm
+  // Hàm lọc hoa theo khoảng giá từ kết quả tìm kiếm
   const filterByPrice = () => {
     console.log("Min Price:", minPrice, "Max Price:", maxPrice);
 
-    const filtered = searchResults.filter((product) => {
+    const filtered = searchResults.filter((flower) => {
       // Loại bỏ ký tự không phải số và chuyển đổi Price thành số
-      const productPrice = Number(product.Price.replace(/[^0-9]/g, ""));
-      return productPrice >= minPrice && productPrice <= maxPrice;
+      const flowerPrice = Number(flower.price.replace(/[^0-9]/g, ""));
+      return flowerPrice >= minPrice && flowerPrice <= maxPrice;
     });
-    setFilteredProducts(filtered);
+    setFilteredFlowers(filtered);
   };
 
-  // Tìm kiếm sản phẩm khi từ khóa thay đổi
+  // Tìm kiếm hoa khi từ khóa thay đổi
   useEffect(() => {
-    searchProducts();
+    searchFlowers();
   }, [searchTerm]);
 
-  // Phân trang sản phẩm
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
+  // Phân trang hoa
+  const indexOfLastFlower = currentPage * flowersPerPage;
+  const indexOfFirstFlower = indexOfLastFlower - flowersPerPage;
+  const currentFlowers = filteredFlowers.slice(
+    indexOfFirstFlower,
+    indexOfLastFlower
   );
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    if (productSectionRef.current) {
-      productSectionRef.current.scrollIntoView({
+    if (flowerSectionRef.current) {
+      flowerSectionRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
@@ -112,22 +119,22 @@ function SearchResultsPage() {
         </Button>
       </div>
 
-      {/* Danh sách sản phẩm sau khi lọc */}
-      <div className="row HomePage__body" ref={productSectionRef}>
-        {currentProducts.length > 0 ? (
-          currentProducts.map((product) => (
-            <div className="product-card" key={product.Id}>
-              <img src={product.Image} alt={product.Name} />
-              <h3>{product.Name}</h3>
+      {/* Danh sách hoa sau khi lọc */}
+      <div className="row HomePage__body" ref={flowerSectionRef}>
+        {currentFlowers.length > 0 ? (
+          currentFlowers.map((flower) => (
+            <div className="flower-card" key={flower.flowerId}>
+              <img src={flower.imageUrl} alt={flower.flowerName} />
+              <h3>{flower.flowerName}</h3>
               <p>
-                {product.Price.toLocaleString("vi-VN", {
+                {flower.price.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 })}
               </p>
               <Button
                 type="primary"
-                onClick={() => navigate(`/ViewPage/${product.Id}`)}
+                onClick={() => navigate(`/viewflower/${flower.flowerId}`)}
                 style={{ marginTop: "10px", marginLeft: "100px" }}
               >
                 View Details
@@ -135,16 +142,16 @@ function SearchResultsPage() {
             </div>
           ))
         ) : (
-          <p>No products found.</p>
+          <p>No flowers found.</p>
         )}
       </div>
 
-      {/* Phân trang nếu có nhiều sản phẩm */}
-      {filteredProducts.length > productsPerPage && (
+      {/* Phân trang nếu có nhiều hoa */}
+      {filteredFlowers.length > flowersPerPage && (
         <Pagination
           current={currentPage}
-          pageSize={productsPerPage}
-          total={filteredProducts.length}
+          pageSize={flowersPerPage}
+          total={filteredFlowers.length}
           onChange={handlePageChange}
           style={{
             marginTop: "20px",

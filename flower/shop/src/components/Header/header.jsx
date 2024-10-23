@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 //HEADER version 2
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.scss";
@@ -28,6 +29,7 @@ function Header() {
   const [cart, setCart] = useState(null); // State cho giỏ hàng
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
   const [categories, setCategories] = useState([]);
+  const [payload, setPayload] = useState({});
 
   // Lấy danh sách danh mục từ localStorage khi trang được tải (category)
   useEffect(() => {
@@ -47,24 +49,20 @@ function Header() {
 
   // Hàm lấy giỏ hàng từ localStorage khi trang được tải
   useEffect(() => {
-    if(isVisible) {
+    if (isVisible) {
       return;
     }
     const savedCart = async () => {
       const data = await getCart();
       console.log(data);
-      setCart(data)
-    }
+      setCart(data);
+    };
     savedCart();
   }, [isVisible]);
 
   // Hàm xóa sản phẩm
   const handleDeleteItem = async (id) => {
-    try {
-      const response = await removeItem(id);
-    }catch(error){
-
-    }
+    const response = await removeItem(id);
   };
 
   const handleSelectItem = (id) => {
@@ -119,7 +117,6 @@ function Header() {
   //   }
   // };
 
-
   // Hàm mở modal giỏ hàng
   const handleCartOpen = () => {
     setIsCartVisible(true);
@@ -140,18 +137,23 @@ function Header() {
   // Hàm tính tổng giá của các sản phẩm đã được chọn
   // const getTotalPrice = () => {
   //   return (
-  //     cart.totalPrice.toLocaleString("vi-VN") + " VND"      
+  //     cart.totalPrice.toLocaleString("vi-VN") + " VND"
   //   );
   // };
   const getTotalPrice = () => {
-    return cart?.items?.$values.reduce((total, item) => {
-      if (selectedItems.includes(item.flowerId)) {  // Chỉ tính tổng cho các sản phẩm đã chọn
-        const price = extractPrice(item.price) || 0;  // Đảm bảo `Price` là số float
-        const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
-        return total + (price * quantity);  // Cộng tổng giá của sản phẩm đã chọn
-      }
-      return total;
-    }, 0).toLocaleString('vi-VN') + " VND";
+    return (
+      cart?.items?.$values
+        .reduce((total, item) => {
+          if (selectedItems.includes(item.flowerId)) {
+            // Chỉ tính tổng cho các sản phẩm đã chọn
+            const price = extractPrice(item.price) || 0; // Đảm bảo `Price` là số float
+            const quantity = parseFloat(item.quantity) || 1; // Đảm bảo `quantity` là số
+            return total + price * quantity; // Cộng tổng giá của sản phẩm đã chọn
+          }
+          return total;
+        }, 0)
+        .toLocaleString("vi-VN") + " VND"
+    );
   };
 
   // Hàm lấy thông tin user từ API
@@ -195,13 +197,10 @@ function Header() {
       setIsVisible(false);
 
       if (response.data.type === "admin") {
-        navigate('/admin')
-      }
-      else if(response.data.type === "seller") {
-        navigate('/seller-page')
-      }
-      else
-        navigate("/");
+        navigate("/admin");
+      } else if (response.data.type === "seller") {
+        navigate("/seller-page");
+      } else navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -230,10 +229,11 @@ function Header() {
 
         const loginFormData = formSignUpData;
         loginFormData.delete("email");
-        const loginResponse = await axios.post("https://localhost:7198/login", 
+        const loginResponse = await axios.post(
+          "https://localhost:7198/login",
           loginFormData
         );
-        
+
         localStorage.setItem("token", loginResponse.data.token);
         navigate("/create-profile"); // Chuyển về trang create profile nếu thành công
       }
@@ -294,31 +294,11 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
-            <li>
-              <Link to="/flowers/rose">ROSES</Link>
-            </li>
-            <li>
-              <Link to="/flowers/wedding">WEDDING FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/flowers/congratulatory">CONGRATULATORY FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/flowers/birthday">BIRTHDAY FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/flowers/holiday">HOLIDAY FLOWERS</Link>
-            </li>
-            <li>
-              <Link to="/flowers/orchids">ORCHIDS</Link>
-            </li>
-            <li>
-              <Link to="/flowers/table">TABLE FLOWERS</Link>
-            </li>
+
             {categories.map((category) => (
               <li key={category.key}>
                 <Link
-                  to={`/${category.Category.toLowerCase().replace(
+                  to={`/flowers/${category.Category.toLowerCase().replace(
                     /\s+/g,
                     "-"
                   )}`}
@@ -407,8 +387,8 @@ function Header() {
                   <CheckCircleOutlined className="icon-cart" />
                 </Button> */}
 
-                {/* Nút xóa các sản phẩm đã chọn */}
-                {/* <Button
+              {/* Nút xóa các sản phẩm đã chọn */}
+              {/* <Button
                   className="button-delete"
                   onClick={handleDeleteSelectedItems}
                   disabled={selectedItems.length === 0}
@@ -562,8 +542,9 @@ function Header() {
             name={isSignUp ? "signup_form" : "signin_form"}
             onFinish={handleSubmit}
             layout="vertical"
-            className={`form-transition ${isSignUp ? "form-hidden" : "form-visible"
-              }`}
+            className={`form-transition ${
+              isSignUp ? "form-hidden" : "form-visible"
+            }`}
           >
             {!isSignUp && (
               <>
@@ -615,8 +596,9 @@ function Header() {
             name="signup_form"
             onFinish={handleSubmit}
             layout="vertical"
-            className={`form-transition ${isSignUp ? "form-visible" : "form-hidden"
-              }`}
+            className={`form-transition ${
+              isSignUp ? "form-visible" : "form-hidden"
+            }`}
           >
             {isSignUp && (
               <>
