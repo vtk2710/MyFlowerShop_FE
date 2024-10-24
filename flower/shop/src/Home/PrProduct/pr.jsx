@@ -48,7 +48,7 @@ function PrProduct() {
             <Button
               type="primary"
               onClick={() => handleOpen(product)}
-              style={{ marginTop: "10px", marginLeft: "90px" }}
+              style={{ marginTop: "10px", marginLeft: "85px" }}
             >
               View Details
             </Button>

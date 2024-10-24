@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
 import { useParams, useNavigate } from "react-router-dom";
@@ -37,15 +38,29 @@ function SearchResultsPage() {
   };
 
   // Hàm lọc hoa theo khoảng giá từ kết quả tìm kiếm
-  const filterByPrice = () => {
-    console.log("Min Price:", minPrice, "Max Price:", maxPrice);
+  const filterByPrice = async () => {
+    try {
+      // Kiểm tra minPrice và maxPrice trước khi gọi API
+      console.log("Min Price:", minPrice, "Max Price:", maxPrice);
 
-    const filtered = searchResults.filter((flower) => {
-      // Loại bỏ ký tự không phải số và chuyển đổi Price thành số
-      const flowerPrice = Number(flower.price.replace(/[^0-9]/g, ""));
-      return flowerPrice >= minPrice && flowerPrice <= maxPrice;
-    });
-    setFilteredFlowers(filtered);
+      // Gọi API với giá trị minPrice và maxPrice động
+      const response = await axios.get(
+        `https://localhost:7198/api/FlowerInfo/GetFlowersByPrice?price1=${minPrice}&price2=${maxPrice}`
+      );
+
+      // Log kết quả trả về để kiểm tra dữ liệu
+      console.log("API response data:", response.data);
+
+      // Cập nhật trạng thái với kết quả trả về từ API
+      setSearchResults(response.data);
+      setFilteredFlowers(response.data.$values); // Nếu response có định dạng chứa $values
+    } catch (error) {
+      // Xử lý lỗi nếu xảy ra khi gọi API
+      console.error(
+        "Error fetching filtered search results:",
+        error.response ? error.response.data : error.message
+      );
+    }
   };
 
   // Tìm kiếm hoa khi từ khóa thay đổi
@@ -135,7 +150,7 @@ function SearchResultsPage() {
               <Button
                 type="primary"
                 onClick={() => navigate(`/viewflower/${flower.flowerId}`)}
-                style={{ marginTop: "10px", marginLeft: "100px" }}
+                style={{ marginTop: "10px", marginLeft: "90px" }}
               >
                 View Details
               </Button>

@@ -69,12 +69,15 @@ function Flowers() {
           <Col span={8} key={flower.flowerId}>
             <div className="product-card">
               {" "}
-              {/* Thêm khối div với className là product-card */}
               <Card
                 hoverable
                 cover={<img src={flower.imageUrl} alt={flower.flowerName} />}
                 actions={[
-                  <Button type="primary" onClick={() => handleOpen(flower)}>
+                  <Button
+                    type="primary"
+                    onClick={() => handleOpen(flower)}
+                    style={{ margin: "10px 85px" }}
+                  >
                     View Details
                   </Button>,
                 ]}
