@@ -5,74 +5,80 @@
   .seller-details-container {
     display: flex;
     align-items: center;
-    justify-content: flex-start; // Align content to the left
+    justify-content: flex-start;
     padding: 20px;
     background-color: #f5f5f5;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%; // Full width
+    width: 100%;
     margin-bottom: 30px;
 
     .seller-logo-container {
-      background-color: #000; // Black background for the container
+      background-color: #ffffff;
       padding: 15px;
-      border-radius: 8px; // Rounded corners for the rectangular container
-      border: none;
+      border-radius: 8px;
+      border: 1px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 250px; // Width of the rectangular container
-      height: 150px; // Height of the rectangular container
+      width: 150px;
+      height: 150px;
 
       .seller-logo {
-        width: 100px; // Fixed size for the circular logo
+        width: 100px;
         height: 100px;
-        border-radius: 50%; // Makes the logo circular
+        border-radius: 50%;
       }
     }
 
     .seller-details {
-      margin-left: 50px; // Increase space between logo and details
+      margin-left: 40px;
       text-align: left;
       flex-grow: 1;
 
       h1 {
-        font-size: 2rem; // Larger font size for the shop name
+        font-size: 1.8rem;
         margin-bottom: 10px;
       }
 
       .seller-info {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        font-size: 16px;
+        gap: 8px;
+        font-size: 15px;
 
         span {
           display: flex;
           align-items: center;
-          gap: 10px; // Gap between icon and text
+          gap: 8px;
           font-size: 15px;
 
           & > span {
-            color: #ff9900; // Orange color for text after colon
+            color: #ff9900;
           }
 
-          // Style for each detail with icons
-          &:nth-child(1) svg {
-            color: #1890ff; // Icon color for Products
+          svg {
+            color: #1890ff;
           }
+        }
+      }
 
-          &:nth-child(2) svg {
-            color: #1890ff; // Icon color for Followers
-          }
+      .seller-introduction {
+        margin-top: 20px;
+        font-size: 14px;
 
-          &:nth-child(3) svg {
-            color: #1890ff; // Icon color for Rating
-          }
+        h3 {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 1.5rem;
+          color: #333;
+        }
 
-          &:nth-child(4) svg {
-            color: #1890ff; // Icon color for Joined date
-          }
+        p {
+          margin-top: 10px;
+          font-size: 14px;
+          line-height: 1.6;
         }
       }
     }
@@ -80,14 +86,14 @@
 
   h2 {
     margin-bottom: 20px;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: #ff5e57;
   }
 
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
+    grid-template-columns: repeat(4, 1fr); // Cấu trúc 4-4
+    gap: 60px; // Tăng khoảng cách giữa các sản phẩm
     justify-content: center;
     padding: 20px;
   }
@@ -110,36 +116,37 @@
 
     .product-image {
       width: 100%;
-      height: 300px;
+      height: 250px;
       object-fit: cover;
       border-radius: 8px;
       margin-bottom: 20px;
     }
 
     .product-name {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .product-price {
       font-size: 1.1rem;
       color: #ff5e57;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
   }
 
   .pagination-nav {
-    margin-top: 20px;
+    margin-top: 40px; // Tăng khoảng cách trên cho phân trang
+    display: flex;
+    justify-content: center;
 
     .pagination {
       list-style-type: none;
       padding: 0;
       display: flex;
-      justify-content: center;
+      gap: 20px; // Tạo khoảng cách lớn giữa các nút phân trang
 
       .page-item {
-        margin: 0 5px;
         cursor: pointer;
 
         &.active .page-link {
@@ -153,7 +160,7 @@
         }
 
         .page-link {
-          padding: 8px 12px;
+          padding: 10px 15px; // Tăng kích thước nút phân trang
           border: 1px solid #ddd;
           text-decoration: none;
           color: #333;
