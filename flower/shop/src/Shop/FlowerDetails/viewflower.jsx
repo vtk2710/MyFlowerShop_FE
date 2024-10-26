@@ -86,9 +86,9 @@ const FlowerPage = () => {
     //const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
     try {
       await addToCart(flower.flowerId, quantity);
-      setTrigger(p=>p+1)
+      setTrigger((p) => p + 1);
       notification.success({
-        message: `Add ${flower.flowerName} quantity ${quantity} successfully !`
+        message: `Add ${flower.flowerName} quantity ${quantity} successfully !`,
       });
     } catch (error) {
       notification.error({
@@ -112,11 +112,6 @@ const FlowerPage = () => {
   const handleReportSubmit = async () => {
     // Kiểm tra nếu `flowerId` hoặc `sellerId` bị thiếu
     if (!flower.flowerId || !flower?.sellerId) {
-      console.error("Missing required fields:", {
-        flowerId: flower.flowerId,
-        sellerId: flower.sellerId,
-      });
-      console.log(flower.flowerId, flower.sellerId);
       notification.error({
         message: "Error",
         description: "Missing required fields. Please try again.",
@@ -124,38 +119,49 @@ const FlowerPage = () => {
       return;
     }
 
+    if (!issueType) {
+      notification.error({
+        message: "Error",
+        description: "Please select an issue type before submitting.",
+      });
+      return;
+    }
+
     const reportContent = {
       FlowerId: flower.flowerId,
-      SellerId: flower?.sellerId,
+      SellerId: flower.sellerId,
       ReportReason: issueType,
       ReportDescription: reportText,
     };
-    console.log(typeof reportContent.ReportReason);
-    console.log("Payload being sent:", reportContent);
-    console.log("FlowerId:", typeof reportContent.FlowerId);
-    console.log("SellerId:", typeof reportContent.SellerId);
-    console.log("ReportReason:", typeof reportContent.ReportReason);
-    console.log("ReportDescription:", typeof reportContent.ReportDescription);
-    console.log("Flower object:", flower);
+
+    console.log("Report Content:", reportContent);
+    console.log("Report Reason:", issueType);
+    console.log("Report Content being sent:", {
+      FlowerId: flower.flowerId,
+      SellerId: flower.sellerId,
+      ReportReason: issueType,
+      ReportDescription: reportText,
+    });
+
     try {
       const userLogin = localStorage.getItem("token");
       const response = await axios.post(
         "https://localhost:7198/api/Report/CreateReport",
+        reportContent,
         {
           headers: {
             Authorization: `Bearer ${userLogin}`,
           },
-        },
-        reportContent
+        }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         notification.success({
           message: "Report Sent",
           description: "Your report has been sent successfully.",
         });
-        setReportText(""); // Reset nội dung
-        setIsModalVisible(false); // Đóng modal
+        setReportText("");
+        setIsModalVisible(false);
       } else {
         throw new Error("Failed to send report.");
       }
@@ -253,12 +259,15 @@ const FlowerPage = () => {
         </Select>
 
         {/* TextArea để nhập nội dung báo cáo */}
-        <TextArea
-          rows={4}
-          value={reportText}
-          onChange={(e) => setReportText(e.target.value)}
-          placeholder="Please describe the issue or problem with this product..."
-        />
+
+        {issueType === "Other" && (
+          <TextArea
+            rows={4}
+            value={reportText}
+            onChange={(e) => setReportText(e.target.value)}
+            placeholder="Please describe the issue or problem with this product..."
+          />
+        )}
       </Modal>
     </div>
   );
