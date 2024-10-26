@@ -1,27 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import FlowerList from "./FlowerList/FlowerList";
 import OrderList from "./OrderList/OrderList";
-//import PriceManagement from "./PriceManagement/PriceManagement";
-//import CustomerSupport from "./CustomerSupport/CustomerSupport";
-import FeedbackManagement from "./FeedbackManagement/FeedbackManagement";
-import FlowerPost from "./FlowerPost/FlowerPost";
-import Navbar from "./Navbar";
-import Sidebar from "./Slidebar";
-import "./SellerPage.scss";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import OrderHistory from '../OrderHistory/OrderHistory';
+import FeedbackManagement from "./FeedbackManagement/FeedbackManagement";
+import FlowerPost from "./FlowerPost/FlowerPost";
+import Footer from "../Home/footer/footer";
+import Header from "../components/Header/header";
+import UserProfile from "./UserProfile/Profile";
+import "./UserPage.scss";
+import Sidebar from "./SlideBarSeller/Slidebar";
 
-const SellerPage = () => {
+const UserPage = () => {
   const location = useLocation();
-  const { activeSection: initialActiveSection, feedback } =
-    location.state || {};
-  const [activeSection, setActiveSection] = useState(
-    initialActiveSection || "flowers"
-  );
+  const { activeSection: initialActiveSection, feedback } = location.state || {};
+  const [activeSection, setActiveSection] = useState(initialActiveSection || 'profile');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //const [searchTerm, setSearchTerm] = useState("");
-  //const [activeSection, setActiveSection] = useState('flowers'); // Khớp với key trong Sidebar
   const [userInfo, setUserInfo] = useState();
 
   // State quản lý danh sách hoa
@@ -57,11 +53,6 @@ const SellerPage = () => {
     fetchUserInfo();
   }, []);
 
-  // State quản lý số lượng Available và Unavailable, lấy từ localStorage nếu có
-  // const [availableCount, setAvailableCount] = useState(() => {
-  //   return JSON.parse(localStorage.getItem('availableCount')) || 0;
-  // });
-
   // State cho total product và total quantity
   const [totalProducts, setTotalProducts] = useState(0);  // Thêm state cho Total Products
   const [totalQuantity, setTotalQuantity] = useState(0);  // Thêm state cho Total Quantity
@@ -70,23 +61,23 @@ const SellerPage = () => {
   useEffect(() => {
     const availableFlowers = flowers.filter(flower => flower.status === 'available').length;
     const unavailableFlowers = flowers.filter(flower => flower.status === 'unavailable').length;
-  
+
     const totalProductsCount = flowers.length; // Tính tổng số sản phẩm
     const totalQuantityCount = flowers.reduce((sum, flower) => sum + Number(flower.quantity || 0), 0); // Tính tổng số lượng hoa và đảm bảo giá trị là số
-  
+
     setAvailableCount(availableFlowers);
     setUnavailableCount(unavailableFlowers);
     setTotalProducts(totalProductsCount);  // Cập nhật total product
     setTotalQuantity(totalQuantityCount);  // Cập nhật total quantity
-  
+
     // Lưu số lượng vào localStorage (tùy chọn)
     localStorage.setItem('availableCount', JSON.stringify(availableFlowers));
     localStorage.setItem('unavailableCount', JSON.stringify(unavailableFlowers));
     localStorage.setItem('totalProducts', JSON.stringify(totalProductsCount));  // Lưu total product vào localStorage
     localStorage.setItem('totalQuantity', JSON.stringify(totalQuantityCount));  // Lưu total quantity vào localStorage
-  
+
   }, [flowers]);
-  
+
 
   // Thêm hoa vào danh sách
   const addFlower = (newFlower) => {
@@ -111,18 +102,20 @@ const SellerPage = () => {
     localStorage.setItem('flowers', JSON.stringify(updatedFlowers)); // Lưu danh sách hoa vào localStorage
   };
 
-  const avatarSrc = "./image/logo.jpg"; 
+  const avatarSrc = "./image/logo.jpg";
 
   return (
     <div className="seller-page">
-      <Navbar avatarSrc={userInfo?.avatar} />
+      <Header/>
       <div className="dashboard-container">
         <Sidebar
           setActiveSection={setActiveSection}
           avatarSrc={userInfo?.avatar}
         />
         <div className="content">
-          {activeSection === "flowers" && (
+          {activeSection === 'profile' && <UserProfile />}
+          {activeSection === 'orderHistory' && <OrderHistory />}
+          {activeSection === 'flowers' && (
             <>
               <div className="action-bar">
                 <button onClick={() => setIsModalOpen(true)}>
@@ -131,15 +124,15 @@ const SellerPage = () => {
                 <input type="text" placeholder="Search Flower..." />
                 <div className="status-controls">
                   {/* Available Control */}
-                  <div className="available-control">
+                  {/* <div className="available-control">
                     <label>Available:</label>
                     <div className="number-box">
                       <span>{availableCount}</span>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Unavailable Control */}
-                  <div className="unavailable-control">
+                  {/* <div className="unavailable-control">
                     <label>Unavailable:</label>
                     <div className="number-box">
                       <span>{unavailableCount}</span>
@@ -182,39 +175,10 @@ const SellerPage = () => {
           {/* Nhận dữ liệu từ FeedbackPage */}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
 
-export default SellerPage;
-//   return (
-//     <div className="seller-page">
-//       <Navbar avatarSrc={avatarSrc} />
-//       <div className="dashboard-container">
-//         <Sidebar setActiveSection={setActiveSection} avatarSrc={avatarSrc} />
-//         <div className="content">
-//           {activeSection === 'flowers' && (
-//             <>
-//               <div className="action-bar">
-//                 <button onClick={() => setIsModalOpen(true)}>Post Flower</button>
-//                 <input
-//                   type="text"
-//                   placeholder="Search Flower..."
-//                   value={searchTerm}
-//                   onChange={(e) => setSearchTerm(e.target.value)}
-//                   className="search-input"
-//                 />
-//               </div>
-//               <FlowerPost isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addFlower={addFlower} />
-//               <FlowerList flowers={filteredFlowers} deleteFlower={deleteFlower} updateFlower={updateFlower} />
-//             </>
-//           )}
-//           {activeSection === 'orders' && <OrderList />}
-//           {activeSection === 'prices' && <PriceManagement />}
-//           {activeSection === 'customerSupport' && <CustomerSupport />}
-//           {activeSection === 'feedback' && <FeedbackManagement />}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+export default UserPage;

@@ -1,8 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./HomePage/home";
 import Admin from "./AdminPage/admin";
-import UserPage from "./UserPage/user";
-import SellerPage from "./Seller/SellerPage";
+import UserPage from "./UserPages/UserPage";
 import CreateProfilePage from "./CreateProfilePage/create_profile";
 import Dashboard1 from "./admin/Dashboard1/Dashboard1";
 import UserManage from "./admin/UserManage/UserManage";
@@ -12,11 +11,13 @@ import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
 import Flowers from "./Shop/Flowers/flower";
 import FlowerPage from "./Shop/FlowerDetails/viewflower";
-import RosesPage from "./Roses/RosesPage";
+import RosesPage from "./Flowers/FlowerPage";
 import UserDetail from "./admin/UserDetail/UserDetail";
 import SearchResultsPage from "./components/SearchResultsPage/SearchResultsPage";
 import SellerManage from "./admin/SellerManage/SellerManage";
 import CategoryManage from "./admin/CategoryManage/CategoryManage";
+import OrderSuccessPage from "./OrderSuccess/OrderSuccessPage";
+import SellerRegisterPage from "./SellerRegister/sellerRegister";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,12 +30,39 @@ function App() {
       element: <UserPage />,
     },
     {
-      path: "/seller-page",
-      element: <SellerPage />,
-    },
-    {
       path: "/create-profile",
       element: <CreateProfilePage />,
+    },
+    {
+      path: "/admin",
+      element: <Admin />,
+      // Các route con của "/admin"
+      children: [
+        {
+          path: "dashboard1", // Đường dẫn cho Dashboard 1
+          element: <Dashboard1 />,
+        },
+        {
+          path: "dashboard2", // Đường dẫn cho Dashboard 1
+          element: <Dashboard2 />,
+        },
+        {
+          path: "manageuser", // Đường dẫn cho Dashboard 2
+          element: <UserManage />,
+        },
+        {
+          path: "ReportAdmin", // Đường dẫn cho Dashboard 3
+          element: <ReportAdmin />, // Component tương ứng với route này
+        },
+        {
+          path: "SellersManage", // Đường dẫn cho Dashboard 3
+          element: <SellerManage />, // Component tương ứng với route này
+        },
+        {
+          path: "CategoryManage", // Đường dẫn cho Dashboard 3
+          element: <CategoryManage />, // Component tương ứng với route này
+        },
+      ],
     },
     {
       path: "/admin",
@@ -118,6 +146,14 @@ function App() {
     {
       path: "flowers/:categoryName",
       element: <RosesPage />,
+    },
+    {
+      path: "order-success",
+      element: <OrderSuccessPage/>
+    },
+    {
+      path: "/seller-register",
+      element: <SellerRegisterPage/>
     },
     {
       path: "*",

@@ -3,7 +3,7 @@ import { notification, DatePicker } from 'antd'; // Import DatePicker từ Ant D
 import moment from 'moment'; // Import moment để xử lý giá trị của DatePicker
 import './Profile.scss';
 
-const Profile = () => {
+const UserProfile = () => {
   const [sellerInfo, setSellerInfo] = useState({
     id: '',
     name: '',
@@ -73,7 +73,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="profile-inner">
-        <h1 className="profile-title">Seller Profile</h1>
+        <h1 className="profile-title">Profile</h1>
         {isEditing ? (
           <form className="profile-form" onSubmit={handleFormSubmit}>
             <div className="form-group">
@@ -241,4 +241,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

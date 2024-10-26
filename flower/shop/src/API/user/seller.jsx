@@ -9,3 +9,12 @@ export const getSellerInfo = async () => {
     });
     return response.data;
 }
+
+export const sellerRegister = async (params) => {
+    const userLogin = localStorage.getItem("token");
+    const response = await axios.post("https://localhost:7198/api/Seller/register", params, {
+        headers: {
+            Authorization: `Bearer ${userLogin}`
+        }
+    })
+}

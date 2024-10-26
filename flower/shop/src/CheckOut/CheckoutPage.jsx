@@ -2,16 +2,32 @@
 
 /* eslint-disable no-prototype-builtins */
 import { useEffect, useState } from "react";
-import { Button, Input, Form, message, Select, Radio } from "antd";
+import { Button, Input, Form, message, Select, Radio, Space } from "antd";
 import "./CheckoutPage.scss";
 import Header from "../components/Header/header";
 import Footer from "../Home/footer/footer";
 import { Link } from "react-router-dom";
+import { createAddress, getAddresses } from "../API/address";
+import { createOrder } from "../API/order/order";
 
 const CheckoutPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [existedAddresses, setExistedAddresses] = useState([]);
+  const [addressId, setAddressId] = useState("");
+  console.log({
+    existedAddresses
+  })
+
+  useEffect(() => {
+    getAddresses().then((data) => {
+      setExistedAddresses(data?.$values || []);
+      setAddressId(data?.$values?.[0]?.addressId)
+    });
+  }, []);
+
+
 
   // Danh sách voucher
   const validVouchers = {
@@ -21,6 +37,8 @@ const CheckoutPage = () => {
       expiryDate: "2024-12-31",
       remaining: 100,
     },
+
+    //ok tiếp đi ông
     SALE20: {
       discount: 20,
       createdDate: "2024-09-15",
@@ -63,9 +81,8 @@ const CheckoutPage = () => {
         }
       }
     }
-
     // Xóa cờ "checkoutFromCart" sau khi kiểm tra xong
-    localStorage.removeItem("checkoutFromCart");
+   // 
   }, []);
 
 
@@ -144,27 +161,26 @@ const CheckoutPage = () => {
     return (total - discountAmount).toLocaleString("vi-VN");
   };
 
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+  console.log(userInfo)
   //customer info
   const [customerInfo, setCustomerInfo] = useState({
-    name: "Vu Min Duc",
-    address: "123 Main Street",
+    name: userInfo.fullName,
+    phone: "0123456789",
+    address: "",
   });
 
   // Recipient info
-  const [isRecipientMyself, setIsRecipientMyself] = useState(true);
-  const [recipientInfo, setRecipientInfo] = useState({
-    name: "",
-    phone: "",
-    address: "",
-  });
+  // const [isRecipientMyself, setIsRecipientMyself] = useState(true);
+  // const [recipientInfo, setRecipientInfo] = useState({
+  //   name: "",
+  //   phone: "",
+  //   address: "",
+  // });
   // Hàm xử lý thay đổi giá trị trong input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (isRecipientMyself) {
-      setCustomerInfo({ ...customerInfo, [name]: value });
-    } else {
-      setRecipientInfo({ ...recipientInfo, [name]: value });
-    }
+    setCustomerInfo({ ...customerInfo, [name]: value });
   };
   //Hàm xử lý thay đổi giá trị
 
@@ -173,14 +189,53 @@ const CheckoutPage = () => {
   // };
 
   //radio button style
-  const [selectedButton, setSelectedButton] = useState("myself");
-  const radioGroupStyle = {
-    display: "flex",
-    justifyContent: "center",
-    marginBottom: "20px",
-    gap: "30px",
-    alignItems: "center",
-  };
+  // const [selectedButton, setSelectedButton] = useState("myself");
+  // const radioGroupStyle = {
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   marginBottom: "20px",
+  //   gap: "30px",
+  //   alignItems: "center",
+  // };
+
+  const handleCheckout = async () => {
+    try {
+      let finalAddressId = "";
+      let finalPhone = customerInfo.phone;
+      if (!addressId || addressId === "other") {
+        // Create new address with value entered from input
+        const newAddress = await createAddress(
+          customerInfo?.address || ""
+        );
+
+        if (!newAddress?.addressId) {
+          message.error("Failed to create address");
+          return;
+        }
+        finalAddressId = newAddress?.addressId;
+      } else {
+        // Use the one that selected
+        finalAddressId = addressId;
+      }
+
+      const order = {
+        "phoneNumber": finalPhone,
+        "addressId": finalAddressId,
+        "voucherIds": [
+
+        ]
+      }
+
+      const newOrder = await createOrder(order);
+      if (newOrder?.paymentUrl) {
+        window.location.href = newOrder?.paymentUrl;
+      }
+    } catch (error) {
+      message.error("Unexpected error occurred");
+    }
+  }
+
+  const shouldShowAddressInput = !existedAddresses?.length || addressId === "other"
 
   return (
     <>
@@ -194,24 +249,8 @@ const CheckoutPage = () => {
           style={{ maxWidth: "600px", margin: "0 auto" }}
         >
           <h3>Customer Information</h3>
-          <div style={{ marginBottom: "20px" }}>
-            {/* <Radio.Group
-              onChange={handleRecipientChange}
-              value={isRecipientMyself ? "myself" : "other"}
-              style={radioGroupStyle}
-            >
-              <Radio.Button value="myself" className="radio-button">
-                I am the recipient
-              </Radio.Button>
-              <Radio.Button value="other" className="radio-button">
-                Someone else is the recipient
-              </Radio.Button>
-            </Radio.Group> */}
-          </div>
-
-          {/** Phần này để đảm bảo form hiện đúng theo điều kiện */}
           <div>
-            <div style={{ display: "block"}}>
+            <div style={{ display: "block" }}>
               {/* <h4>Form for Myself</h4> */}
               <Form layout="vertical">
                 <Form.Item label="Name">
@@ -221,35 +260,43 @@ const CheckoutPage = () => {
                     onChange={handleInputChange}
                   />
                 </Form.Item>
-                <Form.Item label="Address">
+                <Form.Item label="Phone">
                   <Input
+                    name="phone"
+                    value={customerInfo.phone}
+                    onChange={handleInputChange}
+                  />
+                </Form.Item>
+                <Form.Item label="Address">
+                  {!!existedAddresses?.length &&
+                    <Radio.Group
+                      value={addressId}
+                      onChange={(e) => {
+                        setAddressId(e.target.value)
+                      }}
+                    >
+                      <Space direction="vertical">
+                        {existedAddresses.map(address => {
+                          return <Radio value={
+                            address?.addressId
+                          }>
+                            {address?.description}</Radio>
+                        })}
+                        <Radio value={"other"}>Other</Radio>
+                      </Space>
+                    </Radio.Group>
+                  }
+                  {shouldShowAddressInput && <Input
+                    style={{
+                      marginTop: 10
+                    }}
                     name="address"
                     value={customerInfo.address}
                     onChange={handleInputChange}
-                  />
+                  />}
                 </Form.Item>
               </Form>
             </div>
-
-            {/* <div style={{ display: !isRecipientMyself ? "block" : "none" }}>
-              <h4>Form for Someone Else</h4>
-              <Form layout="vertical">
-                <Form.Item label="Name">
-                  <Input
-                    name="name"
-                    value={recipientInfo.name}
-                    onChange={handleInputChange}
-                  />
-                </Form.Item>
-                <Form.Item label="Address">
-                  <Input
-                    name="address"
-                    value={recipientInfo.address}
-                    onChange={handleInputChange}
-                  />
-                </Form.Item>
-              </Form>
-            </div> */}
           </div>
         </div>
 
@@ -450,6 +497,7 @@ const CheckoutPage = () => {
             </div>
 
             <Button
+              onClick={handleCheckout}
               type="primary"
               style={{
                 width: "100%",

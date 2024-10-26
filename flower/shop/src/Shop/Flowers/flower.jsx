@@ -79,7 +79,7 @@ function Flowers() {
                     style={{ margin: "10px 85px" }}
                   >
                     View Details
-                  </Button>,
+                  </Button>
                 ]}
               >
                 <Card.Meta

@@ -13,7 +13,7 @@ function Event() {
           this amazing opportunity to make your gifts even more special at a
           lower price.
         </p>
-        <button>GET VOUCHER NOW</button>{" "}
+        <button className="voucher-btn">GET VOUCHER NOW</button>{" "}
       </div>
     </div>
   );

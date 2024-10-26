@@ -1,19 +1,20 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Header from "../../components/Header/header";
-import "./viewflower.scss"; // CSS phù hợp
-import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
-import axios from "axios";
-import { notification, Button, Modal, Input, Select } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
+import { Button, Input, Modal, notification, Select } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { addToCart } from "../../API/cart/cart";
+import Header from "../../components/Header/header";
+import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
+import "./viewflower.scss"; // CSS phù hợp
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 const FlowerPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
+  const [trigger, setTrigger] = useState(0);
   console.log("ID from URL:", id);
   const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
   const [cart, setCart] = useState([]); // Quản lý giỏ hàng
@@ -53,7 +54,7 @@ const FlowerPage = () => {
     };
 
     fetchFlowerDetails();
-  }, [id]);
+  }, [id, trigger]);
 
   useEffect(() => {
     setQuantity(1);
@@ -82,27 +83,19 @@ const FlowerPage = () => {
       console.error("flowerId is undefined. Cannot add to cart.");
       return;
     }
-    const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
+    //const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
     try {
-      const response = await addToCart(flower.flowerId, quantity);
+      await addToCart(flower.flowerId, quantity);
+      setTrigger(p=>p+1)
+      notification.success({
+        message: `Add ${flower.flowerName} quantity ${quantity} successfully !`
+      });
     } catch (error) {
       notification.error({
-        message: "Error",
-        description: "Failed to add product to cart. Please try again.",
+        message: "Thêm quá số lượng available !",
       });
       console.error("Error adding to cart:", error);
     }
-  };
-
-  // Thông báo thêm vào giỏ hàng thành công
-  const openNotification = () => {
-    notification.open({
-      message: "Notification Cart",
-      description:
-        "Add to cart successfully! Please check your cart to see the product.",
-      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-      duration: 1.5,
-    });
   };
 
   // Mở modal gửi báo cáo

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown, Form, Input, DatePicker, Radio, Card, Badge, Upload, message } from 'antd';
 import { UserOutlined, ShoppingCartOutlined, LogoutOutlined, UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import './user.scss';
+import './userProfile.scss';
 
 const { Header, Content, Sider } = Layout;
 
