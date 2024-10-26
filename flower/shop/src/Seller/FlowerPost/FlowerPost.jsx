@@ -11,10 +11,9 @@ import { congratulateFlowerData } from '../../Share/congratulate';
 import { weddingFlowersData } from '../../Share/wedding';
 
 const FlowerPost = ({ isOpen, onClose, addFlower }) => {
-  // Available roles to choose
   const roles = ['Rose', 'Table Flower', 'Orchid', 'Holiday', 'Birthday', 'Congratulate', 'Wedding'];
 
-  // State to manage selected role and corresponding flower list
+  // State to manage form data and validation
   const [selectedRole, setSelectedRole] = useState('');
   const [flowerOptions, setFlowerOptions] = useState([]);
   const [selectedFlower, setSelectedFlower] = useState(null);
@@ -40,7 +39,6 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
     setFlower({ ...flower, role });
     setError(''); // Clear error when a role is selected
 
-    // Filter flowers based on the role
     let filteredFlowers = [];
     switch (role) {
       case 'Rose':
@@ -87,13 +85,22 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
     }
   };
 
+  // Validate form before submitting
+  const validateForm = () => {
+    if (!selectedRole || !selectedFlower || !flower.description || !flower.price || !flower.shopName || !flower.date || !flower.quantity) {
+      return 'Please fill in all fields before submitting.';
+    }
+    return '';
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if role is selected
-    if (!selectedRole) {
-      setError('Please select a role before adding the flower.');
+    // Run validation
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError); // Set error if validation fails
       return;
     }
 
@@ -119,11 +126,10 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
       date: '', // Reset date input
     });
 
-    // Reset selected role and flower options
     setSelectedRole('');
     setFlowerOptions([]);
     setSelectedFlower(null);
-
+    setError(''); // Clear error after successful submission
     onClose(); // Close modal if necessary
   };
 
@@ -177,6 +183,7 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
             placeholder="Description"
             value={flower.description}
             onChange={(e) => setFlower({ ...flower, description: e.target.value })}
+            autoComplete="off"  // Disable autocomplete
           />
 
           {/* Input status */}
@@ -191,6 +198,7 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
             placeholder="Price"
             value={flower.price}
             onChange={(e) => setFlower({ ...flower, price: e.target.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',') })}
+            autoComplete="off"  // Disable autocomplete
           />
 
           {/* Input shop name */}
@@ -199,6 +207,7 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
             placeholder="Shop Name"
             value={flower.shopName}
             onChange={(e) => setFlower({ ...flower, shopName: e.target.value })}
+            autoComplete="off"  // Disable autocomplete
           />
 
           {/* Select quantity */}
@@ -210,7 +219,7 @@ const FlowerPost = ({ isOpen, onClose, addFlower }) => {
           </select>
 
           {/* Ant Design DatePicker */}
-          <DatePicker onChange={handleDateChange} />
+          <DatePicker onChange={handleDateChange} style={{ width: '100%' }} />
 
           {/* Submit button */}
           <button className="submit-btn" type="submit">Add</button>

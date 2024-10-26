@@ -3,14 +3,17 @@ import './FeedbackPage.scss';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faClock, faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
-import { notification } from 'antd'; // Import notification
+import { ProfileOutlined, PhoneOutlined, CalendarOutlined, EnvironmentOutlined, TruckOutlined, CreditCardOutlined, GiftOutlined, NumberOutlined, UserOutlined } from '@ant-design/icons';
+import { notification, Modal, Button } from 'antd'; // Import notification and modal components
 
 const FeedbackPage = () => {
     const location = useLocation();
     const { order } = location.state || {};
     const [rating, setRating] = useState(0); 
-    const [comment, setComment] = useState(''); 
-    const [userName, setUserName] = useState(''); 
+    const [comment, setComment] = useState('');
+    const [timeDelivery, setTimeDelivery] = useState('on-time'); // State to store Time of Delivery
+    const [serviceQuality, setServiceQuality] = useState(0); // State to store Service Quality
+    const [visibleModal, setVisibleModal] = useState(false); // State to control modal visibility
 
     if (!order) {
         return <p>No order data available.</p>;
@@ -19,9 +22,10 @@ const FeedbackPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const feedbackData = {
-            customer: userName, 
             comment: comment,
             rating: rating,
+            timeDelivery: timeDelivery, // Include Time of Delivery in feedback data
+            serviceQuality: serviceQuality, // Include Service Quality in feedback data
             responded: false,
         };
 
@@ -38,13 +42,23 @@ const FeedbackPage = () => {
         });
 
         // Reset form sau khi submit
-        setUserName('');
         setComment('');
         setRating(0);
+        setTimeDelivery('on-time');
+        setServiceQuality(0);
     };
 
     const handleStarClick = (value) => {
         setRating(value);
+    };
+
+    // Hàm mở modal chi tiết đơn hàng
+    const handleViewDetailClick = () => {
+        setVisibleModal(true); // Mở modal
+    };
+
+    const handleModalClose = () => {
+        setVisibleModal(false); // Đóng modal
     };
 
     return (
@@ -56,24 +70,15 @@ const FeedbackPage = () => {
                         <img src={order.imageUrl} alt={order.productName} />
                     </div>
                     <div className="order-details">
-                        <h3>{order.shopName}</h3>
-                        <p><strong>Date:</strong> {order.date}</p>
-                        <p><strong>Flower:</strong> {order.productName}</p>
-                        <p><strong>Quantity:</strong> {order.quantity}</p>
+                        <h3><strong>Product:</strong> {order.productName}</h3>
                         <p><strong>Total:</strong> {order.total.toLocaleString()} VND</p>
+                        {/* Thêm nút View Detail */}
+                        <button className="view-detail-button" onClick={handleViewDetailClick}>
+                            View Detail
+                        </button>
                     </div>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>User Name:</label>
-                        <input
-                            type="text"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)} 
-                            placeholder="Enter your name"
-                            required
-                        />
-                    </div>
                     <div className="form-group">
                         <label>
                             <FontAwesomeIcon icon={faStar} /> Rating:
@@ -93,7 +98,7 @@ const FeedbackPage = () => {
                         <label>
                             <FontAwesomeIcon icon={faClock} /> Time of Delivery:
                         </label>
-                        <select>
+                        <select value={timeDelivery} onChange={(e) => setTimeDelivery(e.target.value)}>
                             <option value="on-time">On Time</option>
                             <option value="late">Late</option>
                         </select>
@@ -102,7 +107,7 @@ const FeedbackPage = () => {
                         <label>
                             <FontAwesomeIcon icon={faThumbsUp} /> Service Quality:
                         </label>
-                        <select>
+                        <select value={serviceQuality} onChange={(e) => setServiceQuality(Number(e.target.value))}>
                             <option value={0}>Select Service Rating</option>
                             <option value={1}>1 - Poor</option>
                             <option value={2}>2 - Fair</option>
@@ -132,6 +137,41 @@ const FeedbackPage = () => {
                     </div>
                     <button type="submit">Submit Feedback</button>
                 </form>
+
+                {/* Modal hiển thị chi tiết đơn hàng */}
+                <Modal
+                    title="Order Details"
+                    visible={visibleModal}
+                    onCancel={handleModalClose}
+                    footer={[
+                        <Button key="close" onClick={handleModalClose}>Close</Button>
+                    ]}
+                >
+                    {order && (
+                        <div className="order-details-modal">
+                            <img 
+                                src={order.imageUrl} 
+                                alt={order.productName} 
+                                className="modal-image"
+                            />
+                            <div className="order-details-content">
+                                <div className="order-details-column">
+                                    <p><ProfileOutlined /> Order ID: {order.id}</p>
+                                    <p><GiftOutlined /> Flower ID: {order.flowerId}</p>
+                                    <p><UserOutlined /> Shop Name: {order.shopName}</p> {/* Thêm shop name */}
+                                    <p><PhoneOutlined /> Phone Number: {order.phoneNumber}</p>
+                                    <p><NumberOutlined /> Quantity: {order.quantity}</p> {/* Thêm quantity */}
+                                </div>
+                                <div className="order-details-column">
+                                    <p><CreditCardOutlined /> Payment Method: {order.paymentMethod}</p>
+                                    <p><TruckOutlined /> Delivery Method: {order.deliveryMethod}</p>
+                                    <p><CalendarOutlined /> Created Date: {new Date(order.createdDate).toLocaleDateString()}</p>
+                                    <p><EnvironmentOutlined /> Address: {order.address}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </Modal>
             </div>
         </div>
     );

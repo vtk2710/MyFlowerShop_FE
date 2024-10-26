@@ -1,66 +1,51 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import { Table, Button, notification } from 'antd';
+import { useEffect, useState } from 'react';
+import { Table } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import './FeedbackManagement.scss';
 
-const FeedbackManagement = ({ feedback }) => {
-  // Lấy dữ liệu từ localStorage nếu có, nếu không thì sử dụng mảng mặc định
-  const [feedbackList, setFeedbackList] = useState(() => {
-    const savedFeedback = localStorage.getItem('feedbackList');
-    return savedFeedback ? JSON.parse(savedFeedback) : [
-      { id: 1, customer: 'John Doe', comment: 'Great service!', responded: false },
-      { id: 2, customer: 'Jane Smith', comment: 'Loved the flowers!', responded: false },
-    ];
-  });
+// Mapping service quality numbers to their respective text labels
+const serviceQualityLabels = {
+    1: 'Poor',
+    2: 'Fair',
+    3: 'Good',
+    4: 'Very Good',
+    5: 'Excellent'
+};
 
-  // useEffect để thêm phản hồi mới từ FeedbackPage mà không bị lặp lại
+const FeedbackManagement = ({ feedbackList }) => {
+  // useEffect để tự động cập nhật danh sách phản hồi từ localStorage
   useEffect(() => {
-    if (feedback) {
-      // Kiểm tra xem phản hồi đã tồn tại chưa, nếu chưa thì mới thêm
-      const existingFeedback = feedbackList.find(fb => fb.comment === feedback.comment && fb.customer === feedback.customer);
-      if (!existingFeedback) {
-        const newFeedback = [...feedbackList, { id: feedbackList.length + 1, ...feedback }];
-        setFeedbackList(newFeedback);
-        localStorage.setItem('feedbackList', JSON.stringify(newFeedback)); // Lưu vào localStorage
-      }
+    const savedFeedback = localStorage.getItem('feedbackList');
+    if (savedFeedback) {
+      setFeedbackList(JSON.parse(savedFeedback));
     }
-  }, [feedback, feedbackList]);
+  }, []);
 
-  // Hàm phản hồi
-  const respondToFeedback = (id) => {
-    const updatedFeedbackList = feedbackList.map((fb) =>
-      fb.id === id ? { ...fb, responded: true } : fb
-    );
-    setFeedbackList(updatedFeedbackList);
-    localStorage.setItem('feedbackList', JSON.stringify(updatedFeedbackList)); // Cập nhật localStorage
+  const [feedbackListState, setFeedbackList] = useState(feedbackList || []);
 
-    // Hiển thị thông báo khi phản hồi
-    const customerName = feedbackList.find((fb) => fb.id === id).customer;
-    notification.success({
-      message: 'Response Sent',
-      description: `You have successfully responded to ${customerName}'s feedback.`,
-      placement: 'topRight',
-    });
-  };
-
-  // Cấu hình cột trong bảng
   const columns = [
-    { title: 'Customer Name', dataIndex: 'customer', key: 'customer' },
-    { title: 'Comment', dataIndex: 'comment', key: 'comment' },
-    { title: 'Status', dataIndex: 'responded', key: 'responded', render: (responded) => (responded ? 'Responded' : 'Not Responded') },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (_, record) => (
-        <Button
-          type="primary"
-          onClick={() => respondToFeedback(record.id)}
-          disabled={record.responded}
-        >
-          {record.responded ? 'Responded' : 'Respond'}
-        </Button>
-      ),
+    { title: 'ID', dataIndex: 'id', key: 'id' },
+    { title: 'Rating', dataIndex: 'rating', key: 'rating', render: (rating) => (
+      <div className="star-rating">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <FontAwesomeIcon
+            key={star}
+            icon={faStar}
+            className={star <= rating ? "star selected" : "star"}
+          />
+        ))}
+      </div>
+    )},
+    { title: 'Time Delivery', dataIndex: 'timeDelivery', key: 'timeDelivery' },
+    { 
+      title: 'Service Quality', 
+      dataIndex: 'serviceQuality', 
+      key: 'serviceQuality',
+      render: (serviceQuality) => serviceQualityLabels[serviceQuality]
     },
+    { title: 'Comment', dataIndex: 'comment', key: 'comment' },
   ];
 
   return (
@@ -68,7 +53,7 @@ const FeedbackManagement = ({ feedback }) => {
       <h2>Manage Feedback</h2>
       <Table
         columns={columns}
-        dataSource={feedbackList}
+        dataSource={feedbackListState}
         rowKey="id"
         pagination={{ pageSize: 5 }}
       />
