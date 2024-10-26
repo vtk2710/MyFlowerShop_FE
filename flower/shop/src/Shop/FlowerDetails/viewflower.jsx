@@ -2,145 +2,273 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header/header";
-import "./viewflower.scss";
+import "./viewflower.scss"; // CSS phù hợp
 import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
 import axios from "axios";
+import { notification, Button, Modal, Input, Select } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
 import { addToCart } from "../../API/cart/cart";
 
+const { TextArea } = Input;
+const { Option } = Select;
+
 const FlowerPage = () => {
-    const { id } = useParams(); // Lấy ID từ URL
-    const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
-    const [cart, setCart] = useState([]); // Quản lý giỏ hàng
-    const [flower, setFlowerDetails] = useState({});
+  const { id } = useParams(); // Lấy ID từ URL
+  console.log("ID from URL:", id);
+  const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
+  const [cart, setCart] = useState([]); // Quản lý giỏ hàng
+  const [flower, setFlowerDetails] = useState({}); // Giống biến "flower"
+  const [reportText, setReportText] = useState(""); // State cho nội dung báo cáo
+  const [issueType, setIssueType] = useState(""); // State để quản lý loại báo cáo
+  const [isModalVisible, setIsModalVisible] = useState(false); // State quản lý modal
 
-
-    const getFlowerDetails = async () => {
-        try {
-            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/${id}`);
-            console.log(response.data); // Ensure this logs the correct structure
-            return response.data; // Since it's a single object, just return it
-        } catch (error) {
-            console.error('Error fetching flower detail:', error);
-            return null; // Return null on error
-        }
+  const getFlowerDetails = async () => {
+    if (!flower.categoryId) {
+      console.error("categoryId is missing or undefined.");
+      return;
     }
 
-    useEffect(() => {
-        const fetchFlower = async () => {
-            const flowerDetails = await getFlowerDetails(); // Fetch flower details
+    try {
+      const response = await axios.get(
+        `https://localhost:7198/api/Category/${flower.categoryId}/flowers`
+      );
+      console.log("Flowers details fetched by categoryId:", response.data);
+      setFlowerDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching flower details by categoryId:", error);
+    }
+  };
 
-            if (flowerDetails) {
-                setFlowerDetails(flowerDetails); // Set state with the flower details object
-            } else {
-                console.warn("No flower details found.");
-                setFlowerDetails({}); // Set an empty object if no details
-            }
-            //setLoading(false); // Set loading to false after fetching
-        };
-
-        fetchFlower(); // Call the fetch function
-    }, [id]);
-
-    useEffect(() => {
-        setQuantity(1);
-        window.scrollTo(0, 0); // Cuộn lên đầu trang khi vào trang chi tiết
-    }, [id]);
-
-    // nhập số lượng
-    const handleQuantityChange = (e) => {
-        const value = parseInt(e.target.value);
-        if (value >= 1) {
-            setQuantity(value); // Chỉ cho phép số lượng từ 1 trở lên
-        }
+  useEffect(() => {
+    const fetchFlowerDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:7198/api/FlowerInfo/${id}`
+        );
+        setFlowerDetails(response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching flower details:", error);
+      }
     };
 
-    // Hàm để tăng số lượng
-    const increaseQuantity = () => {
-        setQuantity(quantity + 1);
+    fetchFlowerDetails();
+  }, [id]);
+
+  useEffect(() => {
+    setQuantity(1);
+    window.scrollTo(0, 0); // Cuộn lên đầu trang khi vào trang chi tiết
+  }, [id]);
+
+  // Hàm để tăng số lượng
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
+  // Hàm để giảm số lượng (không cho phép giảm xuống dưới 1)
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  //Hàm thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = async () => {
+    if (!flower.flowerId) {
+      notification.error({
+        message: "Error",
+        description: "Flower ID is missing. Please try again later.",
+      });
+      console.error("flowerId is undefined. Cannot add to cart.");
+      return;
+    }
+    const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
+    try {
+      const response = await addToCart(flower.flowerId, quantity);
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: "Failed to add product to cart. Please try again.",
+      });
+      console.error("Error adding to cart:", error);
+    }
+  };
+
+  // Thông báo thêm vào giỏ hàng thành công
+  const openNotification = () => {
+    notification.open({
+      message: "Notification Cart",
+      description:
+        "Add to cart successfully! Please check your cart to see the product.",
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+      duration: 1.5,
+    });
+  };
+
+  // Mở modal gửi báo cáo
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  // Đóng modal gửi báo cáo
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  // Xử lý khi gửi báo cáo
+  const handleReportSubmit = async () => {
+    // Kiểm tra nếu `flowerId` hoặc `sellerId` bị thiếu
+    if (!flower.flowerId || !flower?.sellerId) {
+      console.error("Missing required fields:", {
+        flowerId: flower.flowerId,
+        sellerId: flower.sellerId,
+      });
+      console.log(flower.flowerId, flower.sellerId);
+      notification.error({
+        message: "Error",
+        description: "Missing required fields. Please try again.",
+      });
+      return;
+    }
+
+    const reportContent = {
+      FlowerId: flower.flowerId,
+      SellerId: flower?.sellerId,
+      ReportReason: issueType,
+      ReportDescription: reportText,
     };
+    console.log(typeof reportContent.ReportReason);
+    console.log("Payload being sent:", reportContent);
+    console.log("FlowerId:", typeof reportContent.FlowerId);
+    console.log("SellerId:", typeof reportContent.SellerId);
+    console.log("ReportReason:", typeof reportContent.ReportReason);
+    console.log("ReportDescription:", typeof reportContent.ReportDescription);
+    console.log("Flower object:", flower);
+    try {
+      const userLogin = localStorage.getItem("token");
+      const response = await axios.post(
+        "https://localhost:7198/api/Report/CreateReport",
+        {
+          headers: {
+            Authorization: `Bearer ${userLogin}`,
+          },
+        },
+        reportContent
+      );
 
-    // Hàm để giảm số lượng (không cho phép giảm xuống dưới 1)
-    const decreaseQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
-
-    // // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
-    // useEffect(() => {
-    //     localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
-    //     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    //     setCart(existingCart);
-    // }, []);
-
-
-    const openNotification = () => {
-        notification.open({
-            message: "Notification Cart",
-            description:
-                "Add to cart successfully! Please check your cart to see the product.",
-            icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-            duration: 1.5,
+      if (response.status === 200) {
+        notification.success({
+          message: "Report Sent",
+          description: "Your report has been sent successfully.",
         });
-    };
+        setReportText(""); // Reset nội dung
+        setIsModalVisible(false); // Đóng modal
+      } else {
+        throw new Error("Failed to send report.");
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: "Failed to send report. Please try again.",
+      });
+      console.error("Error sending report:", error);
+    }
+  };
 
-    //Hàm thêm sản phẩm vào giỏ hàng
-    const handleAddToCart = async () => {
-        const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
-        try {
-            const response = await addToCart(flower.flowerId, quantity);
-        } catch (error) {
-
-        }
-    };
-
-    return (
-        <div>
-            <Header />
-            <div className="product-container">
-                {/* Hình ảnh sản phẩm */}
-                <div className="product-image">
-                    <img src={flower.imageUrl} alt={flower.flowerName} className="product-img" />
-                </div>
-
-                {/* Chi tiết sản phẩm */}
-                <div className="product-details">
-                    <h1 className="product-title">
-                        {flower.flowerName} - {flower.price}
-                    </h1>
-                    <p className="product-description">{flower.flowerDescription}</p>
-                    <p>
-                        Available quantity: {flower.availableQuantity}
-                    </p>
-                    {/* Chọn số lượng */}
-                    <div className="quantity-section">
-                        <button className="quantity-btn" onClick={decreaseQuantity}>
-                            -
-                        </button>
-                        <input
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => setQuantity(Number(e.target.value))}
-                            min="1" // Đảm bảo giá trị không nhỏ hơn 1
-                            className="quantity-input"
-                        />
-                        <button className="quantity-btn" onClick={increaseQuantity}>
-                            +
-                        </button>
-                    </div>
-
-                    {/* Nút Thêm vào giỏ hàng */}
-                    <button className="add-to-basket-btn" onClick={handleAddToCart}>
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-            <RelatedProductsSwiper
-                currentFlowerId={flower.flowerId}
-                currentCategoryId={flower.categoryId}
-            />
+  return (
+    <div>
+      <Header />
+      <div className="product-container">
+        {/* Hình ảnh sản phẩm */}
+        <div className="product-image">
+          <img
+            src={flower.imageUrl}
+            alt={flower.flowerName}
+            className="product-img"
+          />
         </div>
-    );
+
+        {/* Chi tiết sản phẩm */}
+        <div className="product-details">
+          <h1 className="product-title">
+            {flower.flowerName} - {flower.price}
+          </h1>
+          <p className="product-description">{flower.flowerDescription}</p>
+          <p>Available quantity: {flower.availableQuantity}</p>
+          {/* Chọn số lượng */}
+          <div className="quantity-section">
+            <button className="quantity-btn" onClick={decreaseQuantity}>
+              -
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              min="1"
+              className="quantity-input"
+            />
+            <button className="quantity-btn" onClick={increaseQuantity}>
+              +
+            </button>
+          </div>
+
+          {/* Nút Thêm vào giỏ hàng */}
+          <button className="add-to-basket-btn" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+
+          <div style={{ marginTop: "100px" }}>
+            <Button type="primary" onClick={showModal}>
+              Report to Admin
+            </Button>
+          </div>
+        </div>
+      </div>
+      <RelatedProductsSwiper
+        currentFlowerId={flower.flowerId}
+        currentCategoryId={flower.categoryId}
+      />
+
+      {/* Modal báo cáo */}
+      <Modal
+        title="Report to Admin"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleReportSubmit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <label
+          style={{ marginBottom: "8px", display: "block", fontWeight: "bold" }}
+        >
+          Choose the issue:
+        </label>
+        <Select
+          placeholder="Select an issue type"
+          style={{ width: "100%", marginBottom: "20px" }}
+          value={issueType}
+          onChange={(value) => setIssueType(value)}
+        >
+          <Option value="Poor Quality">Poor Quality</Option>
+          <Option value="Wrong Item">Wrong Item</Option>
+          <Option value="Other">Other</Option>
+        </Select>
+
+        {/* TextArea để nhập nội dung báo cáo */}
+        <TextArea
+          rows={4}
+          value={reportText}
+          onChange={(e) => setReportText(e.target.value)}
+          placeholder="Please describe the issue or problem with this product..."
+        />
+      </Modal>
+    </div>
+  );
 };
 
 export default FlowerPage;

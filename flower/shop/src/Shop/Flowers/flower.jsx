@@ -1,77 +1,98 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Row, Col, Card } from 'antd';
-import Header from '../../components/Header/header';
-import './flower.scss';
-import axios from 'axios';
+/* eslint-disable react/jsx-key */
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button, Row, Col, Card, Spin, Alert } from "antd";
+import Header from "../../components/Header/header";
+import "./flower.scss";
+import axios from "axios";
 
 function Flowers() {
-    const { id } = useParams()
-    const [flowerList, setFlowerList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+  const { id } = useParams();
+  const [flowerList, setFlowerList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const getListFlower = async () => {
-        try {
-            const response = await axios.get(`https://localhost:7198/api/Category/${id}/flowers`);
-
-            // Check if response.data is an array and has elements
-            if (Array.isArray(response.data) && response.data.length > 0) {
-                return response.data; // Directly return the flower list
-            } else {
-                return []; // Return an empty array if no flowers found
-            }
-        } catch (error) {
-            console.error('Error fetching flower list:', error);
-            return []; // Return an empty array on error
-        }
-    };
-
-    useEffect(() => {
-        const fetchFlowers = async () => {
-            setLoading(true); // Set loading to true before fetching
-            const flowers = await getListFlower(); // Fetch the flower list
-            setFlowerList(flowers); // Update state with the fetched flowers
-            setLoading(false); // Set loading to false after fetching
-        };
-
-        fetchFlowers(); // Call the fetch function
-    }, [id]); // Empty dependency array means this runs once on mount
-
-    if (loading) {
-        return <div>Loading...</div>; // Show loading indicator while fetching
+  const getListFlower = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7198/api/Category/${id}/flowers`
+      );
+      return Array.isArray(response.data) && response.data.length > 0
+        ? response.data
+        : [];
+    } catch (error) {
+      console.error("Error fetching flower list:", error);
+      setError("Failed to fetch flowers. Please try again later.");
+      return [];
     }
+  };
 
-
-    // const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
-
-    const handleOpen = (flower) => {
-        // Điều hướng sang trang chi tiết sản phẩm
-        navigate(`/viewflower/${flower.flowerId}`);
+  useEffect(() => {
+    const fetchFlowers = async () => {
+      setLoading(true);
+      const flowers = await getListFlower();
+      setFlowerList(flowers);
+      setLoading(false);
     };
 
+    fetchFlowers();
+  }, [id]);
+
+  if (loading) {
+    return <Spin size="large" />; // Hiển thị spinner khi đang tải
+  }
+
+  if (error) {
+    return <Alert message={error} type="error" showIcon />;
+  }
+
+  if (flowerList.length === 0) {
     return (
-        <>
-            <Header />
-            <div className="row HomePage__body">
-                {flowerList.map((flower) => (
-                    <div className="product-card" key={flower.flowerId}>
-                        <img src={flower.imageUrl} alt={flower.flowerName} />
-                        <br />
-                        <h3>{flower.flowerName}</h3>
-                        <br />
-                        <Button
-                            type="primary" // Sử dụng kiểu "primary"
-                            onClick={() => handleOpen(flower)} // Điều hướng sang trang chi tiết sản phẩm
-                            style={{ marginTop: "10px" }}
-                        >
-                            View Details
-                        </Button>
-                    </div>
-                ))}
-            </div>
-        </>
+      <Alert
+        message="No flowers found for this category."
+        type="info"
+        showIcon
+      />
     );
-};
+  }
+
+  const handleOpen = (flower) => {
+    navigate(`/viewflower/${flower.flowerId}`);
+  };
+
+  return (
+    <>
+      <Header />
+      <Row gutter={16} className="flower-list">
+        {flowerList.map((flower) => (
+          <Col span={8} key={flower.flowerId}>
+            <div className="product-card">
+              {" "}
+              <Card
+                hoverable
+                cover={<img src={flower.imageUrl} alt={flower.flowerName} />}
+                actions={[
+                  <Button
+                    type="primary"
+                    onClick={() => handleOpen(flower)}
+                    style={{ margin: "10px 85px" }}
+                  >
+                    View Details
+                  </Button>,
+                ]}
+              >
+                <Card.Meta
+                  title={flower.flowerName}
+                  description={`Price: ${flower.price}`}
+                />
+              </Card>
+            </div>
+          </Col>
+        ))}
+      </Row>
+    </>
+  );
+}
 
 export default Flowers;
