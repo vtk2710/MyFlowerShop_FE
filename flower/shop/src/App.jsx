@@ -2,15 +2,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./HomePage/home";
 import Admin from "./AdminPage/admin";
 import UserPage from "./UserPage/user";
-import SellerPage from "./SellerPage/seller";
+import SellerPage from "./Seller/SellerPage";
 import CreateProfilePage from "./CreateProfilePage/create_profile";
-//import ShopPage from "./UserPage/user1";
 import Dashboard1 from "./admin/Dashboard1/Dashboard1";
 import UserManage from "./admin/UserManage/UserManage";
 import ReportAdmin from "./admin/ReportAdmin/ReportAdmin";
 import Dashboard2 from "./admin/CustomerFeedbackRadarChart/CustomerFeedbackRadarChart";
 import ProductPage from "./ViewProduct/viewpage";
 import CheckoutPage from "./CheckOut/CheckoutPage";
+import Flowers from "./Shop/Flowers/flower";
+import FlowerPage from "./Shop/FlowerDetails/viewflower";
+import RosesPage from "./Roses/RosesPage";
+import UserDetail from "./admin/UserDetail/UserDetail";
+import SearchResultsPage from "./components/SearchResultsPage/SearchResultsPage";
+import SellerManage from "./admin/SellerManage/SellerManage";
+import CategoryManage from "./admin/CategoryManage/CategoryManage";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -50,7 +57,23 @@ function App() {
           path: "ReportAdmin", // Đường dẫn cho Dashboard 3
           element: <ReportAdmin />, // Component tương ứng với route này
         },
+        {
+          path: "SellersManage", // Đường dẫn cho Dashboard 3
+          element: <SellerManage />, // Component tương ứng với route này
+        },
+        {
+          path: "CategoryManage", // Đường dẫn cho Dashboard 3
+          element: <CategoryManage />, // Component tương ứng với route này
+        },
       ],
+    },
+    {
+      path: "/search/:searchTerm", // Đường dẫn cho trang kết quả tìm kiếm
+      element: <SearchResultsPage />,
+    },
+    {
+      path: "/userdetail/:id", // Đường dẫn mới cho trang thông tin người dùng
+      element: <UserDetail />,
     },
     {
       path: "/ViewPage/:id",
@@ -84,6 +107,22 @@ function App() {
         </div>
       ), // Trang 404 nếu đường dẫn không hợp lệ
     },
+    {
+      path: "/flower/:id",
+      element: <Flowers />,
+    },
+    {
+      path: "/viewflower/:id",
+      element: <FlowerPage />,
+    },
+    {
+      path: "flowers/:categoryName",
+      element: <RosesPage />,
+    },
+    {
+      path: "*",
+      element: <div>404 Not Found</div>, // Trang 404 nếu đường dẫn không hợp lệ
+    }, 
   ]);
 
   return <RouterProvider router={router} />;

@@ -1,11 +1,7 @@
 // src/Sidebar.jsx
 
 import { Layout, Menu } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, LaptopOutlined, BankOutlined } from "@ant-design/icons";
 import "./Sidebar.scss";
 import { Link } from "react-router-dom";
 
@@ -58,15 +54,17 @@ const Sidebar = () => {
           <Menu.Item key="5">
             <Link to="/admin/ReportAdmin">View Report User</Link>
           </Menu.Item>
-          {/* <Menu.Item key="3">
-           
-          </Menu.Item> */}
+          <Menu.Item key="3">
+            <Link to="/admin/SellersManage">Manage Sellers</Link>
+          </Menu.Item>
         </SubMenu>
 
         {/* Settings Menu */}
-        <SubMenu key="sub3" icon={<NotificationOutlined />} title="Settings">
-          <Menu.Item key="6">Settings 1</Menu.Item>
-          <Menu.Item key="7">Settings 2</Menu.Item>
+        <SubMenu key="sub3" icon={<BankOutlined />} title="Manage Category">
+          {" "}
+          <Menu.Item key="3">
+            <Link to="/admin/CategoryManage">Manage Category</Link>
+          </Menu.Item>
         </SubMenu>
       </Menu>
     </Sider>

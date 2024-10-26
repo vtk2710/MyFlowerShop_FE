@@ -32,7 +32,7 @@ export const roseData = [
     {
         Id: 4,
         Name: "Rose",
-        Image: "/roses/rose3.jpg",
+        Image: "/roses/rose4.jpg",
         Origin: "Ha Noi",
         Description: "A soft lavender rose, evoking romance and mystery, often chosen to express fascination and allure",
         Price: "400,000 VND",

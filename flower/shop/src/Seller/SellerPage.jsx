@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import FlowerList from '../components/FlowerList/FlowerList';
-import OrderList from '../components/OrderList/OrderList';
-import FeedbackManagement from '../components/FeedbackManagement/FeedbackManagement';
-import FlowerPost from '../components/FlowerPost/FlowerPost';
+import FlowerList from './FlowerList/FlowerList';
+import OrderList from './OrderList/OrderList';
+import PriceManagement from './PriceManagement/PriceManagement';
+import CustomerSupport from './CustomerSupport/CustomerSupport';
+import FeedbackManagement from './FeedbackManagement/FeedbackManagement';
+import FlowerPost from './FlowerPost/FlowerPost';
 import Navbar from './Navbar';
 import Sidebar from './Slidebar';
 import './SellerPage.scss';
+import axios from 'axios';
 
 const SellerPage = () => {
   const location = useLocation();
@@ -14,6 +16,9 @@ const SellerPage = () => {
   const [activeSection, setActiveSection] = useState(initialActiveSection || 'flowers');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  //const [activeSection, setActiveSection] = useState('flowers'); // Khớp với key trong Sidebar
+  const [userInfo, setUserInfo] = useState(); 
 
   // State quản lý danh sách hoa
   const [flowers, setFlowers] = useState(JSON.parse(localStorage.getItem('flowers')) || []);
@@ -21,6 +26,35 @@ const SellerPage = () => {
   // State quản lý số lượng Available và Unavailable
   const [availableCount, setAvailableCount] = useState(0);
   const [unavailableCount, setUnavailableCount] = useState(0);
+  // Hàm lấy thông tin user từ API
+  const fetchUserInfo = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Token is undefined. User might not be logged in.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        "https://localhost:7198/api/UserInfo/info",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+    console.log(userInfo);
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  // State quản lý số lượng Available và Unavailable, lấy từ localStorage nếu có
+  // const [availableCount, setAvailableCount] = useState(() => {
+  //   return JSON.parse(localStorage.getItem('availableCount')) || 0;
+  // });
 
   // State cho total product và total quantity
   const [totalProducts, setTotalProducts] = useState(0);  // Thêm state cho Total Products
@@ -75,9 +109,9 @@ const SellerPage = () => {
 
   return (
     <div className="seller-page">
-      <Navbar avatarSrc={avatarSrc} />
+      <Navbar avatarSrc={userInfo?.avatar} />
       <div className="dashboard-container">
-        <Sidebar setActiveSection={setActiveSection} avatarSrc={avatarSrc} />
+        <Sidebar setActiveSection={setActiveSection} avatarSrc={userInfo?.avatar} />
         <div className="content">
           {activeSection === 'flowers' && (
             <>
@@ -131,3 +165,36 @@ const SellerPage = () => {
 };
 
 export default SellerPage;
+//   return (
+//     <div className="seller-page">
+//       <Navbar avatarSrc={avatarSrc} />
+//       <div className="dashboard-container">
+//         <Sidebar setActiveSection={setActiveSection} avatarSrc={avatarSrc} />
+//         <div className="content">
+//           {activeSection === 'flowers' && (
+//             <>
+//               <div className="action-bar">
+//                 <button onClick={() => setIsModalOpen(true)}>Post Flower</button>
+//                 <input
+//                   type="text"
+//                   placeholder="Search Flower..."
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="search-input"
+//                 />
+//               </div>
+//               <FlowerPost isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addFlower={addFlower} />
+//               <FlowerList flowers={filteredFlowers} deleteFlower={deleteFlower} updateFlower={updateFlower} />
+//             </>
+//           )}
+//           {activeSection === 'orders' && <OrderList />}
+//           {activeSection === 'prices' && <PriceManagement />}
+//           {activeSection === 'customerSupport' && <CustomerSupport />}
+//           {activeSection === 'feedback' && <FeedbackManagement />}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+

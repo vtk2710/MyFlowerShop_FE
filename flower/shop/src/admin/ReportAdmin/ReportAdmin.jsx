@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table, Tag, Button, Modal, message } from "antd";
 
 // Dữ liệu báo cáo giả lập
@@ -11,6 +11,9 @@ const initialReports = [
     description:
       "The lotus flowers were wilted when I received them, very poor quality.",
     status: "Not processed",
+    createDate: "2024-10-01", // Ngày tạo báo cáo
+    shopName: "Rose Boutique", // Tên cửa hàng bị báo cáo
+    lastUpdateDate: "2024-10-03", // Lần cập nhật cuối cùng
   },
   {
     key: "2",
@@ -20,6 +23,9 @@ const initialReports = [
     description:
       "The flowers were delivered 3 hours later than the promised time.",
     status: "Not processed",
+    createDate: "2024-10-02",
+    shopName: "Lily Garden",
+    lastUpdateDate: "2024-10-04",
   },
   {
     key: "3",
@@ -29,6 +35,9 @@ const initialReports = [
     description:
       "The roses were crushed and didn't look like the advertised photos.",
     status: "Not processed",
+    createDate: "2024-10-03",
+    shopName: "Tulip Haven",
+    lastUpdateDate: "2024-10-05",
   },
   {
     key: "4",
@@ -37,6 +46,9 @@ const initialReports = [
     issueType: "Poor Feedback",
     description: "The shop delivered the wrong type of flowers I ordered.",
     status: "Not processed",
+    createDate: "2024-10-04",
+    shopName: "Daisy Fields",
+    lastUpdateDate: "2024-10-06",
   },
   {
     key: "5",
@@ -45,6 +57,9 @@ const initialReports = [
     issueType: "Poor Feedback",
     description: "The lilies had a strange smell and were not fresh.",
     status: "Not processed",
+    createDate: "2024-10-05",
+    shopName: "Orchid Paradise",
+    lastUpdateDate: "2024-10-07",
   },
   {
     key: "6",
@@ -54,6 +69,9 @@ const initialReports = [
     description:
       "Customer service was very slow when I requested to exchange flowers.",
     status: "Not processed",
+    createDate: "2024-10-06",
+    shopName: "Sunflower Express",
+    lastUpdateDate: "2024-10-08",
   },
   {
     key: "7",
@@ -62,6 +80,9 @@ const initialReports = [
     issueType: "Poor Feedback",
     description: "The orchids delivered were wilted and had fallen petals.",
     status: "Not processed",
+    createDate: "2024-10-07",
+    shopName: "Lotus Harmony",
+    lastUpdateDate: "2024-10-10",
   },
   {
     key: "8",
@@ -71,6 +92,9 @@ const initialReports = [
     description:
       "The wedding flowers were not as agreed upon, very disappointed.",
     status: "Not processed",
+    createDate: "2024-10-08",
+    shopName: "Wedding Flora",
+    lastUpdateDate: "2024-10-11",
   },
   {
     key: "9",
@@ -80,6 +104,9 @@ const initialReports = [
     description:
       "The bouquet arrived with broken stems, and the quality was subpar.",
     status: "Not processed",
+    createDate: "2024-10-09",
+    shopName: "Blossom Dreams",
+    lastUpdateDate: "2024-10-12",
   },
   {
     key: "10",
@@ -88,13 +115,31 @@ const initialReports = [
     issueType: "Poor Feedback",
     description: "I received sunflowers instead of the roses I ordered.",
     status: "Not processed",
+    createDate: "2024-10-10",
+    shopName: "Sunflower Bliss",
+    lastUpdateDate: "2024-10-13",
   },
 ];
 
 const ReportAdmin = () => {
-  const [reports, setReports] = useState(initialReports); // Danh sách báo cáo
+  const [reports, setReports] = useState([]); // Danh sách báo cáo
   const [selectedReport, setSelectedReport] = useState(null); // Báo cáo đang được chọn để xem chi tiết
   const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái hiện/ẩn modal
+
+  // Tải dữ liệu từ localStorage hoặc dùng dữ liệu mặc định nếu chưa có
+  useEffect(() => {
+    const savedReports = JSON.parse(localStorage.getItem("reportsOfData"));
+    if (savedReports) {
+      setReports(savedReports);
+    } else {
+      setReports(initialReports);
+    }
+  }, []);
+
+  // Lưu dữ liệu vào localStorage mỗi khi reports thay đổi
+  useEffect(() => {
+    localStorage.setItem("reportsOfData", JSON.stringify(reports));
+  }, [reports]);
 
   // Hàm để mở modal và xem chi tiết báo cáo
   const viewReport = (record) => {
@@ -104,8 +149,8 @@ const ReportAdmin = () => {
 
   // Hàm đóng modal
   const handleCloseModal = () => {
-    setIsModalVisible(false); // Ẩn modal
-    setSelectedReport(null); // Xóa báo cáo được chọn
+    setIsModalVisible(false);
+    setSelectedReport(null);
   };
 
   // Hàm đánh dấu báo cáo đã xử lý
@@ -114,6 +159,7 @@ const ReportAdmin = () => {
       report.key === key ? { ...report, status: "Processed" } : report
     );
     setReports(updatedReports); // Cập nhật danh sách báo cáo
+    localStorage.setItem("reportsOfData", JSON.stringify(updatedReports));
     message.success("The report has been marked as processed.");
   };
 
@@ -135,15 +181,16 @@ const ReportAdmin = () => {
       key: "issueType",
     },
     {
-      title: "Description",
+      title: "Status",
       dataIndex: "status",
       key: "status",
       render: (status) => (
-        <Tag color={status === "Đã xử lý" ? "green" : "red"}>{status}</Tag>
+        <Tag color={status === "Processed" ? "green" : "red"}>{status}</Tag>
       ),
     },
     {
       title: "Action",
+      align: "center",
       key: "action",
       render: (_, record) => (
         <>
@@ -165,34 +212,51 @@ const ReportAdmin = () => {
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>Manage reports from users</h1>
-      <Table columns={columns} dataSource={reports} pagination={false} />
+      <Table
+        columns={columns}
+        dataSource={reports}
+        pagination={{ pageSize: 7 }} // Số dòng tối đa trên mỗi trang
+      />
 
       {/* Modal để hiển thị chi tiết báo cáo */}
       {selectedReport && (
         <Modal
-          title="Chi tiết báo cáo"
+          title="Report Details"
           visible={isModalVisible}
           onCancel={handleCloseModal}
           footer={[
             <Button key="close" onClick={handleCloseModal}>
-              Đóng
+              Close
             </Button>,
           ]}
         >
           <p>
-            <strong>Sender:</strong> {selectedReport.username}
+            <strong>Sender:</strong> {selectedReport.username || "N/A"}
           </p>
           <p>
-            <strong>Email:</strong> {selectedReport.email}
+            <strong>Email:</strong> {selectedReport.email || "N/A"}
           </p>
           <p>
-            <strong>Issue Type:</strong> {selectedReport.issueType}
+            <strong>Issue Type:</strong>{" "}
+            {typeof selectedReport.issueType === "object"
+              ? selectedReport.issueType.value
+              : selectedReport.issueType || "N/A"}
           </p>
           <p>
-            <strong>Description:</strong> {selectedReport.description}
+            <strong>Description:</strong> {selectedReport.description || "N/A"}
           </p>
           <p>
-            <strong>Status:</strong> {selectedReport.status}
+            <strong>Shop Name:</strong> {selectedReport.shopName || "N/A"}
+          </p>
+          <p>
+            <strong>Created Date:</strong> {selectedReport.createDate || "N/A"}
+          </p>
+          <p>
+            <strong>Last Update Date:</strong>{" "}
+            {selectedReport.lastUpdateDate || "N/A"}
+          </p>
+          <p>
+            <strong>Status:</strong> {selectedReport.status || "N/A"}
           </p>
         </Modal>
       )}

@@ -5,6 +5,7 @@ import Header from "../../components/Header/header";
 import "./viewflower.scss";
 import RelatedProductsSwiper from "../../ViewProduct/RelatedProductsSwiper/RelatedProductsSwiper";
 import axios from "axios";
+import { addToCart } from "../../API/cart/cart";
 
 const FlowerPage = () => {
     const { id } = useParams(); // Lấy ID từ URL
@@ -15,7 +16,7 @@ const FlowerPage = () => {
 
     const getFlowerDetails = async () => {
         try {
-            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/Search/${id}`);
+            const response = await axios.get(`https://localhost:7198/api/FlowerInfo/${id}`);
             console.log(response.data); // Ensure this logs the correct structure
             return response.data; // Since it's a single object, just return it
         } catch (error) {
@@ -65,33 +66,32 @@ const FlowerPage = () => {
         }
     };
 
-    // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
+    // // // Xóa localStorage để đảm bảo dữ liệu cũ không còn tồn tại
     // useEffect(() => {
     //     localStorage.removeItem("cart"); // Xóa giỏ hàng cũ khi trang tải lần đầu
     //     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     //     setCart(existingCart);
     // }, []);
 
-    // Hàm thêm sản phẩm vào giỏ hàng
-    const handleAddToCart = () => {
+
+    const openNotification = () => {
+        notification.open({
+            message: "Notification Cart",
+            description:
+                "Add to cart successfully! Please check your cart to see the product.",
+            icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+            duration: 1.5,
+        });
+    };
+
+    //Hàm thêm sản phẩm vào giỏ hàng
+    const handleAddToCart = async () => {
         const productToAdd = { ...flower, quantity: Number(quantity) }; // Thêm thông tin sản phẩm và đảm bảo quantity là số
-        const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+        try {
+            const response = await addToCart(flower.flowerId, quantity);
+        } catch (error) {
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        const productExists = existingCart.find(
-            (flower) => flower.flowerID === productToAdd.flowerID
-        );
-        if (productExists) {
-            // Nếu đã có, cập nhật số lượng
-            productExists.quantity += quantity;
-        } else {
-            // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
-            existingCart.push(productToAdd);
         }
-
-        localStorage.setItem("cart", JSON.stringify(existingCart)); // Lưu giỏ hàng vào localStorage
-        setCart(existingCart); // Cập nhật state giỏ hàng để hiển thị
-        console.log("Giỏ hàng hiện tại:", existingCart); // Kiểm tra giỏ hàng trong console
     };
 
     return (
@@ -110,7 +110,7 @@ const FlowerPage = () => {
                     </h1>
                     <p className="product-description">{flower.flowerDescription}</p>
                     <p>
-                        <strong>Category:</strong> {flower.categoryID}
+                        Available quantity: {flower.availableQuantity}
                     </p>
                     {/* Chọn số lượng */}
                     <div className="quantity-section">
@@ -136,7 +136,8 @@ const FlowerPage = () => {
                 </div>
             </div>
             <RelatedProductsSwiper
-                currentProductId={flower.flowerID}
+                currentFlowerId={flower.flowerId}
+                currentCategoryId={flower.categoryId}
             />
         </div>
     );

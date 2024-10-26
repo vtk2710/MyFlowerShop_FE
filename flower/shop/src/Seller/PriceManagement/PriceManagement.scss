@@ -1,0 +1,172 @@
+.price-management {
+  padding: 20px;
+
+  h2 {
+    text-align: center;
+  }
+
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 70%;
+    }
+
+    .post-flower-button {
+      background-color: green;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darkgreen; // Hiệu ứng khi hover
+      }
+    }
+  }
+
+  .flower-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background-color: #f2f2f2;
+
+      th {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ccc;
+      }
+    }
+
+    tbody {
+      tr {
+        &:hover {
+          background-color: #f9f9f9; // Màu nền khi hover vào hàng
+        }
+
+        td {
+          padding: 10px;
+          border: 1px solid #ccc;
+          text-align: left;
+
+          .edit-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px; // Bo tròn cho nút
+
+            &:hover {
+              background-color: darkred; // Màu khi hover vào nút
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Kiểu dáng cho modal khi thêm hoặc sửa giá
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); // Thêm bóng cho modal
+
+    h3 {
+      margin: 0 0 10px 0;
+    }
+
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px; // Khoảng cách giữa hai nút
+    }
+
+    .update-button {
+      background-color: blue; // Màu cho nút Update
+      color: white;
+
+      &:hover {
+        background-color: darkblue; // Hiệu ứng khi hover
+      }
+    }
+
+    .cancel-button {
+      background-color: red; // Màu cho nút Cancel
+      color: white;
+
+      &:hover {
+        background-color: darkred; // Hiệu ứng khi hover
+      }
+    }
+  }
+}
+
+// Kiểu dáng chung cho bảng Ant Design
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Kiểu dáng cho input
+.ant-input {
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+// Căn chỉnh footer của modal
+.ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  .ant-btn-primary {
+    background-color: blue; // Màu xanh cho nút Update trong footer modal
+    border: none;
+
+    &:hover {
+      background-color: darkblue; // Hiệu ứng hover cho nút Update
+    }
+  }
+
+  .ant-btn-default {
+    background-color: red; // Màu đỏ cho nút Cancel trong footer modal
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: darkred; // Hiệu ứng hover cho nút Cancel
+    }
+  }
+}
+
+// Kiểu cho nút link
+.ant-btn-link {
+  color: red;
+
+  &:hover {
+    color: darkred; // Màu khi hover vào nút link
+  }
+}
