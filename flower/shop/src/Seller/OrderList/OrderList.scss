@@ -1,15 +1,4 @@
-/* Reset cho toàn bộ trang */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-}
-
+/* Reset for the entire page */
 /* Styles for the order list */
 .order-list {
   width: 90%;
@@ -18,13 +7,6 @@ body {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.order-list h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 24px;
-  color: #333;
 }
 
 .order-list ul {
@@ -70,11 +52,17 @@ body {
   color: #333;
 }
 
+/* Styling the view and status */
+.view-status {
+  display: flex;
+  align-items: center;
+}
+
 .view-icon {
   font-size: 22px;
   cursor: pointer;
   color: #3498db;
-  margin-right: 15px;
+  margin-right: 10px;
 }
 
 .view-icon:hover {
@@ -91,12 +79,11 @@ body {
   font-size: 14px;
 }
 
-/* Các trạng thái của đơn hàng */
 .status.delivered { background-color: #4caf50; }
 .status.pendingdelivery { background-color: #ff9800; }
 .status.accepted { background-color: #03a9f4; }
 .status.canceled { background-color: #f44336; }
-.status.vnpay { background-color: #2ecc71; } 
+.status.pending { background-color: #ffa500; }
 
 /* Các nút hành động */
 .order-actions button {
@@ -128,10 +115,6 @@ body {
   color: white;
 }
 
-.order-actions .btn-vnpay {
-  background-color: #2ecc71;
-  color: white;
-}
 
 /* Pagination styles */
 .pagination-custom .ant-pagination-item {

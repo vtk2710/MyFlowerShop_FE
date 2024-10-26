@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'; // Import React and useState
 import { useParams } from 'react-router-dom'; // Import useParams to get sellerId from URL
-import { ShoppingCartOutlined, UserOutlined, StarOutlined, CalendarOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import { ShoppingCartOutlined, CalendarOutlined, EnvironmentOutlined, InfoCircleOutlined, TagsOutlined } from '@ant-design/icons'; // Import Ant Design icons
 import "./SellerDetail.scss"; // Custom SCSS for styling
 import { sellerData } from "../Share/seller"; // Import seller data
 
@@ -39,17 +39,29 @@ const SellerDetail = () => {
           <h1>{seller.name}</h1>
           <div className="seller-info">
             <span>
+              <EnvironmentOutlined /> Address: <span>{seller.address}</span>
+            </span>
+            <span>
               <ShoppingCartOutlined /> Products: <span>{seller.products.length}</span>
             </span>
             <span>
-              <UserOutlined /> Followers: <span>{seller.followers}</span>
+              <TagsOutlined /> Type: <span>{seller.type}</span>
             </span>
             <span>
-              <StarOutlined /> Rating: <span>{seller.rating} ({seller.reviews} reviews)</span>
+              <CalendarOutlined /> Created At: <span>{seller.created_at}</span>
             </span>
             <span>
-              <CalendarOutlined /> Joined: <span>{seller.joined}</span>
+              <CalendarOutlined /> Updated At: <span>{seller.updated_at}</span>
             </span>
+            <span>
+              <InfoCircleOutlined /> Role: <span>{seller.role}</span>
+            </span>
+          </div>
+          <div className="seller-introduction">
+            <h3>
+              <InfoCircleOutlined /> Introduction:
+            </h3>
+            <p>{seller.introduction}</p>
           </div>
         </div>
       </div>
@@ -69,6 +81,7 @@ const SellerDetail = () => {
           ))}
         </div>
 
+        {/* Pagination Component */}
         <Pagination
           itemsPerPage={itemsPerPage}
           totalItems={seller.products.length}
