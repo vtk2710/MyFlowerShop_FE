@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import "./RosesPage.scss"; // Liên kết với file SCSS cho styling
+import "./FlowerPage.scss"; // Liên kết với file SCSS cho styling
 import Header from '../components/Header/header';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchFlowerList, fetchFlowerListByCategoryName } from '../API/flower/get_flower_list';
+import { fetchFlowerListByCategoryName } from '../API/flower/get_flower_list';
 
-const RosesPage = () => {
+const FlowersPage = () => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,4 +84,4 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
   );
 };
 
-export default RosesPage;
+export default FlowersPage;

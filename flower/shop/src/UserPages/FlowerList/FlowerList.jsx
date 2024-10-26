@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
-import { Table, Button, Tag, Space, Input, Select } from "antd";
-import { EditOutlined, DeleteOutlined, SaveOutlined } from "@ant-design/icons";
-import "./FlowerList.scss";
+import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { Button, Input, Select, Space, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
 import { fetchFlowerListBySellerId } from "../../API/flower/get_flower_list";
+import "./FlowerList.scss";
 
 const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   const [editingFlowerId, setEditingFlowerId] = useState(null);
@@ -43,15 +43,15 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
   );
 
   const handleEditClick = (flower) => {
-    setEditingFlowerId(flower.id);
+    setEditingFlowerId(flower.flowerId);
     setFlowerForm({
-      name: flower.name,
+      name: flower.flowerName,
       description: flower.description,
       status: flower.status,
       price: flower.price,
-      quantity: flower.quantity, // Thiết lập quantity
-      date: flower.date, // Thiết lập date
-      image: flower.image, // Giữ lại image để không mất khi save
+      quantity: flower.quantity,  // Thiết lập quantity
+      date: flower.date,  // Thiết lập date
+      image: flower.imageUrl,  // Giữ lại image để không mất khi save
     });
   };
 
@@ -111,12 +111,8 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       dataIndex: "flowerName",
       key: "name",
       render: (text, record) =>
-        editingFlowerId === record.id ? (
-          <Input
-            name="name"
-            value={flowerForm.name}
-            onChange={handleInputChange}
-          />
+        editingFlowerId === record.flowerId ? (
+          <Input name="name" value={flowerForm.name} onChange={handleInputChange} />
         ) : (
           <span>{text}</span>
         ),
@@ -126,12 +122,8 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       dataIndex: "flowerDescription",
       key: "description",
       render: (flowerDescription, record) =>
-        editingFlowerId === record.id ? (
-          <Input
-            name="description"
-            value={flowerForm.description}
-            onChange={handleInputChange}
-          />
+        editingFlowerId === record.flowerId ? (
+          <Input name="description" value={flowerForm.description} onChange={handleInputChange} />
         ) : (
           <span>{flowerDescription}</span>
         ),
@@ -141,12 +133,8 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       dataIndex: "status",
       key: "status",
       render: (status, record) =>
-        editingFlowerId === record.id ? (
-          <Select
-            value={flowerForm.status}
-            onChange={handleStatusChange}
-            style={{ width: "120px" }}
-          >
+        editingFlowerId === record.flowerId ? (
+          <Select value={flowerForm.status} onChange={handleStatusChange} style={{ width: '120px' }}>
             <Select.Option value="available">Available</Select.Option>
             <Select.Option value="unavailable">Unavailable</Select.Option>
           </Select>
@@ -161,28 +149,20 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       dataIndex: "price",
       key: "price",
       render: (price, record) =>
-        editingFlowerId === record.id ? (
-          <Input
-            name="price"
-            value={flowerForm.price}
-            onChange={handleInputChange}
-          />
+        editingFlowerId === record.flowerId ? (
+          <Input name="price" value={flowerForm.price} onChange={handleInputChange} />
         ) : (
           <span>{new Intl.NumberFormat("vi-VN").format(price)} VND</span>
         ),
     },
     // Thêm cột Quantity
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
+      title: 'Quantity',
+      dataIndex: 'availableQuantity',
+      key: 'quantity',
       render: (quantity, record) =>
-        editingFlowerId === record.id ? (
-          <Select
-            value={flowerForm.quantity}
-            onChange={handleQuantityChange}
-            style={{ width: "120px" }}
-          >
+        editingFlowerId === record.flowerId ? (
+          <Select value={flowerForm.quantity} onChange={handleQuantityChange} style={{ width: '120px' }}>
             {Array.from({ length: 20 }, (_, i) => i + 1).map((q) => (
               <Select.Option key={q} value={q}>
                 {q}
@@ -195,17 +175,12 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     },
     // Thêm cột Date
     {
-      title: "Post Date",
-      dataIndex: "date",
-      key: "date",
+      title: 'Post Date',
+      dataIndex: 'createdAt',
+      key: 'date',
       render: (date, record) =>
-        editingFlowerId === record.id ? (
-          <Input
-            type="date"
-            name="date"
-            value={flowerForm.date}
-            onChange={handleDateChange}
-          />
+        editingFlowerId === record.flowerId ? (
+          <Input type="date" name="date" value={flowerForm.date} onChange={handleDateChange} />
         ) : (
           <span>{new Date(date).toLocaleDateString("en-US")}</span> // Hiển thị ngày định dạng tiếng Anh
         ),
@@ -215,9 +190,9 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       key: "actions",
       render: (text, record) => (
         <Space size="middle">
-          {editingFlowerId === record.id ? (
+          {editingFlowerId === record.flowerId ? (
             <Button
-              onClick={() => handleSaveClick(record.id)}
+              onClick={() => handleSaveClick(record.flowerId)}
               icon={<SaveOutlined />}
               style={{ backgroundColor: "green", color: "white" }}
             />
@@ -229,7 +204,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
                 style={{ backgroundColor: "orange", color: "white" }}
               />
               <Button
-                onClick={() => deleteFlower(record.id)}
+                onClick={() => deleteFlower(record.flowerId)}
                 icon={<DeleteOutlined />}
                 style={{ backgroundColor: "red", color: "white" }}
               />

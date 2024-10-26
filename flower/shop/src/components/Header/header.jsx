@@ -58,7 +58,7 @@ function Header() {
       setCart(data);
     };
     savedCart();
-  }, [isVisible]);
+  }, [isVisible, isCartVisible]);
 
   // Hàm xóa sản phẩm
   const handleDeleteItem = async (id) => {
@@ -170,6 +170,9 @@ function Header() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      //console.log(response.data.role)
+      console.log(response)
+      localStorage.setItem("userInfo", JSON.stringify(response.data))
       setUserInfo(response.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -198,8 +201,6 @@ function Header() {
 
       if (response.data.type === "admin") {
         navigate("/admin");
-      } else if (response.data.type === "seller") {
-        navigate("/seller-page");
       } else navigate("/");
     } catch (error) {
       console.log(error);
@@ -229,8 +230,7 @@ function Header() {
 
         const loginFormData = formSignUpData;
         loginFormData.delete("email");
-        const loginResponse = await axios.post(
-          "https://localhost:7198/login",
+        const loginResponse = await axios.post("https://localhost:7198/login",
           loginFormData
         );
 
@@ -274,8 +274,13 @@ function Header() {
   const menu = (
     <Menu>
       <Menu.Item key="profile">
-        <Link to="/profile">Profile</Link>
+        <Link to="/user-page">Profile</Link>
       </Menu.Item>
+      {userInfo?.role === "Seller" && (
+        <Menu.Item key="shop">
+          <Link to="/user-page">Shop</Link>
+        </Menu.Item>
+      )}
       <Menu.Item key="logout" onClick={handleLogout}>
         Logout
       </Menu.Item>
@@ -294,8 +299,28 @@ function Header() {
             <li>
               <Link to="/">HOME</Link>
             </li>
-
-            {categories.map((category) => (
+            <li>
+              <Link to="/flowers/rose">ROSES</Link>
+            </li>
+            <li>
+              <Link to="/flowers/wedding">WEDDING FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/congratulatory">CONGRATULATORY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/birthday">BIRTHDAY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/holiday">HOLIDAY FLOWERS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/orchids">ORCHIDS</Link>
+            </li>
+            <li>
+              <Link to="/flowers/table">TABLE FLOWERS</Link>
+            </li>
+            {/* {categories.map((category) => (
               <li key={category.key}>
                 <Link
                   to={`/flowers/${category.Category.toLowerCase().replace(
@@ -306,7 +331,7 @@ function Header() {
                   {category.Category.toUpperCase()}
                 </Link>
               </li>
-            ))}
+            ))} */}
 
             {/* <li>
               <UserOutlined
