@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Table, Button, message } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ReportAdmin = () => {
   const [reports, setReports] = useState([]);
+  const navigate = useNavigate();
 
   // Lấy dữ liệu báo cáo từ API khi component được mount
   useEffect(() => {
@@ -80,36 +82,54 @@ const ReportAdmin = () => {
       title: "Report ID",
       dataIndex: "reportId",
       key: "reportId",
+      align: "center",
     },
     {
       title: "User ID",
       dataIndex: "userId",
       key: "userId",
+      align: "center",
     },
     {
       title: "Flower ID",
       dataIndex: "flowerId",
       key: "flowerId",
+      render: (flowerId) => (
+        <>
+          <span>{flowerId}</span>
+          <Button
+            type="link"
+            onClick={() => navigate(`/viewflower/${flowerId}`)}
+            style={{ marginLeft: "10px" }}
+          >
+            Show
+          </Button>
+        </>
+      ),
     },
     {
       title: "Seller ID",
       dataIndex: "sellerId",
       key: "sellerId",
+      align: "center",
     },
     {
       title: "Report Reason",
       dataIndex: "reportReason",
       key: "reportReason",
+      align: "center",
     },
     {
       title: "Report Description",
       dataIndex: "reportDescription",
       key: "reportDescription",
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      align: "center",
       render: (status) => <span>{status}</span>,
     },
     {
@@ -128,6 +148,7 @@ const ReportAdmin = () => {
             Resolve
           </Button>
           <Button
+            style={{ marginLeft: "10px" }}
             type="link"
             onClick={() => updateReportStatus(record.reportId, "Dismissed")}
             disabled={

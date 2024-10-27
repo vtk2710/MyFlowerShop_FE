@@ -30,6 +30,20 @@ function Header() {
   const [selectedItems, setSelectedItems] = useState([]); // Các sản phẩm được chọn để xóa
   const [categories, setCategories] = useState([]);
   const [payload, setPayload] = useState({});
+  const [isForgotPasswordVisible, setIsForgotPasswordVisible] = useState(false); // Modal quên mật khẩu
+  const [isResetPasswordVisible, setIsResetPasswordVisible] = useState(false); // Modal nhập mật khẩu mới
+
+  // Hàm mở modal Forgot Password khi click
+  const openForgotPasswordModal = () => {
+    setIsForgotPasswordVisible(true);
+    setIsVisible(false);
+  };
+
+  // Hàm mở modal Nhập mật khẩu mới sau khi gửi link đặt lại thành công
+  const openResetPasswordModal = () => {
+    setIsForgotPasswordVisible(false);
+    setIsResetPasswordVisible(true);
+  };
 
   // Lấy danh sách danh mục từ localStorage khi trang được tải (category)
   useEffect(() => {
@@ -171,8 +185,8 @@ function Header() {
         }
       );
       //console.log(response.data.role)
-      console.log(response)
-      localStorage.setItem("userInfo", JSON.stringify(response.data))
+      console.log(response);
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
       setUserInfo(response.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -230,7 +244,8 @@ function Header() {
 
         const loginFormData = formSignUpData;
         loginFormData.delete("email");
-        const loginResponse = await axios.post("https://localhost:7198/login",
+        const loginResponse = await axios.post(
+          "https://localhost:7198/login",
           loginFormData
         );
 
@@ -551,6 +566,89 @@ function Header() {
         </div>
       </Modal>
 
+      {/* Modal Forgot Password */}
+      <Modal
+        title="Forgot Password"
+        visible={isForgotPasswordVisible}
+        onCancel={() => setIsForgotPasswordVisible(false)}
+        footer={null}
+      >
+        <Form layout="vertical" onFinish={openResetPasswordModal}>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Please enter your email!" },
+              { type: "email", message: "Email is not valid!" },
+            ]}
+          >
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Input placeholder="Enter your email" />
+              <Button type="primary" htmlType="button">
+                Send Code
+              </Button>
+            </div>
+          </Form.Item>
+          <Form.Item
+            name="VerifyCode"
+            label="VerifyCode"
+            rules={[
+              { required: true, message: "Please Enter your VerifyCode!" },
+            ]}
+          >
+            <Input placeholder="Enter your VerifyCode " />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Send Reset Link
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Modal Nhập mật khẩu mới */}
+      <Modal
+        title="Reset Password"
+        visible={isResetPasswordVisible}
+        onCancel={() => setIsResetPasswordVisible(false)}
+        footer={null}
+      >
+        <Form layout="vertical">
+          <Form.Item
+            name="NewPassword"
+            label="NewPassword"
+            rules={[{ required: true, message: "Please Enter your password!" }]}
+          >
+            <Input.Password placeholder="Please Enter your password!" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["newPassword"]}
+            rules={[
+              { required: true, message: "Please confirm your password!" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("newPassword") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The two passwords do not match!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Confirm your new Password" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Reset Password
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
       {/* Modal for Sign In/Sign Up */}
       <Modal
         title={isSignUp ? "Sign Up" : "Sign In"}
@@ -597,7 +695,7 @@ function Header() {
                   <Button
                     type="link"
                     className="forgot-password-link"
-                    onClick={() => alert("In development")}
+                    onClick={openForgotPasswordModal}
                   >
                     Forgot password?
                   </Button>
