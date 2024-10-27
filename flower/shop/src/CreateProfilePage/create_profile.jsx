@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, DatePicker, Upload, Radio, message } from 'antd';
+import { Form, Input, Button, DatePicker, Upload, Radio, message, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './create_profile.scss';
 import axios from 'axios';
@@ -11,15 +11,7 @@ const CreateProfilePage = () => {
     const navigate = useNavigate();
 
     const handleAvatarChange = ({ file }) => {
-
-        console.log(file);
         setAvatar(file);
-        // if (file.status === 'done') {
-            
-        //     message.success(`${file.name} uploaded successfully.`);
-        // } else if (file.status === 'error') {
-        //     message.error(`${file.name} upload failed.`);
-        // }
     };
 
     const handleCreateProfile = async (values) => {
@@ -49,6 +41,10 @@ const CreateProfilePage = () => {
                 }
             });
             localStorage.removeItem("newUser");
+            notification.success({
+                message: "Register account successfully !",
+                duration: 3
+            })
             navigate('/');
         } catch (error) {
             console.log("Can't create profile:", error)

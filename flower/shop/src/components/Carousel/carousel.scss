@@ -1,16 +1,32 @@
-
-.carousel{
-    position: relative; /* Vị trí tương đối so với vị trí gốc của nó */
-    img{
-        width: 100%;
-        height: 75dvh;
-        object-position: center;
-        object-fit: cover;
-    //  padding-left: 500px;
-    //  border-radius: 60px;
-    //  border-top-left-radius: 60px;
-    //  margin-left: 235px;
-     margin-top: 10px;
-    }
+.CarouselPage {
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
 }
 
+.carousel {
+    width: 100%;
+    height: 80vh;
+}
+
+.carousel .swiper-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.carousel .swiper-slide {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.carousel img {
+    max-width: none;
+
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    border-radius: 8px;
+}
