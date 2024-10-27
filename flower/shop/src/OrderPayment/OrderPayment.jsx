@@ -22,7 +22,7 @@ const App = () => {
               View order history
             </button>
             <button className="shopping-btn" onClick={handleShoppingClick}>
-                Continue shoppingshopping
+                Back to Homepage
             </button>
           </div>
         </div>

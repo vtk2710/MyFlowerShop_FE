@@ -92,9 +92,39 @@
     gap: 20px; /* Khoảng cách giữa các phần tử bên trong mỗi sản phẩm */
 }
 
+/* Xóa nền xanh của nút chuyển đổi đăng nhập/đăng ký */
+.modal-wrapper .ant-btn-link {
+  background-color: transparent !important;
+  color: #ff5a5f; /* Đặt màu chữ phù hợp */
+  border: none;
+  box-shadow: none;
+}
+
+.modal-wrapper .ant-btn-link:hover {
+
+  color: #e04444; /* Màu khi hover */
+}
+
+.ant-modal {
+  max-width: 500px;
+}
+
+.ant-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: auto; 
+  max-height: 80vh;
+}
 
 
-
+.form-container {
+  position: relative;
+  width: 100%;
+  min-height: 450px;
+  overflow: hidden;
+}
 
 
 //  MODAL OF LOGIN

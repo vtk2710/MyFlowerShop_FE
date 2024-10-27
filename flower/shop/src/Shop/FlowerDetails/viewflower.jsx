@@ -15,30 +15,12 @@ const { Option } = Select;
 const FlowerPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
   const [trigger, setTrigger] = useState(0);
-  console.log("ID from URL:", id);
+  //console.log("ID from URL:", id);
   const [quantity, setQuantity] = useState(1); // Sử dụng state để quản lý số lượng
-  const [cart, setCart] = useState([]); // Quản lý giỏ hàng
   const [flower, setFlowerDetails] = useState({}); // Giống biến "flower"
   const [reportText, setReportText] = useState(""); // State cho nội dung báo cáo
   const [issueType, setIssueType] = useState(""); // State để quản lý loại báo cáo
   const [isModalVisible, setIsModalVisible] = useState(false); // State quản lý modal
-
-  const getFlowerDetails = async () => {
-    if (!flower.categoryId) {
-      console.error("categoryId is missing or undefined.");
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `https://localhost:7198/api/Category/${flower.categoryId}/flowers`
-      );
-      console.log("Flowers details fetched by categoryId:", response.data);
-      setFlowerDetails(response.data);
-    } catch (error) {
-      console.error("Error fetching flower details by categoryId:", error);
-    }
-  };
 
   useEffect(() => {
     const fetchFlowerDetails = async () => {
@@ -190,7 +172,7 @@ const FlowerPage = () => {
         {/* Chi tiết sản phẩm */}
         <div className="product-details">
           <h1 className="product-title">
-            {flower.flowerName} - {flower.price}
+            {flower.flowerName} - {flower.price} VND
           </h1>
           <p className="product-description">{flower.flowerDescription}</p>
           <p>Available quantity: {flower.availableQuantity}</p>

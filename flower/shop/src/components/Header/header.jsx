@@ -417,27 +417,6 @@ function Header() {
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {cart?.items?.$values.length > 0 ? (
             <div>
-              {/* Nút lấy tất cả sản phẩm */}
-              {/* <div className="button-container">
-                <Button
-                  onClick={handleSelectall}
-                  className="button-cart"
-                  style={{ width: "100px" }}
-                >
-                  <CheckCircleOutlined className="icon-cart" />
-                </Button> */}
-
-              {/* Nút xóa các sản phẩm đã chọn */}
-              {/* <Button
-                  className="button-delete"
-                  onClick={handleDeleteSelectedItems}
-                  disabled={selectedItems.length === 0}
-                  style={{ width: "100px" }}
-                >
-                  <DeleteOutlined className="icon-cart" />
-                </Button>
-              </div> */}
-
               {/* Danh sách sản phẩm trong giỏ hàng */}
               {cart?.items?.$values.map((flower, index) => (
                 <div
@@ -796,7 +775,7 @@ function Header() {
           <Button
             type="link"
             onClick={toggleForm}
-            style={{ margin: "0px 30px" }}
+            style={{ margin: "450px 0px 0px 80px" }}
           >
             {isSignUp
               ? "Already have an account? Sign In"
