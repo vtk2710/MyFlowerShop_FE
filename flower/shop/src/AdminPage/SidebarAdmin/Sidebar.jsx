@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const Sidebar = () => {
+const SidebarAdmin = () => {
   return (
     <Sider width={250} style={{ height: "100vh", background: "#fff" }}>
       <div className="welcome-section">
@@ -71,4 +71,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarAdmin;

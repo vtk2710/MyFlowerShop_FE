@@ -2,9 +2,11 @@ import { CalendarOutlined, CreditCardOutlined, EnvironmentOutlined, GiftOutlined
 import { Button, Image, Modal, Table, Tag } from 'antd'; // Import Ant Design modal component
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getOrderDetailByCustomer } from '../API/orderDetails/orderDetails';
-import { groupBy } from '../utils/groupBy';
+import { getOrderDetailByCustomer } from '../../API/orderDetails/orderDetails';
+
 import './OrderHistory.scss';
+import { groupBy } from '../../utils/groupBy';
+
 
 const OrderHistory = () => {
     const location = useLocation();

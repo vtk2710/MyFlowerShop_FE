@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { Outlet } from "react-router-dom"; // Sử dụng Outlet để hiển thị nội dung động
-import SideBar from "../Sidebar/Sidebar"; // Import SideBar
-import AdminHeader from "../admin/AdminHeader/AdminHeader";
+import SidebarAdmin from "./SidebarAdmin/Sidebar";
+import AdminHeader from "./AdminHeader/AdminHeader";
 // Import AdminHeader
 
 const { Content } = Layout;
@@ -10,7 +10,7 @@ const Admin = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sidebar điều hướng */}
-      <SideBar /> {/* Hiển thị sidebar */}
+      <SidebarAdmin /> {/* Hiển thị sidebar */}
       {/* Layout chính cho nội dung */}
       <Layout className="site-layout" style={{ padding: "0 24px 24px" }}>
         <AdminHeader /> {/* Hiển thị header */}
