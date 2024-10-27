@@ -1,0 +1,32 @@
+/* ReportHistory.scss */
+
+.report-history-container {
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+.report-history-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1890ff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.ant-table {
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+/* Phong cách cho các cột và hàng */
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+    text-align: center;
+}
+
+/* Phân trang */
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
