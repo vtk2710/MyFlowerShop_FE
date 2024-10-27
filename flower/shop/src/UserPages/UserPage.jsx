@@ -3,14 +3,14 @@ import FlowerList from "./FlowerList/FlowerList";
 import OrderList from "./OrderList/OrderList";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import OrderHistory from '../OrderHistory/OrderHistory';
+import OrderHistory from './OrderHistory/OrderHistory';
 import FeedbackManagement from "./FeedbackManagement/FeedbackManagement";
 import FlowerPost from "./FlowerPost/FlowerPost";
 import Footer from "../Home/footer/footer";
 import Header from "../components/Header/header";
 import UserProfile from "./UserProfile/Profile";
 import "./UserPage.scss";
-import Sidebar from "./SlideBarSeller/Slidebar";
+import Sidebar from "./SlideBar/Sidebar";
 
 const UserPage = () => {
   const location = useLocation();
@@ -25,9 +25,6 @@ const UserPage = () => {
     JSON.parse(localStorage.getItem("flowers")) || []
   );
 
-  // State quản lý số lượng Available và Unavailable
-  const [availableCount, setAvailableCount] = useState(0);
-  const [unavailableCount, setUnavailableCount] = useState(0);
   // Hàm lấy thông tin user từ API
   const fetchUserInfo = async () => {
     const token = localStorage.getItem("token");
@@ -59,20 +56,13 @@ const UserPage = () => {
 
   // Hàm tự động cập nhật số lượng hoa Available, Unavailable, Total Products, và Total Quantity dựa trên danh sách hoa
   useEffect(() => {
-    const availableFlowers = flowers.filter(flower => flower.status === 'available').length;
-    const unavailableFlowers = flowers.filter(flower => flower.status === 'unavailable').length;
-
     const totalProductsCount = flowers.length; // Tính tổng số sản phẩm
     const totalQuantityCount = flowers.reduce((sum, flower) => sum + Number(flower.quantity || 0), 0); // Tính tổng số lượng hoa và đảm bảo giá trị là số
 
-    setAvailableCount(availableFlowers);
-    setUnavailableCount(unavailableFlowers);
     setTotalProducts(totalProductsCount);  // Cập nhật total product
     setTotalQuantity(totalQuantityCount);  // Cập nhật total quantity
 
     // Lưu số lượng vào localStorage (tùy chọn)
-    localStorage.setItem('availableCount', JSON.stringify(availableFlowers));
-    localStorage.setItem('unavailableCount', JSON.stringify(unavailableFlowers));
     localStorage.setItem('totalProducts', JSON.stringify(totalProductsCount));  // Lưu total product vào localStorage
     localStorage.setItem('totalQuantity', JSON.stringify(totalQuantityCount));  // Lưu total quantity vào localStorage
 
@@ -102,8 +92,6 @@ const UserPage = () => {
     localStorage.setItem('flowers', JSON.stringify(updatedFlowers)); // Lưu danh sách hoa vào localStorage
   };
 
-  const avatarSrc = "./image/logo.jpg";
-
   return (
     <div className="seller-page">
       <Header/>
@@ -121,24 +109,8 @@ const UserPage = () => {
                 <button onClick={() => setIsModalOpen(true)}>
                   Post Flower
                 </button>
-                <input type="text" placeholder="Search Flower..." />
+                {/* <input type="text" placeholder="Search Flower..." /> */}
                 <div className="status-controls">
-                  {/* Available Control */}
-                  {/* <div className="available-control">
-                    <label>Available:</label>
-                    <div className="number-box">
-                      <span>{availableCount}</span>
-                    </div>
-                  </div> */}
-
-                  {/* Unavailable Control */}
-                  {/* <div className="unavailable-control">
-                    <label>Unavailable:</label>
-                    <div className="number-box">
-                      <span>{unavailableCount}</span>
-                    </div>
-                  </div>
-
                   {/* Total Products Control */}
                   <div className="total-products-control">
                     <label>Total Products:</label>

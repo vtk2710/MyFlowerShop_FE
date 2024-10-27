@@ -6,7 +6,7 @@ import {
   ShoppingCartOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';
-import './Slidebar.scss';
+import './Sidebar.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';

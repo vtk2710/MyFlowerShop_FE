@@ -1,24 +1,25 @@
 /* eslint-disable react/prop-types */
-import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
-import { Button, Input, Select, Space, Table, Tag } from "antd";
+import { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { Button, Input, Select, Space, Table, Tag, notification } from "antd";
 import { useEffect, useState } from "react";
 import { fetchFlowerListBySellerId } from "../../API/flower/get_flower_list";
 import "./FlowerList.scss";
+import { updateFlowerInfo } from "../../API/flower/create_modify_flower";
 
-const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
+const FlowerList = ({ flowers, updateFlower }) => {
   const [editingFlowerId, setEditingFlowerId] = useState(null);
+  const [flowerList, setFlowerList] = useState(null);
   const [flowerForm, setFlowerForm] = useState({
     name: "",
     description: "",
     status: "",
     price: "",
+    category: "",
     quantity: "", // Thêm quantity vào form
     date: "", // Thêm date vào form
     image: "", // Giữ lại image để không mất sau khi save
   });
 
-  const [flowerList, setFlowerList] = useState(null);
-  //const [flowerData, setFlowerData] = useState([]);
 
   const loadFlowerList = async () => {
     try {
@@ -31,15 +32,9 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
 
   console.log(flowerList);
 
-  useEffect(
-    () => {
+  useEffect(() => {
       loadFlowerList();
-      //const savedFlowers =
-      //JSON.parse(localStorage.getItem("flowers")) || flowers;
-      //setFlowerData(savedFlowers);
-    },
-    [flowers],
-    []
+    }, []
   );
 
   const handleEditClick = (flower) => {
@@ -49,6 +44,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
       description: flower.description,
       status: flower.status,
       price: flower.price,
+      category: "",
       quantity: flower.quantity,  // Thiết lập quantity
       date: flower.date,  // Thiết lập date
       image: flower.imageUrl,  // Giữ lại image để không mất khi save
@@ -84,30 +80,76 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     }));
   };
 
-  const handleSaveClick = (id) => {
-    const updatedFlower = { id, ...flowerForm };
-    updateFlower(updatedFlower);
+  const handleSaveClick = async (id) => {
+
+    console.log("Saving flower with ID:", id);
+
+    const formData = new FormData();
+    formData.append("flowerName", flowerForm.name);
+    formData.append("flowerDescription", flowerForm.description);
+    formData.append("status", flowerForm.status);
+    formData.append("price", parseFloat(flowerForm.price));
+    formData.append("availableQuantity", flowerForm.quantity);
+
+    if (flowerForm.image) {
+      formData.append("Image", flowerForm.image);
+    }
+
+    try {
+      const response = await updateFlowerInfo(id, formData);
+      console.log("Update response:", response); // Log the response from the server
+      loadFlowerList();
+      notification.success({
+        message: "Flower updated successfully!",
+        duration: 2,
+      });
+
+      setEditingFlowerId(null); // Reset editing state
+      // Optionally refresh the flower list or update the UI accordingly
+    } catch (error) {
+      console.error("Error updating flower:", error); // Log the error
+      notification.error({
+        message: "Failed to update flower",
+        description: error.response?.data || "An error occurred. Please try again.",
+        duration: 3,
+      });
+    }
     setEditingFlowerId(null);
   };
 
   const columns = [
     {
-      title: "Image",
+      title: <div style={{ textAlign: 'center' }}>Image</div>,
       dataIndex: "imageUrl",
       key: "image",
-      render: (image) => (
-        <img
-          src={image}
-          alt="flower"
-          style={{ width: "50px" }}
-          onError={(e) => {
-            e.target.style.display = "none"; // Ẩn hình nếu không load được
-          }}
-        />
-      ),
+      render: (image, record) => {
+        // Check if the current record is being edited
+        const isEditing = editingFlowerId === record.flowerId;
+        return isEditing ? (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setFlowerForm((prev) => ({ ...prev, image: file })); // Assuming `setFlowerForm` updates the current flower form state
+              }
+            }}
+          />
+        ) : (
+          <img
+            src={image}
+            alt="flower"
+            style={{ width: "50px" }}
+            onError={(e) => {
+              e.target.style.display = "none"; // Hide the image if it fails to load
+            }}
+          />
+        );
+      },
     },
     {
-      title: "Name",
+      title: <div style={{ textAlign: 'center' }}>Name</div>,
       dataIndex: "flowerName",
       key: "name",
       render: (text, record) =>
@@ -118,7 +160,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
         ),
     },
     {
-      title: "Description",
+      title: <div style={{ textAlign: 'center' }}>Description</div>,
       dataIndex: "flowerDescription",
       key: "description",
       render: (flowerDescription, record) =>
@@ -129,7 +171,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
         ),
     },
     {
-      title: "Status",
+      title: <div style={{ textAlign: 'center' }}>Status</div>,
       dataIndex: "status",
       key: "status",
       render: (status, record) =>
@@ -140,12 +182,12 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
           </Select>
         ) : (
           <Tag color={status === "available" ? "green" : "volcano"}>
-            {status.toUpperCase()}
+            {status?.toUpperCase()}
           </Tag>
         ),
     },
     {
-      title: "Price",
+      title: <div style={{ textAlign: 'center' }}>Price</div>,
       dataIndex: "price",
       key: "price",
       render: (price, record) =>
@@ -157,7 +199,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     },
     // Thêm cột Quantity
     {
-      title: 'Quantity',
+      title: <div style={{ textAlign: 'center' }}>Quantity</div>,
       dataIndex: 'availableQuantity',
       key: 'quantity',
       render: (quantity, record) =>
@@ -175,7 +217,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
     },
     // Thêm cột Date
     {
-      title: 'Post Date',
+      title: <div style={{ textAlign: 'center' }}>Post Date</div>,
       dataIndex: 'createdAt',
       key: 'date',
       render: (date, record) =>
@@ -186,7 +228,7 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
         ),
     },
     {
-      title: "Actions",
+      title: <div style={{ textAlign: 'center' }}>Action</div>,
       key: "actions",
       render: (text, record) => (
         <Space size="middle">
@@ -203,16 +245,11 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
                 icon={<EditOutlined />}
                 style={{ backgroundColor: "orange", color: "white" }}
               />
-              <Button
-                onClick={() => deleteFlower(record.flowerId)}
-                icon={<DeleteOutlined />}
-                style={{ backgroundColor: "red", color: "white" }}
-              />
             </>
           )}
         </Space>
       ),
-    },
+    }
   ];
 
   return (
@@ -233,18 +270,3 @@ const FlowerList = ({ flowers, deleteFlower, updateFlower }) => {
 
 export default FlowerList;
 
-// {
-//   title: 'Status',
-//   key: 'status',
-//   dataIndex: 'status',
-//   render: (status, record) => {
-//     return editingFlowerId === record.id ? (
-//       <Select value={flowerForm.status} onChange={handleStatusChange} style={{ width: 120 }}>
-//         <Select.Option value="available">Available</Select.Option>
-//         <Select.Option value="unavailable">Unavailable</Select.Option>
-//       </Select>
-//     ) : (
-//       <Tag color={status === 'available' ? 'green' : 'volcano'}>{status.toUpperCase()}</Tag>
-//     );
-//   },
-// },

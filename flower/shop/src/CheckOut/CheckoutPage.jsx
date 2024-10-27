@@ -7,7 +7,7 @@ import "./CheckoutPage.scss";
 import Header from "../components/Header/header";
 import Footer from "../Home/footer/footer";
 import { Link } from "react-router-dom";
-import { createAddress, getAddresses } from "../API/address";
+import { createAddress, getAddresses } from "../API/address/address";
 import { createOrder } from "../API/order/order";
 
 const CheckoutPage = () => {
